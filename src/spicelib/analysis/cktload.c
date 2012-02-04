@@ -64,7 +64,6 @@ CKTload(CKTcircuit *ckt)
     SMPclear(ckt->CKTmatrix);
 	#endif
 
-
 #ifdef STEPDEBUG
     noncon = ckt->CKTnoncon;
 #endif /* STEPDEBUG */

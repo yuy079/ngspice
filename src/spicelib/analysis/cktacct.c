@@ -44,8 +44,10 @@ CKTacct(CKTcircuit *ckt, JOB *anal, int which, IFvalue *val)
     case OPT_FILLNZ:
 	if ( ckt->CKTmatrix != NULL ) {
 	    #ifdef KLU
-	    if (ckt->CKTkluMODE) val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz - ckt->CKTklunz ;
-	    else val->iValue = spFillinCount(ckt->CKTmatrix);
+	    if (ckt->CKTkluMODE)
+		val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz - ckt->CKTklunz;
+	    else
+		val->iValue = spFillinCount(ckt->CKTmatrix);
 	    #else
 	    val->iValue = spFillinCount(ckt->CKTmatrix);
 	    #endif
@@ -56,8 +58,10 @@ CKTacct(CKTcircuit *ckt, JOB *anal, int which, IFvalue *val)
     case OPT_TOTALNZ:
 	if ( ckt->CKTmatrix != NULL ) {
 	    #ifdef KLU
-	    if (ckt->CKTkluMODE) val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz ;
-	    else val->iValue = spElementCount(ckt->CKTmatrix);
+	    if (ckt->CKTkluMODE)
+		val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz;
+	    else
+		val->iValue = spElementCount(ckt->CKTmatrix);
 	    #else
 	    val->iValue = spElementCount(ckt->CKTmatrix);
 	    #endif

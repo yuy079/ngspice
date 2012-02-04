@@ -125,7 +125,8 @@ void spMatrix_CSC(MatrixPtr Matrix, int *Ap, int *Ai, double *Ax, int n, double 
 	}
 
 	Q_new=(int*)SP_MALLOC(int, n);
-	for (i=0;i<n;i++) Q_new[Q[i]]=i;
+        for (i = 0 ; i < n ; i++)
+            Q_new[Q[i]] = i;
 //for (i = 0 ; i < n ; i++) printf("Q_new [i] : %d\tQ [i]: %d\n", Q_new [i], Q [i]);
 	offset=0;
 	for (i=0;i<n;i++) {
@@ -140,7 +141,8 @@ void spMatrix_CSC(MatrixPtr Matrix, int *Ap, int *Ai, double *Ax, int n, double 
 			bind_KLU [bind_KLU_Pinv [j]] = &(Ax [offset]) ;
 //printf("bind_KLU [20] da spOutput: %u\n", bind_KLU [20]) ;
 //			bind_KLU [j] = &(Ax [offset]) ;
-			if (Ai [offset] == i) diag [i] = &(Ax [offset]) ;
+                        if (Ai [offset] == i)
+                            diag [i] = &(Ax [offset]);
 			offset++;
 		}
 	}
@@ -207,7 +209,8 @@ void spMatrix_CSC_dump(MatrixPtr Matrix, char *CSC_output) {
 	}
 
 	Q_new=(int*)SP_MALLOC(int, n);
-	for (i=0;i<n;i++) Q_new[Q[i]]=i;
+        for (i = 0; i < n; i++)
+            Q_new[Q[i]] = i;
 	offset=0;
 	for (i=0;i<n;i++) {
 		CSC_Ap[i]=offset;
@@ -221,16 +224,15 @@ void spMatrix_CSC_dump(MatrixPtr Matrix, char *CSC_output) {
 	}
 	CSC_Ap[n]=offset;
 
-	FILE *output;
-	output=fopen(CSC_output, "w");
+        FILE *output = fopen(CSC_output, "w");
 	fprintf(output, "%%%%MatrixMarket matrix coordinate real general\n");
 	fprintf(output, "%%-------------------------------------------------------------------------------\n");
 	fprintf(output, "%% Transient Matrix Dump\n%% Family: ISCAS Circuit\n");
 	fprintf(output, "%%-------------------------------------------------------------------------------\n");
 	fprintf(output, "%d %d %d\n", n, n, offset);
-	for (i=0;i<n;i++) {
-		for (j=CSC_Ap[i];j<CSC_Ap[i+1];j++) fprintf(output, "%d %d %-.9g\n", CSC_Ai[j]+1, i+1, CSC_A[j]);
-	}
+        for (i = 0; i < n; i++)
+            for (j = CSC_Ap[i]; j < CSC_Ap[i+1]; j++)
+                fprintf(output, "%d %d %-.9g\n", CSC_Ai[j]+1, i+1, CSC_A[j]);
 	fclose(output);
 
 	free(Q);
@@ -246,16 +248,17 @@ void spMatrix_CSC_dump(MatrixPtr Matrix, char *CSC_output) {
 
 void spRHS_CSC_dump(RealNumber *RHS, char *CSC_output_b, MatrixPtr Matrix) {
 
-	int n, i;
-	n=spGetSize(Matrix, 1);
-	FILE *output;
-	output=fopen(CSC_output_b, "w");
+        FILE *output = fopen(CSC_output_b, "w");
+        int n = spGetSize(Matrix, 1);
+        int i;
+
 	fprintf(output, "%%%%MatrixMarket matrix array real general\n");
 	fprintf(output, "%%-------------------------------------------------------------------------------\n");
 	fprintf(output, "%% Transient RHS Vector Dump\n%% Family: ISCAS Circuit\n");
 	fprintf(output, "%%-------------------------------------------------------------------------------\n");
 	fprintf(output, "%d %d\n", n, 1);
-	for (i=1;i<n+1;i++) fprintf(output, "%-.9g\n", RHS[i]);
+        for (i = 1; i < n+1; i++)
+            fprintf(output, "%-.9g\n", RHS[i]);
 	fclose(output);
 
 }
