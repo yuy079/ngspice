@@ -7,8 +7,8 @@
 #ifndef _KLU_INTERNAL_H
 #define _KLU_INTERNAL_H
 
-#include <ngspice/klu.h>
-#include <ngspice/btf.h>
+#include "ngspice/klu.h"
+#include "ngspice/btf.h"
 #include "klu_version.h"
 
 /* ========================================================================== */

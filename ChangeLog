@@ -1,4 +1,18 @@
 2012-02-04  Robert Larice
+ * src/maths/KLU/amd_internal.h ,
+ * src/maths/KLU/btf_maxtrans.c ,
+ * src/maths/KLU/btf_order.c ,
+ * src/maths/KLU/btf_strongcomp.c ,
+ * src/maths/KLU/colamd.c ,
+ * src/maths/KLU/klu_internal.h ,
+ * src/spicelib/devices/bsim4v6/b4v6bindklu.c ,
+ * src/spicelib/devices/cap/capbindklu.c ,
+ * src/spicelib/devices/res/resbindklu.c ,
+ * src/spicelib/devices/vsrc/vsrcbindklu.c :
+  #include <ngspice/...>  -->  #include "ngspice/..."
+    use "" instead of <> to better express project membership
+
+2012-02-04  Robert Larice
  * src/maths/ni/niinit.c ,
  * src/spicelib/analysis/acan.c ,
  * src/spicelib/analysis/cktop.c :

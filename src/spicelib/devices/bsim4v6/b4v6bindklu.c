@@ -2,10 +2,10 @@
 Author: 2012 Francesco Lannutti
 **********/
 
-#include <ngspice/ngspice.h>
-#include <ngspice/cktdefs.h>
+#include "ngspice/ngspice.h"
+#include "ngspice/cktdefs.h"
 #include "bsim4v6def.h"
-#include <ngspice/sperror.h>
+#include "ngspice/sperror.h"
 
 int
 BSIM4v6bindklu(GENmodel *inModel, CKTcircuit *ckt)
