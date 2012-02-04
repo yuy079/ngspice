@@ -1,4 +1,8 @@
 2012-02-04  Robert Larice
+ * src/maths/sparse/spoutput.c :
+  drop some disabled experimental code in spMatrix_CSC()
+
+2012-02-04  Robert Larice
  * configure.ac ,
  * src/include/ngspice/cktdefs.h ,
  * src/include/ngspice/smpdefs.h ,
