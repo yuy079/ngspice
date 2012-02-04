@@ -1,4 +1,11 @@
 2012-02-04  Robert Larice
+ * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
+ * src/spicelib/devices/cap/capinit.c ,
+ * src/spicelib/devices/res/resinit.c ,
+ * src/spicelib/devices/vsrc/vsrcinit.c :
+  polish SPICEdev initialization
+
+2012-02-04  Robert Larice
  * src/include/ngspice/devdefs.h ,
  * src/include/ngspice/smpdefs.h ,
  * src/include/ngspice/spmatrix.h ,

@@ -71,11 +71,10 @@ SPICEdev CAPinfo = {
  /* DEVacct       */ NULL,
 #endif    
  /* DEVinstSize   */ &CAPiSize,
- /* DEVmodSize    */ &CAPmSize
+ /* DEVmodSize    */ &CAPmSize,
 #ifdef KLU
-,
-CAPbindklu,
-CAPbindkluComplex
+ /* DEVbindklu        */  CAPbindklu,
+ /* DEVbindkluComplex */  CAPbindkluComplex,
 #endif
 
 };
