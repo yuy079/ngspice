@@ -31,25 +31,25 @@ NIinit(CKTcircuit *ckt)
     int Error;
 #endif /* SPARSE */
 
-    #ifdef KLU
+#ifdef KLU
     ckt->CKTkluCommon = TMALLOC(klu_common, 1);
-    ckt->CKTkluSymbolic = NULL ;
-    ckt->CKTkluNumeric = NULL ;
-    ckt->CKTkluAp = NULL ;
-    ckt->CKTkluAi = NULL ;
-    ckt->CKTkluAx = NULL ;
-    ckt->CKTkluIntermediate = NULL ;
-    ckt->CKTkluIntermediate_Complex = NULL ;
-    ckt->CKTkluBind_Sparse = NULL ;
-    ckt->CKTkluBind_KLU = NULL ;
-    ckt->CKTkluBind_KLU_Complex = NULL ;
-    ckt->CKTkluDiag = NULL ;
-    ckt->CKTkluN = 0 ;
-    ckt->CKTklunz = 0 ;
-    ckt->CKTkluMODE = CKTkluON ; /* TO BE SUBSTITUTED WITH THE HEURISTICS */
+    ckt->CKTkluSymbolic = NULL;
+    ckt->CKTkluNumeric = NULL;
+    ckt->CKTkluAp = NULL;
+    ckt->CKTkluAi = NULL;
+    ckt->CKTkluAx = NULL;
+    ckt->CKTkluIntermediate = NULL;
+    ckt->CKTkluIntermediate_Complex = NULL;
+    ckt->CKTkluBind_Sparse = NULL;
+    ckt->CKTkluBind_KLU = NULL;
+    ckt->CKTkluBind_KLU_Complex = NULL;
+    ckt->CKTkluDiag = NULL;
+    ckt->CKTkluN = 0;
+    ckt->CKTklunz = 0;
+    ckt->CKTkluMODE = CKTkluON; /* TO BE SUBSTITUTED WITH THE HEURISTICS */
 
-    klu_defaults (ckt->CKTkluCommon) ;
-    #endif
+    klu_defaults (ckt->CKTkluCommon);
+#endif
 
     ckt->CKTniState = NIUNINITIALIZED;
     return(SMPnewMatrix( &(ckt->CKTmatrix) ) );

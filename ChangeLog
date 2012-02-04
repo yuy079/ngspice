@@ -1,4 +1,30 @@
 2012-02-04  Robert Larice
+ * configure.ac ,
+ * src/include/ngspice/cktdefs.h ,
+ * src/include/ngspice/smpdefs.h ,
+ * src/maths/ni/niaciter.c ,
+ * src/maths/ni/nidest.c ,
+ * src/maths/ni/niditer.c ,
+ * src/maths/ni/niinit.c ,
+ * src/maths/ni/niiter.c ,
+ * src/maths/sparse/spbuild.c ,
+ * src/maths/sparse/spoutput.c ,
+ * src/maths/sparse/spsmp.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktacct.c ,
+ * src/spicelib/analysis/cktdest.c ,
+ * src/spicelib/analysis/cktload.c ,
+ * src/spicelib/analysis/cktop.c ,
+ * src/spicelib/analysis/cktpzld.c ,
+ * src/spicelib/analysis/cktpzstr.c ,
+ * src/spicelib/analysis/tfanal.c ,
+ * src/spicelib/devices/bsim4v6/bsim4v6ext.h ,
+ * src/spicelib/devices/cap/capext.h ,
+ * src/spicelib/devices/res/resext.h ,
+ * src/spicelib/devices/vsrc/vsrcext.h :
+  whitespace changes
+
+2012-02-04  Robert Larice
  * src/maths/sparse/spbuild.c ,
  * src/maths/sparse/spoutput.c ,
  * src/maths/sparse/spsmp.c ,
