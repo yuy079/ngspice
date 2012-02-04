@@ -27,7 +27,12 @@ CKTpzLoad(CKTcircuit *ckt, SPcomplex *s)
 	ckt->CKTirhs[i] = 0.0;
     }
 
+    #ifdef KLU
+    SMPcClear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE) ;
+    #else
     SMPcClear(ckt->CKTmatrix);
+    #endif
+
     for (i = 0; i < DEVmaxnum; i++) {
         if (DEVices[i] && DEVices[i]->DEVpzLoad != NULL && ckt->CKThead[i] != NULL) {
             error = DEVices[i]->DEVpzLoad (ckt->CKThead[i], ckt, s);

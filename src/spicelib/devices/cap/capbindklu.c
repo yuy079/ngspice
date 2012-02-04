@@ -2,10 +2,10 @@
 Author: 2012 Francesco Lannutti
 **********/
 
-#include <ngspice/ngspice.h>
-#include <ngspice/cktdefs.h>
+#include "ngspice/ngspice.h"
+#include "ngspice/cktdefs.h"
 #include "capdefs.h"
-#include <ngspice/sperror.h>
+#include "ngspice/sperror.h"
 
 int
 CAPbindklu(GENmodel *inModel, CKTcircuit *ckt)

@@ -22,6 +22,11 @@
                          /* Need to change for SOI devs ? */
 
 #include "ngspice/smpdefs.h"
+
+#ifdef KLU
+#include "ngspice/klu.h"
+#endif
+
 #include "ngspice/ifsim.h"
 #include "ngspice/acdefs.h"
 #include "ngspice/gendefs.h"
@@ -106,6 +111,27 @@ struct CKTcircuit {
 #define GEAR 2
 
     SMPmatrix *CKTmatrix;       /* pointer to sparse matrix */
+
+#ifdef KLU
+    klu_common *CKTkluCommon;      /* KLU common object */
+    klu_symbolic *CKTkluSymbolic;  /* KLU symbolic object */
+    klu_numeric *CKTkluNumeric;    /* KLU numeric object */
+    int *CKTkluAp ;		   /* KLU column pointer */
+    int *CKTkluAi ;		   /* KLU row pointer */
+    double *CKTkluAx ;		   /* KLU element */
+    double *CKTkluIntermediate ;   /* KLU RHS Intermediate for Solve Real Step */
+    double *CKTkluIntermediate_Complex ;   /* KLU iRHS Intermediate for Solve Complex Step */
+    double **CKTkluBind_Sparse ;   /* KLU - Sparse original element position */
+    double **CKTkluBind_KLU ;	   /* KLU - KLU new element position */
+    double **CKTkluBind_KLU_Complex ; /* KLU - KLU new element position in Complex analysis */
+    double **CKTkluDiag ;	   /* KLU pointer to diagonal element to perform Gmin */
+    int CKTkluN ;		   /* KLU N, copied */
+    int CKTklunz ;		   /* KLU nz, copied for AC Analysis */
+    int CKTkluMODE ;		   /* KLU MODE parameter to enable KLU or not from the heuristic */
+    #define CKTkluON 1		   /* KLU MODE ON definition */
+    #define CKTkluOFF 0		   /* KLU MODE OFF definition */
+#endif
+
     int CKTniState;             /* internal state */
     double *CKTrhs;             /* current rhs value - being loaded */
     double *CKTrhsOld;          /* previous rhs value for convergence

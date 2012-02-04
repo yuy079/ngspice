@@ -52,8 +52,16 @@ retry:
 
 skip:
     if(ckt->CKTniState & NIACSHOULDREORDER) {
+
+	#ifdef KLU
+        error = SMPcReorder(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
+		&(ckt->CKTkluSymbolic), &(ckt->CKTkluNumeric), ckt->CKTkluCommon,
+		ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol, &ignore, ckt->CKTkluMODE) ;
+	#else
         error = SMPcReorder(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
                 ckt->CKTpivotRelTol,&ignore);
+	#endif
+
         ckt->CKTniState &= ~NIACSHOULDREORDER;
         if(error != 0) {
             /* either singular equations or no memory, in either case,
@@ -62,7 +70,15 @@ skip:
             return(error);
         }
     } else {
+
+	#ifdef KLU
+        error = SMPcLUfac(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
+			  ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
+			  ckt->CKTpivotAbsTol, ckt->CKTkluMODE) ;
+	#else
         error = SMPcLUfac(ckt->CKTmatrix,ckt->CKTpivotAbsTol);
+	#endif
+
         if(error != 0) {
             if(error == E_SINGULAR) {
                 /* the problem is that the matrix can't be solved with the
@@ -75,9 +91,15 @@ skip:
             return(error); /* can't handle E_BADMATRIX, so let caller */
         }
     } 
+
+    #ifdef KLU
+    SMPcSolve(ckt->CKTmatrix, ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
+	      ckt->CKTrhs, ckt->CKTirhs, ckt->CKTkluIntermediate_Complex, ckt->CKTrhsSpare, ckt->CKTirhsSpare, ckt->CKTkluMODE) ;
+    #else
     SMPcSolve(ckt->CKTmatrix,ckt->CKTrhs, 
             ckt->CKTirhs, ckt->CKTrhsSpare,
             ckt->CKTirhsSpare);
+    #endif
 
     *ckt->CKTrhs = 0;
     *ckt->CKTrhsSpare = 0;

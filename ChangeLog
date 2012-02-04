@@ -1,3 +1,91 @@
+2012-02-04  Robert Larice
+ * src/maths/KLU/amd_internal.h ,
+ * src/maths/KLU/btf_maxtrans.c ,
+ * src/maths/KLU/btf_order.c ,
+ * src/maths/KLU/btf_strongcomp.c ,
+ * src/maths/KLU/colamd.c ,
+ * src/maths/KLU/klu_internal.h ,
+ * src/spicelib/devices/bsim4v6/b4v6bindklu.c ,
+ * src/spicelib/devices/cap/capbindklu.c ,
+ * src/spicelib/devices/res/resbindklu.c ,
+ * src/spicelib/devices/vsrc/vsrcbindklu.c :
+  #include <ngspice/...>  -->  #include "ngspice/..."
+    use "" instead of <> to better express project membership
+
+2012-02-04  Robert Larice
+ * src/maths/ni/niinit.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktop.c :
+  use TMALLOC
+
+2012-02-04  Robert Larice
+ * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
+ * src/spicelib/devices/cap/capinit.c ,
+ * src/spicelib/devices/res/resinit.c ,
+ * src/spicelib/devices/vsrc/vsrcinit.c :
+  polish SPICEdev initialization
+
+2012-02-04  Robert Larice
+ * src/include/ngspice/devdefs.h ,
+ * src/include/ngspice/smpdefs.h ,
+ * src/include/ngspice/spmatrix.h ,
+ * src/maths/sparse/spbuild.c ,
+ * src/maths/sparse/spoutput.c ,
+ * src/maths/sparse/spsmp.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktload.c ,
+ * src/spicelib/analysis/cktsetup.c ,
+ * src/spicelib/devices/bsim4v6/bsim4v6ext.h ,
+ * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
+ * src/spicelib/devices/cap/capext.h ,
+ * src/spicelib/devices/cap/capinit.c ,
+ * src/spicelib/devices/res/resext.h ,
+ * src/spicelib/devices/res/resinit.c ,
+ * src/spicelib/devices/vsrc/vsrcext.h ,
+ * src/spicelib/devices/vsrc/vsrcinit.c :
+  drop Francesco Lannutti name stamp comments from changed files
+    #ifdef KLU is a synonym
+
+2012-02-04  Francesco Lannutti (Robert Larice)
+ * configure.ac ,
+ * src/Makefile.am ,
+ * src/include/ngspice/Makefile.am ,
+ * src/include/ngspice/cktdefs.h ,
+ * src/include/ngspice/devdefs.h ,
+ * src/include/ngspice/smpdefs.h ,
+ * src/include/ngspice/spmatrix.h ,
+ * src/maths/Makefile.am ,
+ * src/maths/ni/niaciter.c ,
+ * src/maths/ni/nidest.c ,
+ * src/maths/ni/niditer.c ,
+ * src/maths/ni/niinit.c ,
+ * src/maths/ni/niiter.c ,
+ * src/maths/sparse/spbuild.c ,
+ * src/maths/sparse/spoutput.c ,
+ * src/maths/sparse/spsmp.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktacct.c ,
+ * src/spicelib/analysis/cktdest.c ,
+ * src/spicelib/analysis/cktload.c ,
+ * src/spicelib/analysis/cktop.c ,
+ * src/spicelib/analysis/cktpzld.c ,
+ * src/spicelib/analysis/cktpzstr.c ,
+ * src/spicelib/analysis/cktsetup.c ,
+ * src/spicelib/analysis/tfanal.c ,
+ * src/spicelib/devices/bsim4v6/Makefile.am ,
+ * src/spicelib/devices/bsim4v6/bsim4v6ext.h ,
+ * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
+ * src/spicelib/devices/cap/Makefile.am ,
+ * src/spicelib/devices/cap/capext.h ,
+ * src/spicelib/devices/cap/capinit.c ,
+ * src/spicelib/devices/res/Makefile.am ,
+ * src/spicelib/devices/res/resext.h ,
+ * src/spicelib/devices/res/resinit.c ,
+ * src/spicelib/devices/vsrc/Makefile.am ,
+ * src/spicelib/devices/vsrc/vsrcext.h ,
+ * src/spicelib/devices/vsrc/vsrcinit.c :
+  import changed ngspice files for project KLU
+
 2012-02-04  Francesco Lannutti (Robert Larice)
  * src/include/ngspice/UFconfig.h ,
  * src/include/ngspice/amd.h ,
