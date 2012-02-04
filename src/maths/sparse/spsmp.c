@@ -102,14 +102,32 @@
 #include "spdefs.h"
 #include "ngspice/smpdefs.h"
 
+#ifdef KLU
+#include "ngspice/klu.h"
+#endif
+
 #if defined (_MSC_VER)
 extern double scalbn(double, int);
 #define logb _logb
 extern double logb(double);
 #endif
 
+#ifdef KLU
+static void LoadGmin_CSC (double **diag, int n, double Gmin) ;
+#endif
 static void LoadGmin(SMPmatrix *eMatrix, double Gmin);
 
+#ifdef KLU
+void SMPmatrix_CSC (SMPmatrix *Matrix, int **Ap, int **Ai, double **Ax, int n, double **Bind_Sparse, double **Bind_KLU, double **Diag) {
+    spMatrix_CSC (Matrix, *Ap, *Ai, *Ax, n, Bind_Sparse, Bind_KLU, Diag) ;
+    return ;
+}
+void SMPnnz (SMPmatrix *Matrix, int *CKTkluN, int *CKTklunz) {
+    *CKTkluN = spGetSize (Matrix, 1) ;
+    *CKTklunz = Matrix->Elements ;
+    return ;
+}
+#endif
 
 /*
  * SMPaddElt()
@@ -133,20 +151,54 @@ SMPmakeElt(SMPmatrix *Matrix, int Row, int Col)
 /*
  * SMPcClear()
  */
+
+#ifdef KLU
+void
+SMPcClear(SMPmatrix *Matrix, double *Ax, int CKTkluMODE)
+{
+    int i, nz ;
+    if (CKTkluMODE) {
+	spClear( Matrix ) ;
+	if (Ax != NULL) {
+	    nz = Matrix->Elements ;
+    	    for (i = 0 ; i < 2 * nz ; i++) Ax [i] = 0 ;
+	}
+    }
+    else spClear( Matrix ) ;
+}
+#else
 void
 SMPcClear(SMPmatrix *Matrix)
 {
     spClear( Matrix );
 }
+#endif
 
 /*
  * SMPclear()
  */
+
+#ifdef KLU
+void
+SMPclear(SMPmatrix *Matrix, double *Ax, int CKTkluMODE)
+{
+    int i, nz ;
+    if (CKTkluMODE) {
+	spClear( Matrix ) ;
+	if (Ax != NULL) {
+	    nz = Matrix->Elements ;
+    	    for (i = 0 ; i < nz ; i++) Ax [i] = 0 ;
+	}
+    }
+    else spClear( Matrix ) ;
+}
+#else
 void
 SMPclear(SMPmatrix *Matrix)
 {
     spClear( Matrix );
 }
+#endif
 
 #define NG_IGNORE(x)  (void)x
 
@@ -154,6 +206,27 @@ SMPclear(SMPmatrix *Matrix)
  * SMPcLUfac()
  */
 /*ARGSUSED*/
+
+#ifdef KLU
+int
+SMPcLUfac(SMPmatrix *Matrix, int *Ap, int *Ai, double *Ax, klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double PivTol, int CKTkluMODE)
+{
+    int ret ;
+    if (CKTkluMODE) {
+	NG_IGNORE(PivTol) ;
+
+	spSetComplex( Matrix ) ;
+	ret = klu_z_refactor (Ap, Ai, Ax, Symbolic, Numeric, Common) ;
+	return (!ret) ;
+    }
+    else {
+	NG_IGNORE(PivTol) ;
+
+	spSetComplex( Matrix ) ;
+	return spFactor( Matrix ) ;
+    }
+}
+#else
 int
 SMPcLUfac(SMPmatrix *Matrix, double PivTol)
 {
@@ -162,11 +235,34 @@ SMPcLUfac(SMPmatrix *Matrix, double PivTol)
     spSetComplex( Matrix );
     return spFactor( Matrix );
 }
+#endif
 
 /*
  * SMPluFac()
  */
 /*ARGSUSED*/
+
+#ifdef KLU
+int
+SMPluFac(SMPmatrix *Matrix, int *Ap, int *Ai, double *Ax, klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double **diag, double PivTol, double Gmin, int CKTkluMODE)
+{
+    int n, ret ;
+    if (CKTkluMODE) {
+	NG_IGNORE(PivTol) ;
+	spSetReal( Matrix ) ;
+	n = spGetSize (Matrix, 1) ;
+	LoadGmin_CSC (diag, n, Gmin) ;
+	ret = klu_refactor (Ap, Ai, Ax, Symbolic, Numeric, Common) ;
+	return (!ret) ;
+    }
+    else {
+	NG_IGNORE(PivTol) ;
+	spSetReal( Matrix ) ;
+	LoadGmin( Matrix, Gmin ) ;
+	return spFactor( Matrix ) ;
+    }
+}
+#else
 int
 SMPluFac(SMPmatrix *Matrix, double PivTol, double Gmin)
 {
@@ -175,10 +271,32 @@ SMPluFac(SMPmatrix *Matrix, double PivTol, double Gmin)
     LoadGmin( Matrix, Gmin );
     return spFactor( Matrix );
 }
+#endif
 
 /*
  * SMPcReorder()
  */
+
+#ifdef KLU
+int
+SMPcReorder(SMPmatrix *Matrix, int *Ap, int *Ai, double *Ax, klu_symbolic **Symbolic, klu_numeric **Numeric, klu_common *Common, double PivTol, double PivRel, int *NumSwaps, int CKTkluMODE)
+{
+    if (CKTkluMODE) {
+	*NumSwaps = 1 ;
+	spSetComplex( Matrix ) ;
+	klu_z_free_numeric (Numeric, Common) ;
+	*Numeric = klu_z_factor (Ap, Ai, Ax, *Symbolic, Common) ;
+	if (*Numeric == NULL) return 1 ;
+	else return 0 ;
+    }
+    else {
+	*NumSwaps = 1;
+	spSetComplex( Matrix );
+	return spOrderAndFactor( Matrix, NULL,
+				 (spREAL)PivRel, (spREAL)PivTol, YES );
+    }
+}
+#else
 int
 SMPcReorder(SMPmatrix *Matrix, double PivTol, double PivRel,
 	    int *NumSwaps)
@@ -188,10 +306,39 @@ SMPcReorder(SMPmatrix *Matrix, double PivTol, double PivRel,
     return spOrderAndFactor( Matrix, NULL,
                              (spREAL)PivRel, (spREAL)PivTol, YES );
 }
+#endif
 
 /*
  * SMPreorder()
  */
+
+#ifdef KLU
+int
+SMPreorder(SMPmatrix *Matrix, int *Ap, int *Ai, double *Ax, klu_symbolic *Symbolic, klu_numeric **Numeric, klu_common *Common, double **diag, double PivTol, double PivRel, double Gmin, int CKTkluMODE)
+{
+    int n ;
+    if (CKTkluMODE) {
+	spSetReal( Matrix );
+	n = spGetSize (Matrix, 1) ;
+	LoadGmin_CSC (diag, n, Gmin) ;
+	if (*Numeric != NULL) {
+	    klu_free_numeric (Numeric, Common) ;
+	    *Numeric = klu_factor (Ap, Ai, Ax, Symbolic, Common) ;
+	}
+	else {
+	    *Numeric = klu_factor (Ap, Ai, Ax, Symbolic, Common) ;
+	}
+	if (*Numeric == NULL) return 1 ;
+	else return 0 ;
+    }
+    else {
+	spSetReal( Matrix );
+	LoadGmin( Matrix, Gmin );
+	return spOrderAndFactor( Matrix, NULL,
+				 (spREAL)PivRel, (spREAL)PivTol, YES );
+    }
+}
+#else
 int
 SMPreorder(SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 {
@@ -200,6 +347,7 @@ SMPreorder(SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
     return spOrderAndFactor( Matrix, NULL,
                              (spREAL)PivRel, (spREAL)PivTol, YES );
 }
+#endif
 
 /*
  * SMPcaSolve()
@@ -208,6 +356,7 @@ void
 SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
 	   double Spare[], double iSpare[])
 {
+    printf ("SMPcaSolve\n") ;
     NG_IGNORE(iSpare);
     NG_IGNORE(Spare);
 
@@ -217,6 +366,40 @@ SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
 /*
  * SMPcSolve()
  */
+
+#ifdef KLU
+void
+SMPcSolve(SMPmatrix *Matrix, klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double RHS[], double iRHS[], double Intermediate[], double Spare[], double iSpare[], int CKTkluMODE)
+{
+    int ret, n, i, *pExtOrder ;
+    if (CKTkluMODE) {
+	n = spGetSize (Matrix, 1) ;
+
+	NG_IGNORE(iSpare);
+	NG_IGNORE(Spare);
+
+	pExtOrder = &Matrix->IntToExtRowMap[n];
+	for (i = 2 * n - 1 ; i > 0 ; i -= 2) {
+	    Intermediate [i] = RHS [*(pExtOrder)] ;
+	    Intermediate [i - 1] = iRHS [*(pExtOrder--)] ;
+	}
+
+	ret = klu_z_solve (Symbolic, Numeric, n, 1, Intermediate, Common) ;
+
+	pExtOrder = &Matrix->IntToExtColMap[n];
+	for (i = 2 * n - 1 ; i > 0 ; i -= 2) {
+	    RHS [*(pExtOrder)] = Intermediate [i] ;
+	    iRHS [*(pExtOrder--)] = Intermediate [i - 1] ;
+	}
+    }
+    else {
+	NG_IGNORE(iSpare);
+	NG_IGNORE(Spare);
+
+	spSolve( Matrix, RHS, RHS, iRHS, iRHS );
+    }
+}
+#else
 void
 SMPcSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
 	  double Spare[], double iSpare[])
@@ -226,10 +409,37 @@ SMPcSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
 
     spSolve( Matrix, RHS, RHS, iRHS, iRHS );
 }
+#endif
 
 /*
  * SMPsolve()
  */
+
+#ifdef KLU
+void
+SMPsolve(SMPmatrix *Matrix, klu_symbolic *Symbolic, klu_numeric *Numeric, klu_common *Common, double RHS[], double Intermediate[], double Spare[], int CKTkluMODE)
+{
+    int ret, n, i, *pExtOrder ;
+    if (CKTkluMODE) {
+	n = spGetSize (Matrix, 1) ;
+
+	NG_IGNORE(Spare);
+
+	pExtOrder = &Matrix->IntToExtRowMap[n];
+	for (i = n - 1 ; i >= 0 ; i--) Intermediate [i] = RHS [*(pExtOrder--)] ;
+
+	ret = klu_solve (Symbolic, Numeric, n, 1, Intermediate, Common) ;
+
+	pExtOrder = &Matrix->IntToExtColMap[n];
+	for (i = n - 1 ; i >= 0 ; i--) RHS [*(pExtOrder--)] = Intermediate [i] ;
+    }
+    else {
+	NG_IGNORE(Spare);
+
+	spSolve( Matrix, RHS, RHS, NULL, NULL );
+    }
+}
+#else
 void
 SMPsolve(SMPmatrix *Matrix, double RHS[], double Spare[])
 {
@@ -237,6 +447,7 @@ SMPsolve(SMPmatrix *Matrix, double RHS[], double Spare[])
 
     spSolve( Matrix, RHS, RHS, NULL, NULL );
 }
+#endif
 
 /*
  * SMPmatSize()
@@ -261,21 +472,68 @@ SMPnewMatrix(SMPmatrix **pMatrix)
 /*
  * SMPdestroy()
  */
+
+#ifdef KLU
+void
+SMPdestroy(SMPmatrix *Matrix, int **Ap, int **Ai, double **Ax, klu_symbolic **Symbolic, klu_numeric **Numeric, klu_common *Common, double ***bind_Sparse_Ptr, double ***bind_KLU_Ptr, double ***bind_KLU_Complex_Ptr, double ***diagPtr, double **Intermediate, double **Intermediate_Complex, int CKTkluMODE)
+{
+    if (CKTkluMODE) {
+	printf("Destroy\n");
+	spDestroy( Matrix );
+	klu_free_numeric (Numeric, Common) ;
+	klu_free_symbolic (Symbolic, Common) ;
+	free (*Ap) ;
+	free (*Ai) ;
+	free (*Ax) ;
+	free (*bind_Sparse_Ptr) ;
+	free (*bind_KLU_Ptr) ;
+	free (*bind_KLU_Complex_Ptr) ;
+	free (*diagPtr) ;
+	free (*Intermediate) ;
+	free (*Intermediate_Complex) ;
+    }
+    else {
+	spDestroy( Matrix );
+    }
+}
+#else
 void
 SMPdestroy(SMPmatrix *Matrix)
 {
     spDestroy( Matrix );
 }
+#endif
 
 /*
  * SMPpreOrder()
  */
+
+#ifdef KLU
+int
+SMPpreOrder(SMPmatrix *Matrix, int *Ap, int *Ai, klu_symbolic **Symbolic, klu_common *Common, int CKTkluMODE)
+{
+    int n ;
+    if (CKTkluMODE) {
+//	spMNA_Preorder( Matrix );
+
+	n = spGetSize (Matrix, 1) ;
+	*Symbolic = klu_analyze (n, Ap, Ai, Common) ;
+
+	return 0 ;
+    }
+    else {
+	spMNA_Preorder( Matrix );
+	return spError( Matrix );
+    }
+}
+#else
 int
 SMPpreOrder(SMPmatrix *Matrix)
 {
     spMNA_Preorder( Matrix );
     return spError( Matrix );
 }
+#endif
 
 /*
  * SMPprint()
@@ -410,6 +668,21 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
  *  for compatibility with Spice3.
  */
 
+
+/* Francesco Lannutti */
+#ifdef KLU
+static void LoadGmin_CSC (double **diag, int n, double Gmin) {
+
+	int i ;
+	if (Gmin != 0.0) {
+		for (i = 0 ; i < n ; i++) {
+			if (diag [i] != NULL) *(diag [i]) += Gmin ;
+		}
+	}
+
+	return ;
+}
+#endif
 static void
 LoadGmin(SMPmatrix *eMatrix, double Gmin)
 {

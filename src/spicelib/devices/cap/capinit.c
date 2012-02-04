@@ -72,6 +72,15 @@ SPICEdev CAPinfo = {
 #endif    
  /* DEVinstSize   */ &CAPiSize,
  /* DEVmodSize    */ &CAPmSize
+
+/* Francesco Lannutti */
+
+#ifdef KLU
+,
+CAPbindklu,
+CAPbindkluComplex
+#endif
+
 };
 
 

@@ -3,4 +3,9 @@
 SUBDIRS = cmaths ni sparse poly deriv misc fft
 DIST_SUBDIRS = cmaths ni sparse poly deriv misc fft
 
+if KLU_WANTED
+SUBDIRS += KLU
+DIST_SUBDIRS += KLU
+endif
+
 MAINTAINERCLEANFILES = Makefile.in

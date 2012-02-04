@@ -18,6 +18,9 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cktdefs.h"
 #include "ngspice/spmatrix.h"
 
+#ifdef KLU
+#include "ngspice/klu.h"
+#endif
 
 
 /* ARGSUSED */
@@ -40,14 +43,24 @@ CKTacct(CKTcircuit *ckt, JOB *anal, int which, IFvalue *val)
         break;
     case OPT_FILLNZ:
 	if ( ckt->CKTmatrix != NULL ) {
+	    #ifdef KLU
+	    if (ckt->CKTkluMODE) val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz - ckt->CKTklunz ;
+	    else val->iValue = spFillinCount(ckt->CKTmatrix);
+	    #else
 	    val->iValue = spFillinCount(ckt->CKTmatrix);
+	    #endif
 	} else {
 	    val->iValue = 0;
 	}
         break;
     case OPT_TOTALNZ:
 	if ( ckt->CKTmatrix != NULL ) {
+	    #ifdef KLU
+	    if (ckt->CKTkluMODE) val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz ;
+	    else val->iValue = spElementCount(ckt->CKTmatrix);
+	    #else
 	    val->iValue = spElementCount(ckt->CKTmatrix);
+	    #endif
 	} else {
 	    val->iValue = 0;
 	}

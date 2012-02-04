@@ -30,6 +30,31 @@ CKTop (CKTcircuit * ckt, long int firstmode, long int continuemode,
 #endif
 ckt->CKTmode = firstmode;
 
+#ifdef KLU
+    if (ckt->CKTkluMODE) {
+	int n, nz ;
+	n = ckt->CKTkluN ;
+	nz = ckt->CKTklunz ;
+	ckt->CKTkluAp = (int *) malloc ((n + 1) * sizeof(int)) ;
+	ckt->CKTkluAi = (int *) malloc (nz * sizeof(int)) ;
+	ckt->CKTkluAx = (double *) malloc (nz * sizeof(double)) ;
+	ckt->CKTkluIntermediate = (double *) malloc (n * sizeof(double)) ;
+
+	ckt->CKTkluBind_Sparse = (double **) malloc (nz * sizeof(double *)) ;
+	ckt->CKTkluBind_KLU = (double **) malloc (nz * sizeof(double *)) ;
+
+	ckt->CKTkluDiag = (double **) malloc (n * sizeof(double *)) ;
+
+	SMPmatrix_CSC (ckt->CKTmatrix, &(ckt->CKTkluAp), &(ckt->CKTkluAi), &(ckt->CKTkluAx),
+			n, ckt->CKTkluBind_Sparse, ckt->CKTkluBind_KLU, ckt->CKTkluDiag) ;
+
+	DEVices[13]->DEVbindklu (ckt->CKThead[13], ckt) ;
+	DEVices[17]->DEVbindklu (ckt->CKThead[17], ckt) ;
+	DEVices[40]->DEVbindklu (ckt->CKThead[40], ckt) ;
+	DEVices[48]->DEVbindklu (ckt->CKThead[48], ckt) ;
+    }
+#endif
+
   if (!ckt->CKTnoOpIter){
 #ifdef XSPICE
 /* gtri - begin - wbk - add convergence problem reporting flags */

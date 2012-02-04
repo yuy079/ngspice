@@ -74,6 +74,14 @@ SPICEdev RESinfo = {
  /* DEVinstSize   */ &RESiSize,
  /* DEVmodSize    */ &RESmSize
 
+/* Francesco Lannutti */
+
+#ifdef KLU
+,
+RESbindklu,
+RESbindkluComplex
+#endif
+
 };
 
 

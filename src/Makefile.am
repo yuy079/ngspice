@@ -169,6 +169,10 @@ ngspice_LDADD += \
 	maths/sparse/libsparse.la \
 	misc/libmisc.la
 
+if KLU_WANTED
+ngspice_LDADD += maths/KLU/libKLU.la
+endif
+
 if !WINDOWS
 if !NO_X
 ngspice_LDADD += frontend/help/libhlp.la
@@ -267,6 +271,9 @@ ngmultidec_LDADD =  \
 	maths/sparse/libsparse.la \
 	misc/libmisc.la
 
+if KLU_WANTED
+ngmultidec_LDADD += maths/KLU/libKLU.la
+endif
 
 ## ngmakeidx:
 
@@ -394,6 +401,10 @@ libspice_la_LIBADD += \
 	ciderlib/oned/libcideroned.la     \
 	ciderlib/input/libciderinput.la   \
 	ciderlib/support/libcidersuprt.la
+endif
+
+if KLU_WANTED
+libspice_la_LIBADD += maths/KLU/libKLU.la
 endif
 
 libspice_la_LIBADD += \

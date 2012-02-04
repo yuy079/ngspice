@@ -244,6 +244,31 @@ ACan(CKTcircuit *ckt, int restart)
 
     INIT_STATS();
 
+/* Francesco Lannutti */
+
+#ifdef KLU
+   if (ckt->CKTkluMODE) {
+	int i, m ;
+	double *temp ;
+	temp = (double *) malloc (2 * ckt->CKTklunz * sizeof(double)) ;
+	ckt->CKTkluBind_KLU_Complex = (double **) malloc (ckt->CKTklunz * sizeof(double *)) ;
+	ckt->CKTkluIntermediate_Complex = (double *) malloc (2 * ckt->CKTkluN * sizeof(double)) ;
+	m = 0 ;
+	for (i = 0 ; i < ckt->CKTklunz ; i++) {
+	    ckt->CKTkluBind_KLU_Complex [i] = &(temp [m]) ;
+	    m += 2 ;
+	}
+
+	DEVices[13]->DEVbindkluComplex (ckt->CKThead[13], ckt) ;
+	DEVices[17]->DEVbindkluComplex (ckt->CKThead[17], ckt) ;
+	DEVices[40]->DEVbindkluComplex (ckt->CKThead[40], ckt) ;
+	DEVices[48]->DEVbindkluComplex (ckt->CKThead[48], ckt) ;
+
+	free (ckt->CKTkluAx) ;
+	ckt->CKTkluAx = temp ;
+    }
+#endif
+
     /* main loop through all scheduled frequencies */
     while (freq <= job->ACstopFreq + freqTol) {
         if(SPfrontEnd->IFpauseTest()) {
@@ -406,7 +431,14 @@ CKTacLoad(CKTcircuit *ckt)
         *(ckt->CKTrhs+i)=0;
         *(ckt->CKTirhs+i)=0;
     }
+
+/* Francesco Lannutti */
+
+    #ifdef KLU
+    SMPcClear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE) ;
+    #else
     SMPcClear(ckt->CKTmatrix);
+    #endif
 
     for (i=0;i<DEVmaxnum;i++) {
         if ( DEVices[i] && DEVices[i]->DEVacLoad && ckt->CKThead[i] ) {

@@ -187,6 +187,10 @@ dnl --enable-openmp: Use OpenMP on multi-core processors
 AC_ARG_ENABLE(openmp,
     AS_HELP_STRING([--enable-openmp],[Use OpenMP parallel processing]))
 
+dnl --enable-KLU: Use KLU linear systems solver
+AC_ARG_ENABLE(klu,
+    AS_HELP_STRING([--enable-klu],[Use KLU linear systems solver]))
+
 dnl readline and editline cannot both be enabled
 if test "$with_editline" = "yes"; then
     if test "$with_readline" = "yes"; then
@@ -1000,8 +1004,18 @@ dnl test if timing function is o.k.
                      [AC_MSG_ERROR(OpenMP not working correctly.)])
 fi
 
+dnl Add KLU solver to ngspice
+if test "$enable_klu" = "yes"; then
+    AC_DEFINE(KLU,[],[Define if we want KLU linear systems solver])
+    AC_MSG_RESULT(WARNING: KLU solver enabled)
+fi
+AM_CONDITIONAL([KLU_WANTED], [test "$enable_klu" = "yes"])
+
 dnl Output Files
 dnl ------------
+
+AM_COND_IF([KLU_WANTED],
+	[AC_CONFIG_FILES([src/maths/KLU/Makefile])])
 
 AC_CONFIG_FILES([Makefile
                  man/Makefile
