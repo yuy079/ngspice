@@ -1,4 +1,14 @@
 2012-02-04  Robert Larice
+ * src/maths/sparse/spbuild.c ,
+ * src/maths/sparse/spoutput.c ,
+ * src/maths/sparse/spsmp.c ,
+ * src/spicelib/analysis/cktacct.c ,
+ * src/spicelib/analysis/cktload.c ,
+ * src/spicelib/analysis/cktop.c ,
+ * src/spicelib/analysis/cktsetup.c :
+  nit pickery, tiny rewrites
+
+2012-02-04  Robert Larice
  * src/maths/KLU/amd_internal.h ,
  * src/maths/KLU/btf_maxtrans.c ,
  * src/maths/KLU/btf_order.c ,

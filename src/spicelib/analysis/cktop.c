@@ -32,9 +32,9 @@ ckt->CKTmode = firstmode;
 
 #ifdef KLU
     if (ckt->CKTkluMODE) {
-	int n, nz ;
-	n = ckt->CKTkluN ;
-	nz = ckt->CKTklunz ;
+        int n  = ckt->CKTkluN;
+        int nz = ckt->CKTklunz;
+
 	ckt->CKTkluAp		= TMALLOC (int, n + 1);
 	ckt->CKTkluAi		= TMALLOC (int, nz);
 	ckt->CKTkluAx		= TMALLOC (double, nz);

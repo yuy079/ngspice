@@ -70,7 +70,8 @@ CKTsetup(CKTcircuit *ckt)
     }
 
 #ifdef KLU
-    if (ckt->CKTkluMODE) SMPnnz (ckt->CKTmatrix, &(ckt->CKTkluN), &(ckt->CKTklunz)) ;
+    if (ckt->CKTkluMODE)
+        SMPnnz (ckt->CKTmatrix, &(ckt->CKTkluN), &(ckt->CKTklunz));
 #endif
 
     for(i=0;i<=MAX(2,ckt->CKTmaxOrder)+1;i++) { /* dctran needs 3 states as minimum */
