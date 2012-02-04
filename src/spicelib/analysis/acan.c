@@ -248,9 +248,9 @@ ACan(CKTcircuit *ckt, int restart)
    if (ckt->CKTkluMODE) {
 	int i, m ;
 	double *temp ;
-	temp = (double *) malloc (2 * ckt->CKTklunz * sizeof(double)) ;
-	ckt->CKTkluBind_KLU_Complex = (double **) malloc (ckt->CKTklunz * sizeof(double *)) ;
-	ckt->CKTkluIntermediate_Complex = (double *) malloc (2 * ckt->CKTkluN * sizeof(double)) ;
+        temp = TMALLOC(double, 2 * ckt->CKTklunz);
+        ckt->CKTkluBind_KLU_Complex = TMALLOC(double *, ckt->CKTklunz);
+        ckt->CKTkluIntermediate_Complex = TMALLOC (double, 2 * ckt->CKTkluN);
 	m = 0 ;
 	for (i = 0 ; i < ckt->CKTklunz ; i++) {
 	    ckt->CKTkluBind_KLU_Complex [i] = &(temp [m]) ;

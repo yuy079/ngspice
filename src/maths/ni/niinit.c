@@ -32,7 +32,7 @@ NIinit(CKTcircuit *ckt)
 #endif /* SPARSE */
 
     #ifdef KLU
-    ckt->CKTkluCommon = (klu_common *) malloc ( sizeof(klu_common) ) ;
+    ckt->CKTkluCommon = TMALLOC(klu_common, 1);
     ckt->CKTkluSymbolic = NULL ;
     ckt->CKTkluNumeric = NULL ;
     ckt->CKTkluAp = NULL ;

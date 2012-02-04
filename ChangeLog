@@ -1,4 +1,10 @@
 2012-02-04  Robert Larice
+ * src/maths/ni/niinit.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktop.c :
+  use TMALLOC
+
+2012-02-04  Robert Larice
  * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
  * src/spicelib/devices/cap/capinit.c ,
  * src/spicelib/devices/res/resinit.c ,

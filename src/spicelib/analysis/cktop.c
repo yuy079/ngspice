@@ -35,15 +35,15 @@ ckt->CKTmode = firstmode;
 	int n, nz ;
 	n = ckt->CKTkluN ;
 	nz = ckt->CKTklunz ;
-	ckt->CKTkluAp = (int *) malloc ((n + 1) * sizeof(int)) ;
-	ckt->CKTkluAi = (int *) malloc (nz * sizeof(int)) ;
-	ckt->CKTkluAx = (double *) malloc (nz * sizeof(double)) ;
-	ckt->CKTkluIntermediate = (double *) malloc (n * sizeof(double)) ;
+	ckt->CKTkluAp		= TMALLOC (int, n + 1);
+	ckt->CKTkluAi		= TMALLOC (int, nz);
+	ckt->CKTkluAx		= TMALLOC (double, nz);
+	ckt->CKTkluIntermediate = TMALLOC (double, n );
 
-	ckt->CKTkluBind_Sparse = (double **) malloc (nz * sizeof(double *)) ;
-	ckt->CKTkluBind_KLU = (double **) malloc (nz * sizeof(double *)) ;
+	ckt->CKTkluBind_Sparse	= TMALLOC (double *, nz);
+	ckt->CKTkluBind_KLU	= TMALLOC (double *, nz);
 
-	ckt->CKTkluDiag = (double **) malloc (n * sizeof(double *)) ;
+	ckt->CKTkluDiag		= TMALLOC (double *, n);
 
 	SMPmatrix_CSC (ckt->CKTmatrix, &(ckt->CKTkluAp), &(ckt->CKTkluAi), &(ckt->CKTkluAx),
 			n, ckt->CKTkluBind_Sparse, ckt->CKTkluBind_KLU, ckt->CKTkluDiag) ;
