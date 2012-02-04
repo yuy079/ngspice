@@ -19,8 +19,8 @@ Modified: 2000  AlansFixes
 #endif
 
 #ifdef KLU
-void SMPmatrix_CSC (SMPmatrix *, int **, int **, double **, int, double **, double **, double **) ;
-void SMPnnz (SMPmatrix *, int *, int *) ;
+void SMPmatrix_CSC (SMPmatrix *, int **, int **, double **, int, double **, double **, double **);
+void SMPnnz (SMPmatrix *, int *, int *);
 #endif
 
 int SMPaddElt( SMPmatrix *, int , int , double );

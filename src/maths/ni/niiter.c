@@ -96,12 +96,12 @@ NIiter(CKTcircuit *ckt, int maxIter)
 
             if(!(ckt->CKTniState & NIDIDPREORDER)) {
 
-		#ifdef KLU
+#ifdef KLU
                 error = SMPpreOrder(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi,
-			&(ckt->CKTkluSymbolic), ckt->CKTkluCommon, ckt->CKTkluMODE);
-		#else
+                        &(ckt->CKTkluSymbolic), ckt->CKTkluCommon, ckt->CKTkluMODE);
+#else
                 error = SMPpreOrder(ckt->CKTmatrix);
-		#endif
+#endif
 
                 if(error) {
                     ckt->CKTstat->STATnumIter += iterno;
@@ -121,14 +121,14 @@ NIiter(CKTcircuit *ckt, int maxIter)
             if(ckt->CKTniState & NISHOULDREORDER) {
                 startTime = SPfrontEnd->IFseconds();
 
-		#ifdef KLU
+#ifdef KLU
                 error = SMPreorder(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-			ckt->CKTkluSymbolic, &(ckt->CKTkluNumeric), ckt->CKTkluCommon, ckt->CKTkluDiag,
-			ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol, ckt->CKTdiagGmin, ckt->CKTkluMODE);
-		#else
+                        ckt->CKTkluSymbolic, &(ckt->CKTkluNumeric), ckt->CKTkluCommon, ckt->CKTkluDiag,
+                        ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol, ckt->CKTdiagGmin, ckt->CKTkluMODE);
+#else
                 error = SMPreorder(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
                         ckt->CKTpivotRelTol,ckt->CKTdiagGmin);
-		#endif
+#endif
 
                 ckt->CKTstat->STATreorderTime +=
                         SPfrontEnd->IFseconds() - startTime;
@@ -154,14 +154,14 @@ NIiter(CKTcircuit *ckt, int maxIter)
             } else {
                 startTime = SPfrontEnd->IFseconds();
 
-		#ifdef KLU
-		error = SMPluFac (ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-			ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon, ckt->CKTkluDiag,
-			ckt->CKTpivotAbsTol, ckt->CKTdiagGmin, ckt->CKTkluMODE) ;
-		#else
+#ifdef KLU
+                error = SMPluFac (ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
+                        ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon, ckt->CKTkluDiag,
+                        ckt->CKTpivotAbsTol, ckt->CKTdiagGmin, ckt->CKTkluMODE);
+#else
                 error=SMPluFac(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
                         ckt->CKTdiagGmin);
-		#endif
+#endif
 
                 ckt->CKTstat->STATdecompTime +=
                         SPfrontEnd->IFseconds() - startTime;
@@ -192,12 +192,12 @@ NIiter(CKTcircuit *ckt, int maxIter)
             
             startTime = SPfrontEnd->IFseconds();
 
-	    #ifdef KLU
+#ifdef KLU
             SMPsolve(ckt->CKTmatrix, ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-		     ckt->CKTrhs, ckt->CKTkluIntermediate, ckt->CKTrhsSpare, ckt->CKTkluMODE);
-	    #else
+                     ckt->CKTrhs, ckt->CKTkluIntermediate, ckt->CKTrhsSpare, ckt->CKTkluMODE);
+#else
             SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
-	    #endif
+#endif
 
             ckt->CKTstat->STATsolveTime += SPfrontEnd->IFseconds() -
                     startTime;
