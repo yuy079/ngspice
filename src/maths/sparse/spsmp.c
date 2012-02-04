@@ -669,7 +669,6 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
  */
 
 
-/* Francesco Lannutti */
 #ifdef KLU
 static void LoadGmin_CSC (double **diag, int n, double Gmin) {
 

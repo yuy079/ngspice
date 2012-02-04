@@ -101,8 +101,6 @@ typedef struct SPICEdev {
     int *DEVinstSize;    /* size of an instance */
     int *DEVmodSize;     /* size of a model */
 
-/* Francesco Lannutti */
-
 #ifdef KLU
     int (*DEVbindklu)(GENmodel*, CKTcircuit*);
     int (*DEVbindkluComplex)(GENmodel*, CKTcircuit*);

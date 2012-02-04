@@ -21,8 +21,6 @@ extern int RESsetup(SMPmatrix*,GENmodel*,CKTcircuit*,int*);
 extern int REStemp(GENmodel*,CKTcircuit*);
 extern int RESnoise(int,int,GENmodel*,CKTcircuit*,Ndata*,double*);
 
-/* Francesco Lannutti */
-
 #ifdef KLU
 extern int RESbindklu(GENmodel*,CKTcircuit*);
 extern int RESbindkluComplex(GENmodel*,CKTcircuit*);

@@ -295,8 +295,6 @@ extern  void     spSolve( MatrixPtr, spREAL*, spREAL*, spREAL*, spREAL* );
 extern  void     spSolveTransposed(MatrixPtr,spREAL*,spREAL*,spREAL*,spREAL*);
 
 
-/* Francesco Lannutti */
-
 extern int WriteCol_original(MatrixPtr, int, spREAL *, int *, spREAL **, spREAL **, spREAL **);
 extern void spMatrix_CSC(MatrixPtr, int *, int *, double *, int, double **, double **, double **);
 extern void spMatrix_CSC_dump(MatrixPtr, char *);

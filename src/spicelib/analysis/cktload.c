@@ -58,9 +58,6 @@ CKTload(CKTcircuit *ckt)
         *(ckt->CKTrhs+i)=0;
     }
 
-
-	/* Francesco Lannutti */
-
 	#ifdef KLU
     SMPclear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE);
 	#else

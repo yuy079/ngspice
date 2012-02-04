@@ -73,9 +73,6 @@ SPICEdev RESinfo = {
 #endif                        
  /* DEVinstSize   */ &RESiSize,
  /* DEVmodSize    */ &RESmSize
-
-/* Francesco Lannutti */
-
 #ifdef KLU
 ,
 RESbindklu,

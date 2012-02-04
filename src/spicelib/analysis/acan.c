@@ -244,8 +244,6 @@ ACan(CKTcircuit *ckt, int restart)
 
     INIT_STATS();
 
-/* Francesco Lannutti */
-
 #ifdef KLU
    if (ckt->CKTkluMODE) {
 	int i, m ;
@@ -431,8 +429,6 @@ CKTacLoad(CKTcircuit *ckt)
         *(ckt->CKTrhs+i)=0;
         *(ckt->CKTirhs+i)=0;
     }
-
-/* Francesco Lannutti */
 
     #ifdef KLU
     SMPcClear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE) ;

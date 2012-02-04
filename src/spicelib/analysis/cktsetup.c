@@ -69,8 +69,6 @@ CKTsetup(CKTcircuit *ckt)
         }
     }
 
-/* Francesco Lannutti */
-
 #ifdef KLU
     if (ckt->CKTkluMODE) SMPnnz (ckt->CKTmatrix, &(ckt->CKTkluN), &(ckt->CKTklunz)) ;
 #endif

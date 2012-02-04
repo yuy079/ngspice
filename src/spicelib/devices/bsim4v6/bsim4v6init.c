@@ -73,9 +73,6 @@ SPICEdev BSIM4v6info = {
 #endif
     &BSIM4v6iSize,   /* DEVinstSize    */
     &BSIM4v6mSize    /* DEVmodSize     */
-
-/* Francesco Lannutti */
-
 #ifdef KLU
 ,
 BSIM4v6bindklu,

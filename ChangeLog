@@ -1,3 +1,24 @@
+2012-02-04  Robert Larice
+ * src/include/ngspice/devdefs.h ,
+ * src/include/ngspice/smpdefs.h ,
+ * src/include/ngspice/spmatrix.h ,
+ * src/maths/sparse/spbuild.c ,
+ * src/maths/sparse/spoutput.c ,
+ * src/maths/sparse/spsmp.c ,
+ * src/spicelib/analysis/acan.c ,
+ * src/spicelib/analysis/cktload.c ,
+ * src/spicelib/analysis/cktsetup.c ,
+ * src/spicelib/devices/bsim4v6/bsim4v6ext.h ,
+ * src/spicelib/devices/bsim4v6/bsim4v6init.c ,
+ * src/spicelib/devices/cap/capext.h ,
+ * src/spicelib/devices/cap/capinit.c ,
+ * src/spicelib/devices/res/resext.h ,
+ * src/spicelib/devices/res/resinit.c ,
+ * src/spicelib/devices/vsrc/vsrcext.h ,
+ * src/spicelib/devices/vsrc/vsrcinit.c :
+  drop Francesco Lannutti name stamp comments from changed files
+    #ifdef KLU is a synonym
+
 2012-02-04  Francesco Lannutti (Robert Larice)
  * configure.ac ,
  * src/Makefile.am ,

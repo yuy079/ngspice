@@ -73,9 +73,6 @@ SPICEdev VSRCinfo = {
 #endif                        
  /* DEVinstSize   */ &VSRCiSize,
  /* DEVmodSize    */ &VSRCmSize
-
-/* Francesco Lannutti */
-
 #ifdef KLU
 ,
 VSRCbindklu,

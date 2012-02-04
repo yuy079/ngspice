@@ -57,8 +57,6 @@ int Printer_Width = PRINTER_WIDTH;
 
 
 
-/* Francesco Lannutti */
-
 void spMatrix_CSC(MatrixPtr Matrix, int *Ap, int *Ai, double *Ax, int n, double **bind_Sparse, double **bind_KLU, double **diag) {
 
 	int offset, i ;

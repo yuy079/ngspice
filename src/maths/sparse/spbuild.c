@@ -77,8 +77,6 @@ static void ExpandTranslationArrays( MatrixPtr, int );
 
 
 
-/* Francesco Lannutti */
-
 int WriteCol_original(MatrixPtr Matrix, int Col, spREAL *CSC_Element, int *CSC_Row, spREAL **bind_Sparse, spREAL **bind_KLU, spREAL **diag) {
 
 	int i=0;
