@@ -11,11 +11,11 @@ EXTRA_DIST = FAQ autogen.sh Stuarts_Poly_Notes  \
 		xgraph/aclocal.m4 \
 		compile_min.sh
 
-MAINTAINERCLEANFILES = Makefile.in aclocal.m4 config.guess \
-			config.h.in config.sub configure install-sh \
+MAINTAINERCLEANFILES = Makefile.in aclocal.m4 compile config.guess \
+			src/include/ngspice/config.h.in config.sub configure install-sh \
 			missing mkinstalldirs stamp-h.in ltconfig \
-			ltmain.sh autom4te.cache \
-			depcomp ylwrap
+			ltmain.sh depcomp ylwrap \
+			m4/libtool.m4 m4/lt~obsolete.m4 m4/ltoptions.m4 m4/ltsugar.m4 m4/ltversion.m4
 
 ACLOCAL_AMFLAGS = -I m4
 
