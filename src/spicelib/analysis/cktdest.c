@@ -43,16 +43,9 @@ CKTdestroy(CKTcircuit *ckt)
     for(i=0;i<=ckt->CKTmaxOrder+1;i++){
         FREE(ckt->CKTstates[i]);
     }
-    if(ckt->CKTmatrix) {
-#ifdef KLU
-        SMPdestroy(ckt->CKTmatrix, &(ckt->CKTkluAp), &(ckt->CKTkluAi), &(ckt->CKTkluAx),
-                   &(ckt->CKTkluSymbolic), &(ckt->CKTkluNumeric), ckt->CKTkluCommon,
-                   &(ckt->CKTkluBind_Sparse), &(ckt->CKTkluBind_KLU), &(ckt->CKTkluBind_KLU_Complex), &(ckt->CKTkluDiag),
-                   &(ckt->CKTkluIntermediate), &(ckt->CKTkluIntermediate_Complex), ckt->CKTkluMODE);
-#else
-        SMPdestroy(ckt->CKTmatrix);
-#endif
-        ckt->CKTmatrix = NULL;
+    if(ckt->CKTmatrix->SPmatrix) {
+        SMPdestroy (ckt->CKTmatrix) ;
+        ckt->CKTmatrix->SPmatrix = NULL;
     }
     FREE(ckt->CKTbreaks);
     for(node = ckt->CKTnodes; node; ) {

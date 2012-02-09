@@ -56,7 +56,7 @@ CKTsetup(CKTcircuit *ckt)
     if (error) return(error);
     ckt->CKTisSetup = 1;
 
-    matrix = ckt->CKTmatrix;
+    matrix = ckt->CKTmatrix ;
 
     for (i=0;i<DEVmaxnum;i++) {
 #ifdef HAS_WINDOWS
@@ -70,8 +70,8 @@ CKTsetup(CKTcircuit *ckt)
     }
 
 #ifdef KLU
-    if (ckt->CKTkluMODE)
-        SMPnnz (ckt->CKTmatrix, &(ckt->CKTkluN), &(ckt->CKTklunz));
+    if (ckt->CKTmatrix->CKTkluMODE)
+        SMPnnz (ckt->CKTmatrix) ;
 #endif
 
     for(i=0;i<=MAX(2,ckt->CKTmaxOrder)+1;i++) { /* dctran needs 3 states as minimum */
@@ -158,7 +158,7 @@ CKTunsetup(CKTcircuit *ckt)
 
     NIdestroy(ckt);
     /*
-    if (ckt->CKTmatrix)
+    if (ckt->CKTmatrix->SPmatrix)
         SMPdestroy(ckt->CKTmatrix);
     ckt->CKTmatrix = NULL;
     */

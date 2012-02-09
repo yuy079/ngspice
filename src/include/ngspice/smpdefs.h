@@ -1,7 +1,11 @@
 #ifndef SMP
 #define SMP
 
+/* Typedef removed by Francesco Lannutti (2012-02) to create the new SMPmatrix structure */
+/*
 typedef  struct MatrixFrame     SMPmatrix;
+*/
+typedef  struct MatrixFrame     MatrixFrame;
 typedef  struct MatrixElement  *SMPelement;
 
 /**********
@@ -18,92 +22,93 @@ Modified: 2000  AlansFixes
 #include "ngspice/klu.h"
 #endif
 
-#ifdef KLU
-void SMPmatrix_CSC (SMPmatrix *, int **, int **, double **, int, double **, double **, double **);
-void SMPnnz (SMPmatrix *, int *, int *);
-#endif
-
-int SMPaddElt( SMPmatrix *, int , int , double );
-double * SMPmakeElt( SMPmatrix * , int , int );
+struct SMPmatrix {
+    MatrixFrame *SPmatrix ;               /* pointer to sparse matrix */
 
 #ifdef KLU
-void SMPcClear( SMPmatrix *, double *, int );
-#else
-void SMPcClear( SMPmatrix *);
+    klu_common *CKTkluCommon ;            /* KLU common object */
+    klu_symbolic *CKTkluSymbolic ;        /* KLU symbolic object */
+    klu_numeric *CKTkluNumeric ;          /* KLU numeric object */
+    int *CKTkluAp ;                       /* KLU column pointer */
+    int *CKTkluAi ;                       /* KLU row pointer */
+    double *CKTkluAx ;                    /* KLU element */
+    double *CKTkluIntermediate ;          /* KLU RHS Intermediate for Solve Real Step */
+    double *CKTkluIntermediate_Complex ;  /* KLU iRHS Intermediate for Solve Complex Step */
+    double **CKTkluBind_Sparse ;          /* KLU - Sparse original element position */
+    double **CKTkluBind_KLU ;             /* KLU - KLU new element position */
+    double **CKTkluBind_KLU_Complex ;     /* KLU - KLU new element position in Complex analysis */
+    double **CKTkluDiag ;                 /* KLU pointer to diagonal element to perform Gmin */
+    int CKTkluN ;                         /* KLU N, copied */
+    int CKTklunz ;                        /* KLU nz, copied for AC Analysis */
+    int CKTkluMODE ;                      /* KLU MODE parameter to enable KLU or not from the heuristic */
+    #define CKTkluON  1                   /* KLU MODE ON  definition */
+    #define CKTkluOFF 0                   /* KLU MODE OFF definition */
 #endif
 
-#ifdef KLU
-void SMPclear( SMPmatrix *, double *, int);
-#else
-void SMPclear( SMPmatrix *);
-#endif
+};
+
+/* SMPmatrix structure alias - Francesco Lannutti (2012-02) */
+typedef struct SMPmatrix SMPmatrix ;
+
 
 #ifdef KLU
-int SMPcLUfac( SMPmatrix *, int *, int *, double *, klu_symbolic *, klu_numeric *, klu_common *, double, int );
-#else
-int SMPcLUfac( SMPmatrix *, double );
+void SMPmatrix_CSC ( SMPmatrix * ) ;
+void SMPnnz ( SMPmatrix * ) ;
 #endif
 
-#ifdef KLU
-int SMPluFac( SMPmatrix *, int *, int *, double *, klu_symbolic *, klu_numeric *, klu_common *, double **, double, double, int );
-#else
-int SMPluFac( SMPmatrix *, double , double );
-#endif
-#ifdef KLU
-int SMPcReorder( SMPmatrix *, int *, int *, double *, klu_symbolic **, klu_numeric **, klu_common *, double, double, int *, int );
-#else
-int SMPcReorder( SMPmatrix * , double , double , int *);
-#endif
-#ifdef KLU
-int SMPreorder( SMPmatrix * , int *, int *, double *, klu_symbolic *, klu_numeric **, klu_common *, double **, double, double, double, int );
-#else
-int SMPreorder( SMPmatrix * , double , double , double );
-#endif
-void SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
-		double Spare[], double iSpare[]);
-#ifdef KLU
-void SMPcSolve( SMPmatrix *, klu_symbolic *, klu_numeric *, klu_common *, double [], double [], double [], double [], double [], int );
-#else
-void SMPcSolve( SMPmatrix *, double [], double [], double [], double []);
-#endif
-#ifdef KLU
-void SMPsolve( SMPmatrix *, klu_symbolic *, klu_numeric *, klu_common *, double [], double [], double [], int);
-#else
-void SMPsolve( SMPmatrix *, double [], double []);
-#endif
+int SMPaddElt ( SMPmatrix *, int , int , double ) ;
 
-int SMPmatSize( SMPmatrix *);
-int SMPnewMatrix( SMPmatrix ** );
+double * SMPmakeElt ( SMPmatrix * , int , int ) ;
 
-#ifdef KLU
-void SMPdestroy( SMPmatrix *, int **, int **, double **, klu_symbolic **, klu_numeric **, klu_common *, double ***, double ***, double ***, double ***, double **, double **, int );
-#else
-void SMPdestroy( SMPmatrix *);
-#endif
+void SMPcClear ( SMPmatrix *) ;
 
-#ifdef KLU
-int SMPpreOrder( SMPmatrix *, int *, int *, klu_symbolic **, klu_common *, int );
-#else
-int SMPpreOrder( SMPmatrix *);
-#endif
+void SMPclear ( SMPmatrix *) ;
 
-void SMPprint( SMPmatrix * , FILE *);
-void SMPgetError( SMPmatrix *, int *, int *);
-int SMPcProdDiag( SMPmatrix *, SPcomplex *, int *);
-int SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent);
-SMPelement * SMPfindElt( SMPmatrix *, int , int , int );
-int SMPcZeroCol(SMPmatrix *eMatrix, int Col);
-int SMPcAddCol(SMPmatrix *eMatrix, int Accum_Col, int Addend_Col);
-int SMPzeroRow(SMPmatrix *eMatrix, int Row);
+int SMPcLUfac ( SMPmatrix *, double ) ;
 
 /* Correction for the Spertica's hack */
 extern void SMPgmo ( SMPmatrix *, int, double * ) ;
 /* End of Correction for the Spertica's hack */
+int SMPluFac ( SMPmatrix *, double , double ) ;
+
+int SMPcReorder ( SMPmatrix * , double , double , int *) ;
+
+int SMPreorder ( SMPmatrix * , double , double , double ) ;
+
+void SMPcaSolve ( SMPmatrix *, double [], double [], double [], double [] ) ;
+
+void SMPcSolve ( SMPmatrix *, double [], double [], double [], double [] ) ;
+
+void SMPsolve ( SMPmatrix *, double [], double [] ) ;
+
+int SMPmatSize ( SMPmatrix * ) ;
+
+int SMPnewMatrix ( SMPmatrix * ) ;
+
+void SMPdestroy ( SMPmatrix * ) ;
+
+int SMPpreOrder ( SMPmatrix * ) ;
+
+void SMPprint ( SMPmatrix * , FILE * ) ;
+
+void SMPgetError ( SMPmatrix *, int *, int * ) ;
+
+int SMPcProdDiag ( SMPmatrix *, SPcomplex *, int * ) ;
+
+int SMPcDProd ( SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent ) ;
+
+SMPelement * SMPfindElt ( SMPmatrix *, int , int , int ) ;
+
+int SMPcZeroCol ( SMPmatrix *eMatrix, int Col ) ;
+
+int SMPcAddCol ( SMPmatrix *eMatrix, int Accum_Col, int Addend_Col ) ;
+
+int SMPzeroRow ( SMPmatrix *eMatrix, int Row ) ;
 
 #ifdef PARALLEL_ARCH
-void SMPcombine(SMPmatrix *Matrix, double RHS[], double Spare[]);
-void SMPcCombine(SMPmatrix *Matrix, double RHS[], double Spare[],
-		 double iRHS[], double iSpare[]);
+void SMPcombine ( SMPmatrix *Matrix, double RHS[], double Spare[] ) ;
+
+void SMPcCombine ( SMPmatrix *Matrix, double RHS[], double Spare[], double iRHS[], double iSpare[] ) ;
 #endif
 
 #endif /*SMP*/

@@ -35,35 +35,35 @@ CKTacct(CKTcircuit *ckt, JOB *anal, int which, IFvalue *val)
         val->iValue = ckt->CKTmaxEqNum;
         break;
     case OPT_ORIGNZ:
-	if ( ckt->CKTmatrix != NULL ) {
-	    val->iValue = spOriginalCount(ckt->CKTmatrix);
+	if ( ckt->CKTmatrix->SPmatrix != NULL ) {
+	    val->iValue = spOriginalCount(ckt->CKTmatrix->SPmatrix);
 	} else {
 	    val->iValue = 0;
 	}
         break;
     case OPT_FILLNZ:
-	if ( ckt->CKTmatrix != NULL ) {
+	if ( ckt->CKTmatrix->SPmatrix != NULL ) {
 #ifdef KLU
-	    if (ckt->CKTkluMODE)
-		val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz - ckt->CKTklunz;
+	    if (ckt->CKTmatrix->CKTkluMODE)
+		val->iValue = ckt->CKTmatrix->CKTkluNumeric->lnz + ckt->CKTmatrix->CKTkluNumeric->unz - ckt->CKTmatrix->CKTklunz;
 	    else
-		val->iValue = spFillinCount(ckt->CKTmatrix);
+		val->iValue = spFillinCount(ckt->CKTmatrix->SPmatrix);
 #else
-	    val->iValue = spFillinCount(ckt->CKTmatrix);
+	    val->iValue = spFillinCount(ckt->CKTmatrix->SPmatrix);
 #endif
 	} else {
 	    val->iValue = 0;
 	}
         break;
     case OPT_TOTALNZ:
-	if ( ckt->CKTmatrix != NULL ) {
+	if ( ckt->CKTmatrix->SPmatrix != NULL ) {
 #ifdef KLU
-	    if (ckt->CKTkluMODE)
-		val->iValue = ckt->CKTkluNumeric->lnz + ckt->CKTkluNumeric->unz;
+	    if (ckt->CKTmatrix->CKTkluMODE)
+		val->iValue = ckt->CKTmatrix->CKTkluNumeric->lnz + ckt->CKTmatrix->CKTkluNumeric->unz;
 	    else
-		val->iValue = spElementCount(ckt->CKTmatrix);
+		val->iValue = spElementCount(ckt->CKTmatrix->SPmatrix);
 #else
-	    val->iValue = spElementCount(ckt->CKTmatrix);
+	    val->iValue = spElementCount(ckt->CKTmatrix->SPmatrix);
 #endif
 	} else {
 	    val->iValue = 0;

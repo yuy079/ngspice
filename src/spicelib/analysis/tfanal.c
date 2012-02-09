@@ -89,12 +89,7 @@ TFanal(CKTcircuit *ckt, int restart)
         ckt->CKTrhs[insrc] += 1;
     }
 
-#ifdef KLU
-    SMPsolve(ckt->CKTmatrix, ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-             ckt->CKTrhs, ckt->CKTkluIntermediate, ckt->CKTrhsSpare, ckt->CKTkluMODE);
-#else
-    SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
-#endif
+    SMPsolve (ckt->CKTmatrix, ckt->CKTrhs, ckt->CKTrhsSpare) ;
 
     ckt->CKTrhs[0]=0;
 
@@ -165,12 +160,7 @@ TFanal(CKTcircuit *ckt, int restart)
         ckt->CKTrhs[outsrc] += 1;
     }
 
-#ifdef KLU
-    SMPsolve(ckt->CKTmatrix, ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-             ckt->CKTrhs, ckt->CKTkluIntermediate, ckt->CKTrhsSpare, ckt->CKTkluMODE);
-#else
-    SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
-#endif
+    SMPsolve (ckt->CKTmatrix, ckt->CKTrhs, ckt->CKTrhsSpare) ;
 
     ckt->CKTrhs[0]=0;
     if (job->TFoutIsV) {
