@@ -17,16 +17,9 @@ Author: 1985 Thomas L. Quarles
 void
 NIdestroy(CKTcircuit *ckt)
 {
-    if (ckt->CKTmatrix)
+    if (ckt->CKTmatrix->SPmatrix)
 
-#ifdef KLU
-	SMPdestroy(ckt->CKTmatrix, &(ckt->CKTkluAp), &(ckt->CKTkluAi), &(ckt->CKTkluAx),
-		   &(ckt->CKTkluSymbolic), &(ckt->CKTkluNumeric), ckt->CKTkluCommon,
-		   &(ckt->CKTkluBind_Sparse), &(ckt->CKTkluBind_KLU), &(ckt->CKTkluBind_KLU_Complex), &(ckt->CKTkluDiag),
-		   &(ckt->CKTkluIntermediate), &(ckt->CKTkluIntermediate_Complex), ckt->CKTkluMODE);
-#else
-	SMPdestroy(ckt->CKTmatrix);
-#endif
+	SMPdestroy (ckt->CKTmatrix) ;
 
     ckt->CKTmatrix = NULL;
     if(ckt->CKTrhs)         FREE(ckt->CKTrhs);

@@ -31,26 +31,29 @@ NIinit(CKTcircuit *ckt)
     int Error;
 #endif /* SPARSE */
 
-#ifdef KLU
-    ckt->CKTkluCommon = TMALLOC(klu_common, 1);
-    ckt->CKTkluSymbolic = NULL;
-    ckt->CKTkluNumeric = NULL;
-    ckt->CKTkluAp = NULL;
-    ckt->CKTkluAi = NULL;
-    ckt->CKTkluAx = NULL;
-    ckt->CKTkluIntermediate = NULL;
-    ckt->CKTkluIntermediate_Complex = NULL;
-    ckt->CKTkluBind_Sparse = NULL;
-    ckt->CKTkluBind_KLU = NULL;
-    ckt->CKTkluBind_KLU_Complex = NULL;
-    ckt->CKTkluDiag = NULL;
-    ckt->CKTkluN = 0;
-    ckt->CKTklunz = 0;
-    ckt->CKTkluMODE = CKTkluON; /* TO BE SUBSTITUTED WITH THE HEURISTICS */
+/* Allocation of the new SMPmatrix structure - Francesco Lannuti (2012-02) */
+    ckt->CKTmatrix = TMALLOC (SMPmatrix, 1) ;
 
-    klu_defaults (ckt->CKTkluCommon);
+#ifdef KLU
+    ckt->CKTmatrix->CKTkluCommon = TMALLOC (klu_common, 1) ;
+    ckt->CKTmatrix->CKTkluSymbolic = NULL ;
+    ckt->CKTmatrix->CKTkluNumeric = NULL ;
+    ckt->CKTmatrix->CKTkluAp = NULL ;
+    ckt->CKTmatrix->CKTkluAi = NULL ;
+    ckt->CKTmatrix->CKTkluAx = NULL ;
+    ckt->CKTmatrix->CKTkluIntermediate = NULL ;
+    ckt->CKTmatrix->CKTkluIntermediate_Complex = NULL ;
+    ckt->CKTmatrix->CKTkluBind_Sparse = NULL ;
+    ckt->CKTmatrix->CKTkluBind_KLU = NULL ;
+    ckt->CKTmatrix->CKTkluBind_KLU_Complex = NULL ;
+    ckt->CKTmatrix->CKTkluDiag = NULL ;
+    ckt->CKTmatrix->CKTkluN = 0 ;
+    ckt->CKTmatrix->CKTklunz = 0 ;
+    ckt->CKTmatrix->CKTkluMODE = CKTkluON ; /* TO BE SUBSTITUTED WITH THE HEURISTICS */
+
+    klu_defaults (ckt->CKTmatrix->CKTkluCommon) ;
 #endif
 
-    ckt->CKTniState = NIUNINITIALIZED;
-    return(SMPnewMatrix( &(ckt->CKTmatrix) ) );
+    ckt->CKTniState = NIUNINITIALIZED ;
+    return (SMPnewMatrix (ckt->CKTmatrix)) ;
 }

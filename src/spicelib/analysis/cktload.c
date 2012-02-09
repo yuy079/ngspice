@@ -58,11 +58,7 @@ CKTload(CKTcircuit *ckt)
         *(ckt->CKTrhs+i)=0;
     }
 
-#ifdef KLU
-    SMPclear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE);
-#else
-    SMPclear(ckt->CKTmatrix);
-#endif
+    SMPclear (ckt->CKTmatrix) ;
 
 #ifdef STEPDEBUG
     noncon = ckt->CKTnoncon;

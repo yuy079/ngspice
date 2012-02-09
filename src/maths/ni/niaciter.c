@@ -38,14 +38,7 @@ retry:
     if(ckt->CKTniState & NIACSHOULDREORDER) {
 	startTime = SPfrontEnd->IFseconds();
 
-#ifdef KLU
-        error = SMPcReorder(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-                &(ckt->CKTkluSymbolic), &(ckt->CKTkluNumeric), ckt->CKTkluCommon,
-                ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol, &ignore, ckt->CKTkluMODE);
-#else
-        error = SMPcReorder(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
-                ckt->CKTpivotRelTol,&ignore);
-#endif
+        error = SMPcReorder (ckt->CKTmatrix,ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol,&ignore) ;
 
 	ckt->CKTstat->STATreorderTime +=
 		SPfrontEnd->IFseconds()- startTime;
@@ -59,13 +52,7 @@ retry:
     } else {
 	startTime = SPfrontEnd->IFseconds();
 
-#ifdef KLU
-        error = SMPcLUfac(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-                          ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-                          ckt->CKTpivotAbsTol, ckt->CKTkluMODE);
-#else
-        error = SMPcLUfac(ckt->CKTmatrix,ckt->CKTpivotAbsTol);
-#endif
+        error = SMPcLUfac (ckt->CKTmatrix, ckt->CKTpivotAbsTol) ;
 
 	ckt->CKTstat->STATdecompTime += 
 		SPfrontEnd->IFseconds()-startTime;
@@ -83,14 +70,7 @@ retry:
     } 
     startTime = SPfrontEnd->IFseconds();
 
-#ifdef KLU
-    SMPcSolve(ckt->CKTmatrix, ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-              ckt->CKTrhs, ckt->CKTirhs, ckt->CKTkluIntermediate_Complex, ckt->CKTrhsSpare, ckt->CKTirhsSpare, ckt->CKTkluMODE);
-#else
-    SMPcSolve(ckt->CKTmatrix,ckt->CKTrhs, 
-            ckt->CKTirhs, ckt->CKTrhsSpare,
-            ckt->CKTirhsSpare);
-#endif
+    SMPcSolve (ckt->CKTmatrix,ckt->CKTrhs, ckt->CKTirhs, ckt->CKTrhsSpare, ckt->CKTirhsSpare) ;
 
     ckt->CKTstat->STATsolveTime += SPfrontEnd->IFseconds() - startTime;
 

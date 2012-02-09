@@ -245,25 +245,27 @@ ACan(CKTcircuit *ckt, int restart)
     INIT_STATS();
 
 #ifdef KLU
-   if (ckt->CKTkluMODE) {
-        int i, m;
-        double *temp;
-        temp = TMALLOC(double, 2 * ckt->CKTklunz);
-        ckt->CKTkluBind_KLU_Complex = TMALLOC(double *, ckt->CKTklunz);
-        ckt->CKTkluIntermediate_Complex = TMALLOC (double, 2 * ckt->CKTkluN);
-        m = 0;
-        for (i = 0 ; i < ckt->CKTklunz ; i++) {
-            ckt->CKTkluBind_KLU_Complex [i] = &(temp [m]);
-            m += 2;
+   if (ckt->CKTmatrix->CKTkluMODE)
+   {
+        int i, m ;
+        double *temp ;
+        temp = TMALLOC (double, 2 * ckt->CKTmatrix->CKTklunz) ;
+        ckt->CKTmatrix->CKTkluBind_KLU_Complex = TMALLOC (double *, ckt->CKTmatrix->CKTklunz) ;
+        ckt->CKTmatrix->CKTkluIntermediate_Complex = TMALLOC (double, 2 * ckt->CKTmatrix->CKTkluN) ;
+        m = 0 ;
+        for (i = 0 ; i < ckt->CKTmatrix->CKTklunz ; i++)
+        {
+            ckt->CKTmatrix->CKTkluBind_KLU_Complex [i] = &(temp [m]) ;
+            m += 2 ;
         }
 
-        DEVices[13]->DEVbindkluComplex (ckt->CKThead[13], ckt);
-        DEVices[17]->DEVbindkluComplex (ckt->CKThead[17], ckt);
-        DEVices[40]->DEVbindkluComplex (ckt->CKThead[40], ckt);
-        DEVices[48]->DEVbindkluComplex (ckt->CKThead[48], ckt);
+        DEVices[13]->DEVbindkluComplex (ckt->CKThead[13], ckt) ;
+        DEVices[17]->DEVbindkluComplex (ckt->CKThead[17], ckt) ;
+        DEVices[40]->DEVbindkluComplex (ckt->CKThead[40], ckt) ;
+        DEVices[48]->DEVbindkluComplex (ckt->CKThead[48], ckt) ;
 
-        free (ckt->CKTkluAx);
-        ckt->CKTkluAx = temp;
+        free (ckt->CKTmatrix->CKTkluAx) ;
+        ckt->CKTmatrix->CKTkluAx = temp ;
     }
 #endif
 
@@ -430,11 +432,7 @@ CKTacLoad(CKTcircuit *ckt)
         *(ckt->CKTirhs+i)=0;
     }
 
-#ifdef KLU
-    SMPcClear(ckt->CKTmatrix, ckt->CKTkluAx, ckt->CKTkluMODE);
-#else
-    SMPcClear(ckt->CKTmatrix);
-#endif
+    SMPcClear (ckt->CKTmatrix) ;
 
     for (i=0;i<DEVmaxnum;i++) {
         if ( DEVices[i] && DEVices[i]->DEVacLoad && ckt->CKThead[i] ) {

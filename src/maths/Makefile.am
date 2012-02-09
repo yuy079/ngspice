@@ -8,4 +8,8 @@ SUBDIRS += KLU
 DIST_SUBDIRS += KLU
 endif
 
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in KLU/Makefile.in
+
+if KLU_WANTED
+MAINTAINERCLEANFILES -= KLU/Makefile.in
+endif

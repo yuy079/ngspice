@@ -678,13 +678,7 @@ CKTpzRunTrial(CKTcircuit *ckt, PZtrial **new_trialp, PZtrial **set)
 		}
 #endif
 
-#ifdef KLU
-		error = SMPcLUfac(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-				  ckt->CKTkluSymbolic, ckt->CKTkluNumeric, ckt->CKTkluCommon,
-				  ckt->CKTpivotAbsTol, ckt->CKTkluMODE);
-#else
-		error = SMPcLUfac(ckt->CKTmatrix, ckt->CKTpivotAbsTol);
-#endif
+		error = SMPcLUfac (ckt->CKTmatrix, ckt->CKTpivotAbsTol) ;
 
 		if (error == E_SINGULAR) {
 #ifdef PZDEBUG
@@ -697,17 +691,9 @@ CKTpzRunTrial(CKTcircuit *ckt, PZtrial **new_trialp, PZtrial **set)
 	    if (ckt->CKTniState & NIPZSHOULDREORDER) {
 		CKTpzLoad(ckt, &new_trial->s);
 
-#ifdef KLU
-		error = SMPcReorder(ckt->CKTmatrix, ckt->CKTkluAp, ckt->CKTkluAi, ckt->CKTkluAx,
-			&(ckt->CKTkluSymbolic), &(ckt->CKTkluNumeric), ckt->CKTkluCommon,
-			1.0e-30,
-			0.0 /* 0.1 Piv. Rel. */,
-			&(job->PZnumswaps), ckt->CKTkluMODE);
-#else
-		error = SMPcReorder(ckt->CKTmatrix, 1.0e-30,
+		error = SMPcReorder (ckt->CKTmatrix, 1.0e-30,
 		    0.0 /* 0.1 Piv. Rel. */,
-		    &(job->PZnumswaps));
-#endif
+		    &(job->PZnumswaps)) ;
 
 	    }
 
