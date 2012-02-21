@@ -118,7 +118,7 @@ void
 SMPmatrix_CSC (SMPmatrix *Matrix)
 {
     spMatrix_CSC (Matrix->SPmatrix, Matrix->CKTkluAp, Matrix->CKTkluAi, Matrix->CKTkluAx,
-                  Matrix->CKTkluN, Matrix->CKTkluBind_Sparse, Matrix->CKTkluBind_KLU, Matrix->CKTkluDiag) ;
+                  Matrix->CKTkluN, Matrix->CKTbind_Sparse, Matrix->CKTbind_CSC, Matrix->CKTdiag_CSC) ;
     return ;
 }
 
@@ -159,14 +159,13 @@ SMPmakeElt (SMPmatrix *Matrix, int Row, int Col)
 void
 SMPcClear (SMPmatrix *Matrix)
 {
-    int i, nz ;
+    int i ;
     if (Matrix->CKTkluMODE)
     {
         spClear (Matrix->SPmatrix) ;
         if (Matrix->CKTkluAx != NULL)
         {
-            nz = Matrix->SPmatrix->Elements ;
-            for (i = 0 ; i < 2 * nz ; i++)
+            for (i = 0 ; i < 2 * Matrix->CKTklunz ; i++)
                 Matrix->CKTkluAx [i] = 0 ;
         }
     } else {
@@ -189,14 +188,13 @@ SMPcClear (SMPmatrix *Matrix)
 void
 SMPclear (SMPmatrix *Matrix)
 {
-    int i, nz ;
+    int i ;
     if (Matrix->CKTkluMODE)
     {
         spClear (Matrix->SPmatrix) ;
         if (Matrix->CKTkluAx != NULL)
         {
-            nz = Matrix->SPmatrix->Elements ;
-            for (i = 0 ; i < nz ; i++)
+            for (i = 0 ; i < Matrix->CKTklunz ; i++)
                 Matrix->CKTkluAx [i] = 0 ;
         }
     } else {
@@ -232,9 +230,7 @@ SMPcLUfac (SMPmatrix *Matrix, double PivTol)
         ret = klu_z_refactor (Matrix->CKTkluAp, Matrix->CKTkluAi, Matrix->CKTkluAx,
                               Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, Matrix->CKTkluCommon) ;
         return (!ret) ;
-
     } else {
-
         spSetComplex (Matrix->SPmatrix) ;
         return spFactor (Matrix->SPmatrix) ;
     }
@@ -259,21 +255,18 @@ SMPcLUfac (SMPmatrix *Matrix, double PivTol)
 int
 SMPluFac (SMPmatrix *Matrix, double PivTol, double Gmin)
 {
-    int n, ret ;
+    int ret ;
 
     NG_IGNORE (PivTol) ;
 
     if (Matrix->CKTkluMODE)
     {
         spSetReal (Matrix->SPmatrix) ;
-        n = spGetSize (Matrix->SPmatrix, 1) ;
-        LoadGmin_CSC (Matrix->CKTkluDiag, n, Gmin) ;
+        LoadGmin_CSC (Matrix->CKTdiag_CSC, Matrix->CKTkluN, Gmin) ;
         ret = klu_refactor (Matrix->CKTkluAp, Matrix->CKTkluAi, Matrix->CKTkluAx,
                             Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, Matrix->CKTkluCommon) ;
         return (!ret) ;
-
     } else {
-
         spSetReal (Matrix->SPmatrix) ;
         LoadGmin (Matrix, Gmin) ;
         return spFactor (Matrix->SPmatrix) ;
@@ -332,13 +325,10 @@ SMPcReorder (SMPmatrix *Matrix, double PivTol, double PivRel, int *NumSwaps)
 int
 SMPreorder (SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 {
-    int n ;
-
     if (Matrix->CKTkluMODE)
     {
         spSetReal (Matrix->SPmatrix) ;
-        n = spGetSize (Matrix->SPmatrix, 1) ;
-        LoadGmin_CSC (Matrix->CKTkluDiag, n, Gmin) ;
+        LoadGmin_CSC (Matrix->CKTdiag_CSC, Matrix->CKTkluN, Gmin) ;
 
         if (Matrix->CKTkluNumeric != NULL)
         {
@@ -352,7 +342,6 @@ SMPreorder (SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
             return 1 ;
         else
             return 0 ;
-
     } else {
         spSetReal (Matrix->SPmatrix) ;
         LoadGmin (Matrix, Gmin) ;
@@ -390,26 +379,24 @@ SMPcaSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], doub
 void
 SMPcSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], double iSpare[])
 {
-    int ret, n, i, *pExtOrder ;
+    int ret, i, *pExtOrder ;
 
     NG_IGNORE (iSpare) ;
     NG_IGNORE (Spare) ;
 
     if (Matrix->CKTkluMODE)
     {
-        n = spGetSize (Matrix->SPmatrix, 1) ;
-
-        pExtOrder = &Matrix->SPmatrix->IntToExtRowMap [n] ;
-        for (i = 2 * n - 1 ; i > 0 ; i -= 2)
+        pExtOrder = &Matrix->SPmatrix->IntToExtRowMap [Matrix->CKTkluN] ;
+        for (i = 2 * Matrix->CKTkluN - 1 ; i > 0 ; i -= 2)
         {
             Matrix->CKTkluIntermediate [i] = RHS [*(pExtOrder)] ;
             Matrix->CKTkluIntermediate [i - 1] = iRHS [*(pExtOrder--)] ;
         }
 
-        ret = klu_z_solve (Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, n, 1, Matrix->CKTkluIntermediate, Matrix->CKTkluCommon) ;
+        ret = klu_z_solve (Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, Matrix->CKTkluN, 1, Matrix->CKTkluIntermediate, Matrix->CKTkluCommon) ;
 
-        pExtOrder = &Matrix->SPmatrix->IntToExtColMap [n] ;
-        for (i = 2 * n - 1 ; i > 0 ; i -= 2)
+        pExtOrder = &Matrix->SPmatrix->IntToExtColMap [Matrix->CKTkluN] ;
+        for (i = 2 * Matrix->CKTkluN - 1 ; i > 0 ; i -= 2)
         {
             RHS [*(pExtOrder)] = Matrix->CKTkluIntermediate [i] ;
             iRHS [*(pExtOrder--)] = Matrix->CKTkluIntermediate [i - 1] ;
@@ -439,21 +426,20 @@ SMPcSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], doubl
 void
 SMPsolve (SMPmatrix *Matrix, double RHS[], double Spare[])
 {
-    int ret, n, i, *pExtOrder ;
+    int ret, i, *pExtOrder ;
 
     NG_IGNORE (Spare) ;
 
     if (Matrix->CKTkluMODE) {
-        n = spGetSize (Matrix->SPmatrix, 1) ;
 
-        pExtOrder = &Matrix->SPmatrix->IntToExtRowMap [n] ;
-        for (i = n - 1 ; i >= 0 ; i--)
+        pExtOrder = &Matrix->SPmatrix->IntToExtRowMap [Matrix->CKTkluN] ;
+        for (i = Matrix->CKTkluN - 1 ; i >= 0 ; i--)
             Matrix->CKTkluIntermediate [i] = RHS [*(pExtOrder--)] ;
 
-        ret = klu_solve (Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, n, 1, Matrix->CKTkluIntermediate, Matrix->CKTkluCommon) ;
+        ret = klu_solve (Matrix->CKTkluSymbolic, Matrix->CKTkluNumeric, Matrix->CKTkluN, 1, Matrix->CKTkluIntermediate, Matrix->CKTkluCommon) ;
 
-        pExtOrder = &Matrix->SPmatrix->IntToExtColMap [n] ;
-        for (i = n - 1 ; i >= 0 ; i--)
+        pExtOrder = &Matrix->SPmatrix->IntToExtColMap [Matrix->CKTkluN] ;
+        for (i = Matrix->CKTkluN - 1 ; i >= 0 ; i--)
             RHS [*(pExtOrder--)] = Matrix->CKTkluIntermediate [i] ;
     } else {
         spSolve (Matrix->SPmatrix, RHS, RHS, NULL, NULL) ;
@@ -506,10 +492,10 @@ SMPdestroy (SMPmatrix *Matrix)
         free (Matrix->CKTkluAp) ;
         free (Matrix->CKTkluAi) ;
         free (Matrix->CKTkluAx) ;
-        free (Matrix->CKTkluBind_Sparse) ;
-        free (Matrix->CKTkluBind_KLU) ;
-        free (Matrix->CKTkluBind_KLU_Complex) ;
-        free (Matrix->CKTkluDiag) ;
+        free (Matrix->CKTbind_Sparse) ;
+        free (Matrix->CKTbind_CSC) ;
+        free (Matrix->CKTbind_CSC_Complex) ;
+        free (Matrix->CKTdiag_CSC) ;
         free (Matrix->CKTkluIntermediate) ;
         free (Matrix->CKTkluIntermediate_Complex) ;
     } else {
@@ -532,13 +518,9 @@ SMPdestroy (SMPmatrix *Matrix)
 int
 SMPpreOrder (SMPmatrix *Matrix)
 {
-    int n ;
     if (Matrix->CKTkluMODE)
     {
-//      spMNA_Preorder( Matrix );
-
-        n = spGetSize (Matrix->SPmatrix, 1) ;
-        Matrix->CKTkluSymbolic = klu_analyze (n, Matrix->CKTkluAp, Matrix->CKTkluAi, Matrix->CKTkluCommon) ;
+        Matrix->CKTkluSymbolic = klu_analyze (Matrix->CKTkluN, Matrix->CKTkluAp, Matrix->CKTkluAi, Matrix->CKTkluCommon) ;
 
         return 0 ;
     } else {

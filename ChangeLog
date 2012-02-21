@@ -1,3 +1,6 @@
+2012-02-21  Francesco Lannutti
+  Almost all devices now supports KLU
+
 2012-02-16  Francesco Lannutti
  * src/spicelib/analysis/cktacct.c
   corrected a bug during the calculation of fill-ins for KLU
