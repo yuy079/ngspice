@@ -87,4 +87,6 @@ typedef struct sVCCSmodel {       /* model structure for a source */
 
 /* model questions */
 
+#include "vccsext.h"
+
 #endif /*VCCS*/
