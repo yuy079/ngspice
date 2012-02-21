@@ -34,5 +34,9 @@ libdio_la_SOURCES =	\
 	diotrunc.c
 
 
+if KLU_WANTED
+libdio_la_SOURCES += diobindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
 MAINTAINERCLEANFILES = Makefile.in
