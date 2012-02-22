@@ -76,12 +76,13 @@ struct plotab plotabs[NUMPLOTTYPES] = {
     { "sens2", "sens2" } ,
     { "sp", "s.p." } ,
     { "sp", "sp" } ,
-    { "harm", "harm" },
-    { "spect", "spect" },
+    { "harm", "harm" } ,
+    { "spect", "spect" } ,
+    { "pss", "periodic" } ,
 };
 
-int notypes = 19;
-int noplotabs = 21;
+int notypes = 19 ;
+int noplotabs = 22 ;
 
 
 /* A command to define types for vectors and plots.  This will generally
