@@ -1,3 +1,26 @@
+2012-02-22  Francesco Lannutti
+ * src/frontend/outitf.c
+ * src/frontend/typesdef.c
+ * src/spicelib/analysis/dcpss.c
+  Corrected the plot type in the PSS Frequency Domain
+   and the plot name in the PSS Analysis
+
+ * src/Makefile.am
+ * src/maths/KLU/Makefile.am
+ * src/maths/KLU/klusmp.c (new file)
+ * src/maths/sparse/Makefile.am
+ * src/maths/sparse/spsmp.c
+  SMP to solver interface separated:
+   spsmp.c is the original interface between SMP and Sparse
+   klusmp.c is the new one between SMP and KLU
+
+ * src/spicelib/analysis/cktsens.c
+  Corrected a bug during the Sensitivity Analysis
+   when NG-Spice is compiled with KLU enabled
+ * src/spicelib/parser/inp2dot.c
+  Corrected a minus-cosmetic bug in the name of
+   the PSS Analysis
+
 2012-02-21  Francesco Lannutti
   Almost all devices now supports KLU
 

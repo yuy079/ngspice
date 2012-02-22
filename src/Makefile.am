@@ -165,13 +165,15 @@ ngspice_LDADD += \
 	maths/misc/libmathmisc.la \
 	maths/fft/libmathfft.la \
 	maths/poly/libpoly.la \
-	maths/ni/libni.la \
-	maths/sparse/libsparse.la \
-	misc/libmisc.la
+	maths/ni/libni.la
 
 if KLU_WANTED
 ngspice_LDADD += maths/KLU/libKLU.la
 endif
+
+ngspice_LDADD += \
+	maths/sparse/libsparse.la \
+	misc/libmisc.la
 
 if !WINDOWS
 if !NO_X
