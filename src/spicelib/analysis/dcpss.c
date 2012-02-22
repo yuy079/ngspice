@@ -792,6 +792,7 @@ nextTime:
                     freqUid, IF_REAL,
                     numNames, nameList, IF_REAL, &(job->PSSplot_fd));
                 tfree(nameList);
+                SPfrontEnd->OUTattributes (job->PSSplot_fd, NULL, PLOT_COMB, NULL) ;
                 /* ************************* */
                 /* Fourier transform on data */
                 /* ************************* */
