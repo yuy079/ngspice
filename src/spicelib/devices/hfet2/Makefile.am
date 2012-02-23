@@ -29,5 +29,10 @@ if KLU_WANTED
 libhfet2_la_SOURCES += hfet2bindCSC.c
 endif
 
+if SuperLU_WANTED
+libhfet2_la_SOURCES += hfet2bindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
+
 MAINTAINERCLEANFILES = Makefile.in

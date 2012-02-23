@@ -28,5 +28,10 @@ if KLU_WANTED
 libvcvs_la_SOURCES += vcvsbindCSC.c
 endif
 
+if SuperLU_WANTED
+libvcvs_la_SOURCES += vcvsbindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
+
 MAINTAINERCLEANFILES = Makefile.in
