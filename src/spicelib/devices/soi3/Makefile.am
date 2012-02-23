@@ -31,5 +31,10 @@ if KLU_WANTED
 libsoi3_la_SOURCES += soi3bindCSC.c
 endif
 
+if SuperLU_WANTED
+libsoi3_la_SOURCES += soi3bindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
+
 MAINTAINERCLEANFILES = Makefile.in

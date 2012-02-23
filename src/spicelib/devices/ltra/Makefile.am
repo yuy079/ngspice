@@ -29,5 +29,10 @@ if KLU_WANTED
 libltra_la_SOURCES += ltrabindCSC.c
 endif
 
+if SuperLU_WANTED
+libltra_la_SOURCES += ltrabindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
+
 MAINTAINERCLEANFILES = Makefile.in

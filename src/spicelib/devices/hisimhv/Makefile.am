@@ -36,6 +36,10 @@ if KLU_WANTED
 libhisimhv_la_SOURCES += hsmhvbindCSC.c
 endif
 
+if SuperLU_WANTED
+libhisimhv_la_SOURCES += hsmhvbindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
 
 MAINTAINERCLEANFILES = Makefile.in

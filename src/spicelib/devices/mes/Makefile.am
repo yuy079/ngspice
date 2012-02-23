@@ -32,5 +32,10 @@ if KLU_WANTED
 libmes_la_SOURCES += mesbindCSC.c
 endif
 
+if SuperLU_WANTED
+libmes_la_SOURCES += mesbindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
+
 MAINTAINERCLEANFILES = Makefile.in
