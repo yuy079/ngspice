@@ -1,3 +1,8 @@
+2012-02-23  Francesco Lannutti
+ * src/maths/SuperLU
+  Added SuperLU as new experimental linear solver
+   Several files added and/or modified
+
 2012-02-22  Francesco Lannutti
  * src/frontend/outitf.c
  * src/frontend/typesdef.c

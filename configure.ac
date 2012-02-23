@@ -191,6 +191,10 @@ dnl --enable-KLU: Use KLU linear systems solver
 AC_ARG_ENABLE(klu,
     AS_HELP_STRING([--enable-klu],[Use KLU linear systems solver]))
 
+dnl --enable-superlu: Use SuperLU linear systems solver
+AC_ARG_ENABLE(superlu,
+    AS_HELP_STRING([--enable-superlu],[Use SuperLU linear systems solver]))
+
 dnl readline and editline cannot both be enabled
 if test "$with_editline" = "yes"; then
     if test "$with_readline" = "yes"; then
@@ -1011,11 +1015,26 @@ if test "$enable_klu" = "yes"; then
 fi
 AM_CONDITIONAL([KLU_WANTED], [test "$enable_klu" = "yes"])
 
+dnl Add SuperLU solver to ngspice
+if test "$enable_superlu" = "yes"; then
+    AC_DEFINE(SuperLU,[],[Define if we want SuperLU linear systems solver])
+    AC_MSG_RESULT(WARNING: SuperLU solver enabled - at the moment it only works with transient analyses)
+fi
+AM_CONDITIONAL([SuperLU_WANTED], [test "$enable_superlu" = "yes"])
+
+#REMOVE THIS TEST IN THE FUTURE WHEN BOTH KLU AND SuperLU ARE SUPPORTED IN THE MEAN TIME
+if test "$enable_klu" = "yes" && test "$enable_superlu" = "yes" ; then
+    AC_MSG_ERROR(ERROR: KLU and SuperLU can't be enabled together at the moment)
+fi
+
 dnl Output Files
 dnl ------------
 
 AM_COND_IF([KLU_WANTED],
         [AC_CONFIG_FILES([src/maths/KLU/Makefile])])
+
+AM_COND_IF([SuperLU_WANTED],
+	[AC_CONFIG_FILES([src/maths/SuperLU/Makefile])])
 
 AC_CONFIG_FILES([Makefile
                  man/Makefile
