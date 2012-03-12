@@ -37,15 +37,15 @@ ckt->CKTmode = firstmode;
         int n  = ckt->CKTmatrix->CKTkluN ;
         int nz = ckt->CKTmatrix->CKTklunz ;
 
-        ckt->CKTmatrix->CKTkluAp           = TMALLOC (int, n + 1) ;
-        ckt->CKTmatrix->CKTkluAi           = TMALLOC (int, nz) ;
-        ckt->CKTmatrix->CKTkluAx           = TMALLOC (double, nz) ;
-        ckt->CKTmatrix->CKTkluIntermediate = TMALLOC (double, n ) ;
+        ckt->CKTmatrix->CKTkluAp =		TMALLOC (int, n + 1) ;
+        ckt->CKTmatrix->CKTkluAi =		TMALLOC (int, nz) ;
+        ckt->CKTmatrix->CKTkluAx =		TMALLOC (double, nz) ;
+        ckt->CKTmatrix->CKTkluIntermediate =	TMALLOC (double, n ) ;
 
-        ckt->CKTmatrix->CKTbind_Sparse  = TMALLOC (double *, nz) ;
-        ckt->CKTmatrix->CKTbind_CSC     = TMALLOC (double *, nz) ;
+        ckt->CKTmatrix->CKTbind_Sparse  =	TMALLOC (double *, nz) ;
+        ckt->CKTmatrix->CKTbind_CSC =		TMALLOC (double *, nz) ;
 
-        ckt->CKTmatrix->CKTdiag_CSC         = TMALLOC (double *, n) ;
+        ckt->CKTmatrix->CKTdiag_CSC =		TMALLOC (double *, n) ;
 
         SMPmatrix_CSC (ckt->CKTmatrix) ;
 
@@ -60,19 +60,19 @@ ckt->CKTmode = firstmode;
         int n  = ckt->CKTmatrix->CKTsuperluN ;
         int nz = ckt->CKTmatrix->CKTsuperlunz ;
 
-	ckt->CKTmatrix->CKTsuperluAp = 		TMALLOC (int, n + 1) ;
-	ckt->CKTmatrix->CKTsuperluAi = 		TMALLOC (int, nz) ;
-	ckt->CKTmatrix->CKTsuperluAx = 		TMALLOC (double, nz) ;
-	ckt->CKTmatrix->CKTsuperluPerm_c = 	TMALLOC (int, n) ;
-	ckt->CKTmatrix->CKTsuperluPerm_r = 	TMALLOC (int, n) ;
-	ckt->CKTmatrix->CKTsuperluEtree = 		TMALLOC (int, n) ;
+	ckt->CKTmatrix->CKTsuperluAp =			TMALLOC (int, n + 1) ;
+	ckt->CKTmatrix->CKTsuperluAi =			TMALLOC (int, nz) ;
+	ckt->CKTmatrix->CKTsuperluAx =			TMALLOC (double, nz) ;
+	ckt->CKTmatrix->CKTsuperluPerm_c =		TMALLOC (int, n) ;
+	ckt->CKTmatrix->CKTsuperluPerm_r =		TMALLOC (int, n) ;
+	ckt->CKTmatrix->CKTsuperluEtree =		TMALLOC (int, n) ;
 
-	ckt->CKTmatrix->CKTsuperluIntermediate = 	TMALLOC (double, n) ;
+	ckt->CKTmatrix->CKTsuperluIntermediate =	TMALLOC (double, n) ;
 
-	ckt->CKTmatrix->CKTbind_Sparse = 	TMALLOC (double *, nz) ;
-	ckt->CKTmatrix->CKTbind_CSC = 		TMALLOC (double *, nz) ;
+	ckt->CKTmatrix->CKTbind_Sparse =		TMALLOC (double *, nz) ;
+	ckt->CKTmatrix->CKTbind_CSC =			TMALLOC (double *, nz) ;
 
-	ckt->CKTmatrix->CKTdiag_CSC = 	TMALLOC (double *, n) ;
+	ckt->CKTmatrix->CKTdiag_CSC =			TMALLOC (double *, n) ;
 
         SMPmatrix_CSC (ckt->CKTmatrix) ;
 
@@ -83,6 +83,33 @@ ckt->CKTmode = firstmode;
 	StatInit (&(ckt->CKTmatrix->CKTsuperluStat)) ;
 
         for (i = 0 ; i < DEVmaxnum ; i++)
+            if (DEVices [i] && DEVices [i]->DEVbindCSC)
+                DEVices [i]->DEVbindCSC (ckt->CKThead [i], ckt) ;
+    }
+#elif defined(UMFPACK)
+    if (ckt->CKTmatrix->CKTumfpackMODE)
+    {
+        int i ;
+	int n = ckt->CKTmatrix->CKTumfpackN ;
+	int nz = ckt->CKTmatrix->CKTumfpacknz ;
+	ckt->CKTmatrix->CKTumfpackAp =			TMALLOC (int, n + 1) ;
+	ckt->CKTmatrix->CKTumfpackAi =			TMALLOC (int, nz) ;
+	ckt->CKTmatrix->CKTumfpackAx =			TMALLOC (double, nz) ;
+	ckt->CKTmatrix->CKTumfpackControl =		TMALLOC (double, UMFPACK_CONTROL) ;
+	ckt->CKTmatrix->CKTumfpackInfo =		TMALLOC (double, UMFPACK_INFO) ;
+
+	ckt->CKTmatrix->CKTumfpackIntermediate =	TMALLOC (double, n) ;
+
+	ckt->CKTmatrix->CKTumfpackX =			TMALLOC (double, n) ;
+
+	ckt->CKTmatrix->CKTbind_Sparse =		TMALLOC (double *, nz) ;
+	ckt->CKTmatrix->CKTbind_CSC =			TMALLOC (double *, nz) ;
+
+	ckt->CKTmatrix->CKTdiag_CSC =			TMALLOC (double *, n) ;
+
+	SMPmatrix_CSC (ckt->CKTmatrix) ;
+
+	for (i = 0 ; i < DEVmaxnum ; i++)
             if (DEVices [i] && DEVices [i]->DEVbindCSC)
                 DEVices [i]->DEVbindCSC (ckt->CKThead [i], ckt) ;
     }

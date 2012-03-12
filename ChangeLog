@@ -1,3 +1,11 @@
+2012-03-12  Francesco Lannutti
+ * src/maths/UMFPACK
+  Added UMFPACK as new experimental linear solver
+   Some files modified due to UMFPACK integration
+   Some bugs and minor/cosmetic fixed
+   TODO: Correct cktacct.c to let it print fill-ins
+         properly using UMFPACK or SuperLU
+
 2012-02-23  Francesco Lannutti
  * src/maths/SuperLU
   Added SuperLU as new experimental linear solver

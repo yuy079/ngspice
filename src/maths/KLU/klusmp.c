@@ -124,7 +124,6 @@ SMPnnz (SMPmatrix *Matrix)
 {
     Matrix->CKTkluN = spGetSize (Matrix->SPmatrix, 1) ;
     Matrix->CKTklunz = Matrix->SPmatrix->Elements ;
-
     return ;
 }
 
