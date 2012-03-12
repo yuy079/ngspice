@@ -32,5 +32,9 @@ if SuperLU_WANTED
 libcsw_la_SOURCES += cswbindCSC.c
 endif
 
+if UMFPACK_WANTED
+libcsw_la_SOURCES += cswbindCSC.c
+endif
+
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include
 MAINTAINERCLEANFILES = Makefile.in

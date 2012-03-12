@@ -195,6 +195,10 @@ dnl --enable-superlu: Use SuperLU linear systems solver
 AC_ARG_ENABLE(superlu,
     AS_HELP_STRING([--enable-superlu],[Use SuperLU linear systems solver]))
 
+dnl --enable-umfpack: Use UMFPACK linear systems solver
+AC_ARG_ENABLE(umfpack,
+    AS_HELP_STRING([--enable-umfpack],[Use UMFPACK linear systems solver]))
+
 dnl readline and editline cannot both be enabled
 if test "$with_editline" = "yes"; then
     if test "$with_readline" = "yes"; then
@@ -1026,9 +1030,23 @@ if test "$enable_superlu" = "yes"; then
 fi
 AM_CONDITIONAL([SuperLU_WANTED], [test "$enable_superlu" = "yes"])
 
-#REMOVE THIS TEST IN THE FUTURE WHEN BOTH KLU AND SuperLU ARE SUPPORTED IN THE MEAN TIME
-if test "$enable_klu" = "yes" && test "$enable_superlu" = "yes" ; then
+dnl Add UMFPACK solver to ngspice
+if test "$enable_umfpack" = "yes"; then
+    AC_MSG_RESULT(Checking for ATLAS library...)
+    AC_CHECK_LIB(atlas, ATL_buildinfo, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
+    AC_CHECK_LIB(f77blas, dgemm_, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
+    AC_DEFINE(UMFPACK,[],[Define if we want UMFPACK linear systems solver])
+    AC_MSG_RESULT(WARNING: UMFPACK solver enabled)
+fi
+AM_CONDITIONAL([UMFPACK_WANTED], [test "$enable_umfpack" = "yes"])
+
+#REMOVE THIS TEST IN THE FUTURE WHEN KLU, SuperLU AND UMFPACK ARE SUPPORTED IN THE MEAN TIME
+if (test "$enable_klu" = "yes" && test "$enable_superlu" = "yes") ; then
     AC_MSG_ERROR(ERROR: KLU and SuperLU can't be enabled together at the moment)
+elif (test "$enable_klu" = "yes" && test "$enable_umfpack" = "yes") ; then
+    AC_MSG_ERROR(ERROR: KLU and UMFPACK can't be enabled together at the moment)
+elif (test "$enable_superlu" = "yes" && test "$enable_umfpack" = "yes") ; then
+    AC_MSG_ERROR(ERROR: SuperLU and UMFPACK can't be enabled together at the moment)
 fi
 
 if test "$enable_pss" = "yes"; then
@@ -1043,6 +1061,9 @@ AM_COND_IF([KLU_WANTED],
 
 AM_COND_IF([SuperLU_WANTED],
 	[AC_CONFIG_FILES([src/maths/SuperLU/Makefile])])
+
+AM_COND_IF([UMFPACK_WANTED],
+	[AC_CONFIG_FILES([src/maths/UMFPACK/Makefile])])
 
 AC_CONFIG_FILES([Makefile
                  man/Makefile
