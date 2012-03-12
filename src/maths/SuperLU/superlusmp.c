@@ -278,6 +278,7 @@ SMPreorder (SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 /*
  * SMPcaSolve()
  */
+
 void
 SMPcaSolve (SMPmatrix *Matrix, double RHS[], double iRHS[],
 	   double Spare[], double iSpare[])
@@ -307,7 +308,7 @@ SMPcSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], doubl
  */
 
 void
-SMPsolve(SMPmatrix *Matrix, double RHS[], double Spare[])
+SMPsolve (SMPmatrix *Matrix, double RHS[], double Spare[])
 {//printf("Solve\n");
     int i, *pExtOrder ;
 
@@ -344,7 +345,7 @@ SMPmatSize (SMPmatrix *Matrix)
  * SMPnewMatrix()
  */
 int
-SMPnewMatrix(SMPmatrix *Matrix)
+SMPnewMatrix (SMPmatrix *Matrix)
 {
     int Error;
     Matrix->SPmatrix = spCreate (0, 1, &Error) ;
