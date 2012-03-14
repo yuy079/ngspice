@@ -787,6 +787,10 @@ if test "$enable_pzdebug" = "yes"; then
     AC_MSG_RESULT(WARNING: Pole/Zero analysis debug is enabled)
 fi
 if test "$enable_pss" = "yes"; then
+    AC_MSG_RESULT(Checking for GSL library...)
+    AC_CHECK_HEADERS(gsl/gsl_math.h,[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gslcblas],[cblas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gsl],[gsl_blas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_DEFINE(WITH_PSS,[],[Define if you want PSS analysis])
 fi
 if test "$enable_blktmsdebug" = "yes"; then
@@ -998,6 +1002,11 @@ dnl test for header
 dnl test if timing function is o.k.
      AC_CHECK_FUNC(omp_get_wtime, [AC_MSG_RESULT(OpenMP features enabled)],
                      [AC_MSG_ERROR(OpenMP not working correctly.)])
+fi
+
+
+if test "$enable_pss" = "yes"; then
+    AC_MSG_RESULT(WARNING: PSS analysis enabled)
 fi
 
 dnl Output Files
