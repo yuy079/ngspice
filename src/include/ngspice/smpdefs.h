@@ -98,6 +98,12 @@ struct SMPmatrix {
 /* SMPmatrix structure alias - Francesco Lannutti (2012-02) */
 typedef struct SMPmatrix SMPmatrix ;
 
+
+/* Correction for the Spertica's hack */
+extern void SMPgmo ( SMPmatrix *, int, double * ) ;
+/* End of Correction for the Spertica's hack */
+
+
 #if defined(KLU) || defined(SuperLU) || defined(UMFPACK)
 void SMPmatrix_CSC ( SMPmatrix * ) ;
 void SMPnnz ( SMPmatrix * ) ;

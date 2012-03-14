@@ -110,6 +110,17 @@ extern double logb(double);
 
 static void LoadGmin (SMPmatrix *eMatrix, double Gmin) ;
 
+
+/* Correction for the Spertica's hack */
+void
+SMPgmo (SMPmatrix *Matrix, int PrintReordered, double *gsl_matrix_out)
+{
+    spGMO (Matrix->SPmatrix, PrintReordered, gsl_matrix_out) ;
+    return ;
+}
+/* End of Correction for the Spertica's hack */
+
+
 /*
  * SMPaddElt()
  */

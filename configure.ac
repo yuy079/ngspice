@@ -799,6 +799,10 @@ if test "$enable_pzdebug" = "yes"; then
     AC_MSG_RESULT(WARNING: Pole/Zero analysis debug is enabled)
 fi
 if test "$enable_pss" = "yes"; then
+    AC_MSG_RESULT(Checking for GSL library...)
+    AC_CHECK_HEADERS(gsl/gsl_math.h,[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gslcblas],[cblas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gsl],[gsl_blas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_DEFINE(WITH_PSS,[],[Define if you want PSS analysis])
 fi
 if test "$enable_blktmsdebug" = "yes"; then
@@ -1043,6 +1047,10 @@ elif (test "$enable_klu" = "yes" && test "$enable_umfpack" = "yes") ; then
     AC_MSG_ERROR(ERROR: KLU and UMFPACK can't be enabled together at the moment)
 elif (test "$enable_superlu" = "yes" && test "$enable_umfpack" = "yes") ; then
     AC_MSG_ERROR(ERROR: SuperLU and UMFPACK can't be enabled together at the moment)
+fi
+
+if test "$enable_pss" = "yes"; then
+    AC_MSG_RESULT(WARNING: PSS analysis enabled)
 fi
 
 dnl Output Files
