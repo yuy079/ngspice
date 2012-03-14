@@ -786,8 +786,8 @@ if test "x$enable_pzdebug" = xyes; then
     AC_DEFINE([PZDEBUG], [], [Define if you want to debug pole-zero analysis])
     AC_MSG_RESULT([WARNING: Pole/Zero analysis debug is enabled])
 fi
-if test "x$enable_pss" = xyes; then
-    AC_DEFINE([WITH_PSS], [], [Define if you want PSS analysis])
+if test "$enable_pss" = "yes"; then
+    AC_DEFINE(WITH_PSS,[],[Define if you want PSS analysis])
 fi
 if test "x$enable_blktmsdebug" = xyes; then
     AC_DEFINE([D_DBG_BLOCKTIMES], [], [Define if we want debug distortion analysis (BLOCKTIMES)])
@@ -999,8 +999,18 @@ if test "x$enable_openmp" = xyes; then
     AC_MSG_RESULT([OpenMP feature enabled])
 fi
 
+<<<<<<< HEAD
 # Output Files
 # ------------
+=======
+
+if test "$enable_pss" = "yes"; then
+    AC_MSG_RESULT(WARNING: PSS analysis enabled)
+fi
+
+dnl Output Files
+dnl ------------
+>>>>>>> pss, The PSS Analysis Algorithm has been entirely reviewed
 
 AC_CONFIG_FILES([Makefile
                  man/Makefile
