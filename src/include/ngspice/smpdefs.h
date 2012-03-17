@@ -99,6 +99,11 @@ struct SMPmatrix {
 typedef struct SMPmatrix SMPmatrix ;
 
 
+/* Correction for the Spertica's hack */
+extern void SMPgmo ( SMPmatrix *, int, double * ) ;
+/* End of Correction for the Spertica's hack */
+
+
 #if defined(KLU) || defined(SuperLU) || defined(UMFPACK)
 void SMPmatrix_CSC ( SMPmatrix * ) ;
 void SMPnnz ( SMPmatrix * ) ;
@@ -114,9 +119,6 @@ void SMPclear ( SMPmatrix *) ;
 
 int SMPcLUfac ( SMPmatrix *, double ) ;
 
-/* Correction for the Spertica's hack */
-extern void SMPgmo ( SMPmatrix *, int, double * ) ;
-/* End of Correction for the Spertica's hack */
 int SMPluFac ( SMPmatrix *, double , double ) ;
 
 int SMPcReorder ( SMPmatrix * , double , double , int *) ;

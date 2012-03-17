@@ -1,3 +1,9 @@
+2012-03-14  Stefano Perticaroli and Francesco Lannutti
+ * src/spicelib/analysis/dcpss.c
+  The PSS Analysis Algorithm has been entirely reviewed and now
+   it works very well. Some additional files have been modified,
+   like configure.ac, plotting strategies and so on...
+
 2012-03-12  Francesco Lannutti
  * src/maths/UMFPACK
   Added UMFPACK as new experimental linear solver
