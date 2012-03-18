@@ -804,6 +804,7 @@ if test "$enable_pss" = "yes"; then
     AC_CHECK_LIB([gslcblas],[cblas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_CHECK_LIB([gsl],[gsl_blas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_DEFINE(WITH_PSS,[],[Define if you want PSS analysis])
+    AC_MSG_RESULT(WARNING: PSS analysis enabled)
 fi
 if test "$enable_blktmsdebug" = "yes"; then
     AC_DEFINE(D_DBG_BLOCKTIMES,[],[Define if we want debug distortion analysis (BLOCKTIMES)])
@@ -1025,6 +1026,9 @@ AM_CONDITIONAL([KLU_WANTED], [test "$enable_klu" = "yes"])
 
 dnl Add SuperLU solver to ngspice
 if test "$enable_superlu" = "yes"; then
+    AC_MSG_RESULT(Checking for ATLAS library...)
+    AC_CHECK_LIB(atlas, ATL_buildinfo, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
+    AC_CHECK_LIB(f77blas, dgemm_, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
     AC_DEFINE(SuperLU,[],[Define if we want SuperLU linear systems solver])
     AC_MSG_RESULT(WARNING: SuperLU solver enabled - at the moment it only works with transient analyses)
 fi
@@ -1036,7 +1040,7 @@ if test "$enable_umfpack" = "yes"; then
     AC_CHECK_LIB(atlas, ATL_buildinfo, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
     AC_CHECK_LIB(f77blas, dgemm_, [], AC_MSG_ERROR([ERROR!!! You must have ATLAS installed]))
     AC_DEFINE(UMFPACK,[],[Define if we want UMFPACK linear systems solver])
-    AC_MSG_RESULT(WARNING: UMFPACK solver enabled)
+    AC_MSG_RESULT(WARNING: UMFPACK solver enabled - at the moment it only works with transient analyses)
 fi
 AM_CONDITIONAL([UMFPACK_WANTED], [test "$enable_umfpack" = "yes"])
 
@@ -1047,10 +1051,6 @@ elif (test "$enable_klu" = "yes" && test "$enable_umfpack" = "yes") ; then
     AC_MSG_ERROR(ERROR: KLU and UMFPACK can't be enabled together at the moment)
 elif (test "$enable_superlu" = "yes" && test "$enable_umfpack" = "yes") ; then
     AC_MSG_ERROR(ERROR: SuperLU and UMFPACK can't be enabled together at the moment)
-fi
-
-if test "$enable_pss" = "yes"; then
-    AC_MSG_RESULT(WARNING: PSS analysis enabled)
 fi
 
 dnl Output Files
