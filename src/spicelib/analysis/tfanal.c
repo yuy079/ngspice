@@ -89,8 +89,8 @@ TFanal(CKTcircuit *ckt, int restart)
         ckt->CKTrhs[insrc] += 1;
     }
 
+    SMPsolve (ckt->CKTmatrix, ckt->CKTrhs, ckt->CKTrhsSpare) ;
 
-    SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
     ckt->CKTrhs[0]=0;
 
     /* make a UID for the transfer function output */
@@ -159,7 +159,9 @@ TFanal(CKTcircuit *ckt, int restart)
     } else {
         ckt->CKTrhs[outsrc] += 1;
     }
-    SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
+
+    SMPsolve (ckt->CKTmatrix, ckt->CKTrhs, ckt->CKTrhsSpare) ;
+
     ckt->CKTrhs[0]=0;
     if (job->TFoutIsV) {
         outputs[2] = ckt->CKTrhs[job->TFoutNeg->number] -

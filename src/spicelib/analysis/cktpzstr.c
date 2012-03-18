@@ -677,7 +677,9 @@ CKTpzRunTrial(CKTcircuit *ckt, PZtrial **new_trialp, PZtrial **set)
 		    SMPprint(ckt->CKTmatrix, stdout);
 		}
 #endif
-		error = SMPcLUfac(ckt->CKTmatrix, ckt->CKTpivotAbsTol);
+
+		error = SMPcLUfac (ckt->CKTmatrix, ckt->CKTpivotAbsTol) ;
+
 		if (error == E_SINGULAR) {
 #ifdef PZDEBUG
 		    DEBUG(1) printf("Needs reordering\n");
@@ -688,9 +690,11 @@ CKTpzRunTrial(CKTcircuit *ckt, PZtrial **new_trialp, PZtrial **set)
 	    }
 	    if (ckt->CKTniState & NIPZSHOULDREORDER) {
 		CKTpzLoad(ckt, &new_trial->s);
-		error = SMPcReorder(ckt->CKTmatrix, 1.0e-30,
+
+		error = SMPcReorder (ckt->CKTmatrix, 1.0e-30,
 		    0.0 /* 0.1 Piv. Rel. */,
-		    &(job->PZnumswaps));
+		    &(job->PZnumswaps)) ;
+
 	    }
 
 	    if (error != E_SINGULAR) {

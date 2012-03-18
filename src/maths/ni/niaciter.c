@@ -51,7 +51,9 @@ retry:
         }
     } else {
 	startTime = SPfrontEnd->IFseconds();
-        error = SMPcLUfac(ckt->CKTmatrix,ckt->CKTpivotAbsTol);
+
+        error = SMPcLUfac (ckt->CKTmatrix, ckt->CKTpivotAbsTol) ;
+
 	ckt->CKTstat->STATdecompTime += 
 		SPfrontEnd->IFseconds()-startTime;
         if(error != 0) {

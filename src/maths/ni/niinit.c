@@ -90,6 +90,6 @@ NIinit(CKTcircuit *ckt)
 
 #endif
 
-    ckt->CKTniState = NIUNINITIALIZED;
-    return (SMPnewMatrix (ckt->CKTmatrix));
+    ckt->CKTniState = NIUNINITIALIZED ;
+    return (SMPnewMatrix (ckt->CKTmatrix)) ;
 }

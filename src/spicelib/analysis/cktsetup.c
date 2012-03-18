@@ -56,7 +56,7 @@ CKTsetup(CKTcircuit *ckt)
     if (error) return(error);
     ckt->CKTisSetup = 1;
 
-    matrix = ckt->CKTmatrix;
+    matrix = ckt->CKTmatrix ;
 
     for (i=0;i<DEVmaxnum;i++) {
 #ifdef HAS_WINDOWS

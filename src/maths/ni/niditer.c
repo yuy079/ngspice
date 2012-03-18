@@ -63,7 +63,9 @@ skip:
             return(error);
         }
     } else {
-        error = SMPcLUfac(ckt->CKTmatrix,ckt->CKTpivotAbsTol);
+
+        error = SMPcLUfac (ckt->CKTmatrix,ckt->CKTpivotAbsTol) ;
+
         if(error != 0) {
             if(error == E_SINGULAR) {
                 /* the problem is that the matrix can't be solved with the

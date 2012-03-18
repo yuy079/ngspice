@@ -278,6 +278,7 @@ SMPreorder (SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 /*
  * SMPcaSolve()
  */
+
 void
 SMPcaSolve (SMPmatrix *Matrix, double RHS[], double iRHS[],
 	   double Spare[], double iSpare[])

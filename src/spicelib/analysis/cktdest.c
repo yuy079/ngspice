@@ -44,7 +44,7 @@ CKTdestroy(CKTcircuit *ckt)
         FREE(ckt->CKTstates[i]);
     }
     if(ckt->CKTmatrix->SPmatrix) {
-        SMPdestroy(ckt->CKTmatrix);
+        SMPdestroy (ckt->CKTmatrix) ;
         ckt->CKTmatrix->SPmatrix = NULL;
     }
     FREE(ckt->CKTbreaks);

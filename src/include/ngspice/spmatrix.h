@@ -298,6 +298,7 @@ extern  void     spMultTransposed(MatrixPtr,spREAL*,spREAL*,spREAL*,spREAL*);
 extern  void     spSolve( MatrixPtr, spREAL*, spREAL*, spREAL*, spREAL* );
 extern  void     spSolveTransposed(MatrixPtr,spREAL*,spREAL*,spREAL*,spREAL*);
 
+
 extern int WriteCol_original(MatrixPtr, int, spREAL *, int *, spREAL **, spREAL **, spREAL **);
 extern int WriteCol_original_dump(MatrixPtr, int, spREAL *, int *);
 extern void spMatrix_CSC(MatrixPtr, int *, int *, double *, int, double **, double **, double **);

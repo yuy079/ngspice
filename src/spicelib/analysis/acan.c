@@ -247,8 +247,8 @@ ACan(CKTcircuit *ckt, int restart)
 #ifdef KLU
    if (ckt->CKTmatrix->CKTkluMODE)
    {
-        int i, m;
-        double *temp;
+        int i, m ;
+        double *temp ;
         temp = TMALLOC (double, 2 * ckt->CKTmatrix->CKTklunz) ;
         ckt->CKTmatrix->CKTbind_CSC_Complex = TMALLOC (double *, ckt->CKTmatrix->CKTklunz) ;
         ckt->CKTmatrix->CKTkluIntermediate_Complex = TMALLOC (double, 2 * ckt->CKTmatrix->CKTkluN) ;
@@ -256,7 +256,7 @@ ACan(CKTcircuit *ckt, int restart)
         for (i = 0 ; i < ckt->CKTmatrix->CKTklunz ; i++)
         {
             ckt->CKTmatrix->CKTbind_CSC_Complex [i] = &(temp [m]) ;
-            m += 2;
+            m += 2 ;
         }
 
         for (i = 0 ; i < DEVmaxnum ; i++)
@@ -430,7 +430,8 @@ CKTacLoad(CKTcircuit *ckt)
         *(ckt->CKTrhs+i)=0;
         *(ckt->CKTirhs+i)=0;
     }
-    SMPcClear(ckt->CKTmatrix);
+
+    SMPcClear (ckt->CKTmatrix) ;
 
     for (i=0;i<DEVmaxnum;i++) {
         if ( DEVices[i] && DEVices[i]->DEVacLoad && ckt->CKThead[i] ) {

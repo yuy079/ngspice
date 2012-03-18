@@ -108,8 +108,7 @@ extern double scalbn(double, int);
 extern double logb(double);
 #endif
 
-static void LoadGmin(SMPmatrix *eMatrix, double Gmin);
-
+static void LoadGmin (SMPmatrix *eMatrix, double Gmin) ;
 
 
 /* Correction for the Spertica's hack */
@@ -126,37 +125,39 @@ SMPgmo (SMPmatrix *Matrix, int PrintReordered, double *gsl_matrix_out)
  * SMPaddElt()
  */
 int
-SMPaddElt(SMPmatrix *Matrix, int Row, int Col, double Value)
+SMPaddElt (SMPmatrix *Matrix, int Row, int Col, double Value)
 {
-    *spGetElement( Matrix->SPmatrix, Row, Col ) = Value;
-    return spError( Matrix->SPmatrix );
+    *spGetElement (Matrix->SPmatrix, Row, Col) = Value ;
+    return spError (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPmakeElt()
  */
 double *
-SMPmakeElt(SMPmatrix *Matrix, int Row, int Col)
+SMPmakeElt (SMPmatrix *Matrix, int Row, int Col)
 {
-    return spGetElement( Matrix->SPmatrix, Row, Col );
+    return spGetElement (Matrix->SPmatrix, Row, Col) ;
 }
 
 /*
  * SMPcClear()
  */
+
 void
-SMPcClear(SMPmatrix *Matrix)
+SMPcClear (SMPmatrix *Matrix)
 {
-    spClear( Matrix->SPmatrix );
+    spClear (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPclear()
  */
+
 void
-SMPclear(SMPmatrix *Matrix)
+SMPclear (SMPmatrix *Matrix)
 {
-    spClear( Matrix->SPmatrix );
+    spClear (Matrix->SPmatrix) ;
 }
 
 #define NG_IGNORE(x)  (void)x
@@ -165,47 +166,51 @@ SMPclear(SMPmatrix *Matrix)
  * SMPcLUfac()
  */
 /*ARGSUSED*/
-int
-SMPcLUfac(SMPmatrix *Matrix, double PivTol)
-{
-    NG_IGNORE(PivTol);
 
-    spSetComplex( Matrix->SPmatrix );
-    return spFactor( Matrix->SPmatrix );
+int
+SMPcLUfac (SMPmatrix *Matrix, double PivTol)
+{
+    NG_IGNORE (PivTol) ;
+
+    spSetComplex (Matrix->SPmatrix) ;
+    return spFactor (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPluFac()
  */
 /*ARGSUSED*/
+
 int
 SMPluFac(SMPmatrix *Matrix, double PivTol, double Gmin)
 {
-    NG_IGNORE(PivTol);
-    spSetReal( Matrix->SPmatrix );
-    LoadGmin( Matrix, Gmin );
-    return spFactor( Matrix->SPmatrix );
+    NG_IGNORE (PivTol) ;
+    spSetReal (Matrix->SPmatrix) ;
+    LoadGmin (Matrix, Gmin) ;
+    return spFactor (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPcReorder()
  */
+
 int
 SMPcReorder (SMPmatrix *Matrix, double PivTol, double PivRel, int *NumSwaps)
 {
-    *NumSwaps = 1;
-    spSetComplex( Matrix->SPmatrix );
+    *NumSwaps = 1 ;
+    spSetComplex (Matrix->SPmatrix) ;
     return spOrderAndFactor (Matrix->SPmatrix, NULL, (spREAL)PivRel, (spREAL)PivTol, YES) ;
 }
 
 /*
  * SMPreorder()
  */
+
 int
-SMPreorder(SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
+SMPreorder (SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 {
-    spSetReal( Matrix->SPmatrix );
-    LoadGmin( Matrix, Gmin );
+    spSetReal (Matrix->SPmatrix) ;
+    LoadGmin (Matrix, Gmin) ;
     return spOrderAndFactor (Matrix->SPmatrix, NULL, (spREAL)PivRel, (spREAL)PivTol, YES) ;
 }
 
@@ -216,72 +221,76 @@ void
 SMPcaSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], double iSpare[])
 {
     printf ("SMPcaSolve\n") ;
-    NG_IGNORE(iSpare);
-    NG_IGNORE(Spare);
+    NG_IGNORE (iSpare) ;
+    NG_IGNORE (Spare) ;
 
-    spSolveTransposed( Matrix->SPmatrix, RHS, RHS, iRHS, iRHS );
+    spSolveTransposed (Matrix->SPmatrix, RHS, RHS, iRHS, iRHS) ;
 }
 
 /*
  * SMPcSolve()
  */
+
 void
 SMPcSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], double iSpare[])
 {
-    NG_IGNORE(iSpare);
-    NG_IGNORE(Spare);
+    NG_IGNORE (iSpare) ;
+    NG_IGNORE (Spare) ;
 
-    spSolve( Matrix->SPmatrix, RHS, RHS, iRHS, iRHS );
+    spSolve (Matrix->SPmatrix, RHS, RHS, iRHS, iRHS) ;
 }
 
 /*
  * SMPsolve()
  */
-void
-SMPsolve(SMPmatrix *Matrix, double RHS[], double Spare[])
-{
-    NG_IGNORE(Spare);
 
-    spSolve( Matrix->SPmatrix, RHS, RHS, NULL, NULL );
+void
+SMPsolve (SMPmatrix *Matrix, double RHS[], double Spare[])
+{
+    NG_IGNORE (Spare) ;
+
+    spSolve (Matrix->SPmatrix, RHS, RHS, NULL, NULL) ;
 }
 
 /*
  * SMPmatSize()
  */
 int
-SMPmatSize(SMPmatrix *Matrix)
+SMPmatSize (SMPmatrix *Matrix)
 {
-    return spGetSize( Matrix->SPmatrix, 1 );
+    return spGetSize (Matrix->SPmatrix, 1) ;
 }
 
 /*
  * SMPnewMatrix()
  */
 int
-SMPnewMatrix(SMPmatrix *Matrix)
+SMPnewMatrix (SMPmatrix *Matrix)
 {
-    int Error;
-    Matrix->SPmatrix = spCreate( 0, 1, &Error );
-    return Error;
+    int Error ;
+    Matrix->SPmatrix = spCreate (0, 1, &Error) ;
+    return Error ;
 }
 
 /*
  * SMPdestroy()
  */
+
 void
-SMPdestroy(SMPmatrix *Matrix)
+SMPdestroy (SMPmatrix *Matrix)
 {
-    spDestroy( Matrix->SPmatrix );
+    spDestroy (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPpreOrder()
  */
+
 int
-SMPpreOrder(SMPmatrix *Matrix)
+SMPpreOrder (SMPmatrix *Matrix)
 {
-    spMNA_Preorder( Matrix->SPmatrix );
-    return spError( Matrix->SPmatrix );
+    spMNA_Preorder (Matrix->SPmatrix) ;
+    return spError (Matrix->SPmatrix) ;
 }
 
 /*
@@ -289,20 +298,20 @@ SMPpreOrder(SMPmatrix *Matrix)
  */
 /*ARGSUSED*/
 void
-SMPprint(SMPmatrix *Matrix, FILE *File)
+SMPprint (SMPmatrix *Matrix, FILE *File)
 {
-    NG_IGNORE(File);
+    NG_IGNORE (File) ;
 
-    spPrint( Matrix->SPmatrix, 0, 1, 1 );
+    spPrint (Matrix->SPmatrix, 0, 1, 1) ;
 }
 
 /*
  * SMPgetError()
  */
 void
-SMPgetError(SMPmatrix *Matrix, int *Col, int *Row)
+SMPgetError (SMPmatrix *Matrix, int *Col, int *Row)
 {
-    spWhereSingular( Matrix->SPmatrix, Row, Col );
+    spWhereSingular (Matrix->SPmatrix, Row, Col) ;
 }
 
 /*
@@ -310,22 +319,22 @@ SMPgetError(SMPmatrix *Matrix, int *Col, int *Row)
  *    note: obsolete for Spice3d2 and later
  */
 int
-SMPcProdDiag(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
+SMPcProdDiag (SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 {
     spDeterminant (Matrix->SPmatrix, pExponent, &(pMantissa->real), &(pMantissa->imag)) ;
-    return spError( Matrix->SPmatrix );
+    return spError (Matrix->SPmatrix) ;
 }
 
 /*
  * SMPcDProd()
  */
 int
-SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
+SMPcDProd (SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 {
     double	re, im, x, y, z;
     int		p;
 
-    spDeterminant( Matrix->SPmatrix, &p, &re, &im);
+    spDeterminant (Matrix->SPmatrix, &p, &re, &im) ;
 
 #ifndef M_LN2
 #define M_LN2   0.69314718055994530942
@@ -335,7 +344,7 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 #endif
 
 #ifdef debug_print
-    printf("Determinant 10: (%20g,%20g)^%d\n", re, im, p);
+    printf ("Determinant 10: (%20g,%20g)^%d\n", re, im, p) ;
 #endif
 
     /* Convert base 10 numbers to base 2 numbers, for comparison */
@@ -349,52 +358,52 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 
     /* Fold in the fractional part */
 #ifdef debug_print
-    printf(" ** base10 -> base2 int =  %g, frac = %20g\n", x, y);
+    printf (" ** base10 -> base2 int =  %g, frac = %20g\n", x, y) ;
 #endif
-    z = pow(2.0, y);
-    re *= z;
-    im *= z;
+    z = pow (2.0, y) ;
+    re *= z ;
+    im *= z ;
 #ifdef debug_print
-    printf(" ** multiplier = %20g\n", z);
+    printf (" ** multiplier = %20g\n", z) ;
 #endif
 
     /* Re-normalize (re or im may be > 2.0 or both < 1.0 */
     if (re != 0.0)
     {
-	y = logb(re);
+	y = logb (re) ;
 	if (im != 0.0)
-	    z = logb(im);
+	    z = logb (im) ;
 	else
-	    z = 0;
+	    z = 0 ;
     } else if (im != 0.0) {
-	z = logb(im);
-	y = 0;
+	z = logb (im) ;
+	y = 0 ;
     } else {
 	/* Singular */
 	/*printf("10 -> singular\n");*/
-	y = 0;
-	z = 0;
+	y = 0 ;
+	z = 0 ;
     }
 
 #ifdef debug_print
-    printf(" ** renormalize changes = %g,%g\n", y, z);
+    printf (" ** renormalize changes = %g,%g\n", y, z) ;
 #endif
     if (y < z)
-	y = z;
+	y = z ;
 
-    *pExponent = (int)(x + y);
-    x = scalbn(re, (int) -y);
-    z = scalbn(im, (int) -y);
+    *pExponent = (int)(x + y) ;
+    x = scalbn (re, (int) -y) ;
+    z = scalbn (im, (int) -y) ;
 #ifdef debug_print
     printf (" ** values are: re %g, im %g, y %g, re' %g, im' %g\n", re, im, y, x, z) ;
 #endif
-    pMantissa->real = scalbn(re, (int) -y);
-    pMantissa->imag = scalbn(im, (int) -y);
+    pMantissa->real = scalbn (re, (int) -y) ;
+    pMantissa->imag = scalbn (im, (int) -y) ;
 
 #ifdef debug_print
     printf ("Determinant 10->2: (%20g,%20g)^%d\n", pMantissa->real, pMantissa->imag, *pExponent) ;
 #endif
-    return spError( Matrix->SPmatrix );
+    return spError (Matrix->SPmatrix) ;
 }
 
 
@@ -415,26 +424,27 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
  *  for compatibility with Spice3.
  */
 
+
 static void
-LoadGmin(SMPmatrix *eMatrix, double Gmin)
+LoadGmin (SMPmatrix *eMatrix, double Gmin)
 {
-    MatrixPtr Matrix = eMatrix->SPmatrix;
-    int I;
-    ArrayOfElementPtrs Diag;
-    ElementPtr diag;
+    MatrixPtr Matrix = eMatrix->SPmatrix ;
+    int I ;
+    ArrayOfElementPtrs Diag ;
+    ElementPtr diag ;
 
     /* Begin `LoadGmin'. */
-    assert( IS_SPARSE( Matrix ) );
+    assert (IS_SPARSE (Matrix)) ;
 
     if (Gmin != 0.0) {
-	Diag = Matrix->Diag;
+	Diag = Matrix->Diag ;
 	for (I = Matrix->Size ; I > 0 ; I--)
         {
-	    if ((diag = Diag[I]) != NULL)
-		diag->Real += Gmin;
+	    if ((diag = Diag [I]) != NULL)
+		diag->Real += Gmin ;
 	}
     }
-    return;
+    return ;
 }
 
 
@@ -450,18 +460,18 @@ LoadGmin(SMPmatrix *eMatrix, double Gmin)
  */
 
 SMPelement *
-SMPfindElt(SMPmatrix *eMatrix, int Row, int Col, int CreateIfMissing)
+SMPfindElt (SMPmatrix *eMatrix, int Row, int Col, int CreateIfMissing)
 {
-    MatrixPtr Matrix = eMatrix->SPmatrix;
-    ElementPtr Element;
+    MatrixPtr Matrix = eMatrix->SPmatrix ;
+    ElementPtr Element ;
 
     /* Begin `SMPfindElt'. */
-    assert( IS_SPARSE( Matrix ) );
-    Row = Matrix->ExtToIntRowMap[Row];
-    Col = Matrix->ExtToIntColMap[Col];
-    Element = Matrix->FirstInCol[Col];
-    Element = spcFindElementInCol(Matrix, &Element, Row, Col, CreateIfMissing);
-    return (SMPelement *)Element;
+    assert (IS_SPARSE (Matrix)) ;
+    Row = Matrix->ExtToIntRowMap [Row] ;
+    Col = Matrix->ExtToIntColMap [Col] ;
+    Element = Matrix->FirstInCol [Col] ;
+    Element = spcFindElementInCol (Matrix, &Element, Row, Col, CreateIfMissing) ;
+    return (SMPelement *)Element ;
 }
 
 /* XXX The following should probably be implemented in spUtils */
@@ -470,86 +480,86 @@ SMPfindElt(SMPmatrix *eMatrix, int Row, int Col, int CreateIfMissing)
  * SMPcZeroCol()
  */
 int
-SMPcZeroCol(SMPmatrix *eMatrix, int Col)
+SMPcZeroCol (SMPmatrix *eMatrix, int Col)
 {
-    MatrixPtr Matrix = eMatrix->SPmatrix;
-    ElementPtr	Element;
+    MatrixPtr Matrix = eMatrix->SPmatrix ;
+    ElementPtr	Element ;
 
-    Col = Matrix->ExtToIntColMap[Col];
+    Col = Matrix->ExtToIntColMap [Col] ;
 
     for (Element = Matrix->FirstInCol [Col] ; Element != NULL ; Element = Element->NextInCol)
     {
-	Element->Real = 0.0;
-	Element->Imag = 0.0;
+	Element->Real = 0.0 ;
+	Element->Imag = 0.0 ;
     }
 
-    return spError( Matrix );
+    return spError (Matrix) ;
 }
 
 /*
  * SMPcAddCol()
  */
 int
-SMPcAddCol(SMPmatrix *eMatrix, int Accum_Col, int Addend_Col)
+SMPcAddCol (SMPmatrix *eMatrix, int Accum_Col, int Addend_Col)
 {
-    MatrixPtr Matrix = eMatrix->SPmatrix;
-    ElementPtr	Accum, Addend, *Prev;
+    MatrixPtr Matrix = eMatrix->SPmatrix ;
+    ElementPtr	Accum, Addend, *Prev ;
 
-    Accum_Col = Matrix->ExtToIntColMap[Accum_Col];
-    Addend_Col = Matrix->ExtToIntColMap[Addend_Col];
+    Accum_Col = Matrix->ExtToIntColMap [Accum_Col] ;
+    Addend_Col = Matrix->ExtToIntColMap [Addend_Col] ;
 
-    Addend = Matrix->FirstInCol[Addend_Col];
-    Prev = &Matrix->FirstInCol[Accum_Col];
+    Addend = Matrix->FirstInCol [Addend_Col] ;
+    Prev = &Matrix->FirstInCol [Accum_Col] ;
     Accum = *Prev;
 
     while (Addend != NULL)
     {
 	while (Accum && Accum->Row < Addend->Row)
         {
-	    Prev = &Accum->NextInCol;
-	    Accum = *Prev;
+	    Prev = &Accum->NextInCol ;
+	    Accum = *Prev ;
 	}
 	if (!Accum || Accum->Row > Addend->Row)
         {
-	    Accum = spcCreateElement(Matrix, Addend->Row, Accum_Col, Prev, 0);
+	    Accum = spcCreateElement (Matrix, Addend->Row, Accum_Col, Prev, 0) ;
 	}
-	Accum->Real += Addend->Real;
-	Accum->Imag += Addend->Imag;
-	Addend = Addend->NextInCol;
+	Accum->Real += Addend->Real ;
+	Accum->Imag += Addend->Imag ;
+	Addend = Addend->NextInCol ;
     }
 
-    return spError( Matrix );
+    return spError (Matrix) ;
 }
 
 /*
  * SMPzeroRow()
  */
 int
-SMPzeroRow(SMPmatrix *eMatrix, int Row)
+SMPzeroRow (SMPmatrix *eMatrix, int Row)
 {
-    MatrixPtr Matrix = eMatrix->SPmatrix;
-    ElementPtr	Element;
+    MatrixPtr Matrix = eMatrix->SPmatrix ;
+    ElementPtr	Element ;
 
-    Row = Matrix->ExtToIntColMap[Row];
+    Row = Matrix->ExtToIntColMap [Row] ;
 
     if (Matrix->RowsLinked == NO)
-	spcLinkRows(Matrix);
+	spcLinkRows (Matrix) ;
 
     if (Matrix->PreviousMatrixWasComplex || Matrix->Complex)
     {
 	for (Element = Matrix->FirstInRow[Row] ; Element != NULL; Element = Element->NextInRow)
 	{
-	    Element->Real = 0.0;
-	    Element->Imag = 0.0;
+	    Element->Real = 0.0 ;
+	    Element->Imag = 0.0 ;
 	}
     } else {
 	for (Element = Matrix->FirstInRow [Row] ; Element != NULL ; Element = Element->NextInRow)
 	{
-	    Element->Real = 0.0;
+	    Element->Real = 0.0 ;
 	}
     }
 
-    return spError( Matrix );
+    return spError (Matrix) ;
 }
 
 #ifdef PARALLEL_ARCH
@@ -557,10 +567,10 @@ SMPzeroRow(SMPmatrix *eMatrix, int Row)
  * SMPcombine()
  */
 void
-SMPcombine(SMPmatrix *Matrix, double RHS[], double Spare[])
+SMPcombine (SMPmatrix *Matrix, double RHS[], double Spare[])
 {
-    spSetReal( Matrix->SPmatrix );
-    spCombine( Matrix->SPmatrix, RHS, Spare, NULL, NULL );
+    spSetReal (Matrix->SPmatrix) ;
+    spCombine (Matrix->SPmatrix, RHS, Spare, NULL, NULL) ;
 }
 
 /*
@@ -569,7 +579,7 @@ SMPcombine(SMPmatrix *Matrix, double RHS[], double Spare[])
 void
 SMPcCombine (SMPmatrix *Matrix, double RHS[], double Spare[], double iRHS[], double iSpare[])
 {
-    spSetComplex( Matrix->SPmatrix );
-    spCombine( Matrix->SPmatrix, RHS, Spare, iRHS, iSpare );
+    spSetComplex (Matrix->SPmatrix) ;
+    spCombine (Matrix->SPmatrix, RHS, Spare, iRHS, iSpare) ;
 }
 #endif /* PARALLEL_ARCH */

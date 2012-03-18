@@ -1057,7 +1057,7 @@ dnl Output Files
 dnl ------------
 
 AM_COND_IF([KLU_WANTED],
-	[AC_CONFIG_FILES([src/maths/KLU/Makefile])])
+        [AC_CONFIG_FILES([src/maths/KLU/Makefile])])
 
 AM_COND_IF([SuperLU_WANTED],
 	[AC_CONFIG_FILES([src/maths/SuperLU/Makefile])])

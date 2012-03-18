@@ -22,6 +22,7 @@
                          /* Need to change for SOI devs ? */
 
 #include "ngspice/smpdefs.h"
+
 #include "ngspice/ifsim.h"
 #include "ngspice/acdefs.h"
 #include "ngspice/gendefs.h"
@@ -106,6 +107,7 @@ struct CKTcircuit {
 #define GEAR 2
 
     SMPmatrix *CKTmatrix;       /* pointer to sparse matrix structure */
+
     int CKTniState;             /* internal state */
     double *CKTrhs;             /* current rhs value - being loaded */
     double *CKTrhsOld;          /* previous rhs value for convergence

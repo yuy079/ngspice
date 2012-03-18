@@ -95,7 +95,9 @@ NIiter(CKTcircuit *ckt, int maxIter)
             /*CKTdump(ckt);*/
 
             if(!(ckt->CKTniState & NIDIDPREORDER)) {
-                error = SMPpreOrder(ckt->CKTmatrix);
+
+                error = SMPpreOrder (ckt->CKTmatrix) ;
+
                 if(error) {
                     ckt->CKTstat->STATnumIter += iterno;
 #ifdef STEPDEBUG
@@ -170,7 +172,9 @@ NIiter(CKTcircuit *ckt, int maxIter)
             }
             
             startTime = SPfrontEnd->IFseconds();
-            SMPsolve(ckt->CKTmatrix,ckt->CKTrhs,ckt->CKTrhsSpare);
+
+            SMPsolve (ckt->CKTmatrix, ckt->CKTrhs, ckt->CKTrhsSpare) ;
+
             ckt->CKTstat->STATsolveTime += SPfrontEnd->IFseconds() -
                     startTime;
 #ifdef STEPDEBUG

@@ -4,33 +4,33 @@ noinst_LTLIBRARIES = libhisimhv.la
 
 libhisimhv_la_SOURCES =	\
 	hisimhv.h	\
-			hsmhv.c		\
-			hsmhvacld.c	\
-			hsmhvask.c 	\
-			hsmhvcvtest.c 	\
-			hsmhvdef.h	\
-			hsmhvdel.c 	\
-			hsmhvdest.c 	\
-			hsmhveval.c	\
-			hsmhveval_qover.h	\
-			hsmhvevalenv.h	\
-			hsmhvext.h	\
-			hsmhvgetic.c 	\
-			hsmhvinit.c	\
-			hsmhvinit.h	\
-			hsmhvitf.h	\
-			hsmhvld.c 	\
-			hsmhvld_info_eval.h 	\
-			hsmhvmask.c 	\
-			hsmhvmdel.c 	\
-			hsmhvmpar.c 	\
-			hsmhvnoi.c 	\
-			hsmhvpar.c 	\
-			hsmhvpzld.c 	\
-			hsmhvset.c 	\
-			hsmhvtemp.c 	\
-			hsmhvtemp_eval.h \
-			hsmhvtrunc.c
+	hsmhv.c		\
+	hsmhvacld.c	\
+	hsmhvask.c 	\
+	hsmhvcvtest.c 	\
+	hsmhvdef.h	\
+	hsmhvdel.c 	\
+	hsmhvdest.c 	\
+	hsmhveval.c	\
+	hsmhveval_qover.h	\
+	hsmhvevalenv.h	\
+	hsmhvext.h	\
+	hsmhvgetic.c 	\
+	hsmhvinit.c	\
+	hsmhvinit.h	\
+	hsmhvitf.h	\
+	hsmhvld.c 	\
+	hsmhvld_info_eval.h 	\
+	hsmhvmask.c 	\
+	hsmhvmdel.c 	\
+	hsmhvmpar.c 	\
+	hsmhvnoi.c 	\
+	hsmhvpar.c 	\
+	hsmhvpzld.c 	\
+	hsmhvset.c 	\
+	hsmhvtemp.c 	\
+	hsmhvtemp_eval.h \
+	hsmhvtrunc.c
 
 
 if KLU_WANTED

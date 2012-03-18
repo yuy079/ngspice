@@ -2,7 +2,7 @@
 
 noinst_LTLIBRARIES = libsparse.la
 
-libsparse_la_SOURCES = \
+libsparse_la_SOURCES =	\
 	spalloc.c	\
 	spbuild.c	\
 	spcombin.c	\
@@ -13,7 +13,6 @@ libsparse_la_SOURCES = \
 	spoutput.c	\
 	spsolve.c	\
 	sputils.c
-
 
 if KLU_WANTED
 libsparse_la_SOURCES += spCSC.c

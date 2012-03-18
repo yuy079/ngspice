@@ -18,7 +18,9 @@ void
 NIdestroy(CKTcircuit *ckt)
 {
     if (ckt->CKTmatrix->SPmatrix)
-	SMPdestroy(ckt->CKTmatrix);
+
+	SMPdestroy (ckt->CKTmatrix) ;
+
     ckt->CKTmatrix = NULL;
     if(ckt->CKTrhs)         FREE(ckt->CKTrhs);
     if(ckt->CKTrhsOld)      FREE(ckt->CKTrhsOld);
