@@ -1,3 +1,14 @@
+2012-03-18  Francesco Lannutti
+ * src/maths/KLU/Makefile.am
+ * src/maths/SuperLU/Makefile.am
+ * src/maths/UMFPACK/Makefile.am
+ * src/include/ngspice/Makefile.am
+  Corrected a bug which didn't let ngspice compile in an
+   external folder (e.g. "sourcedir/ngspice-klu-release")
+ * configure.ac
+  Added a check for ATLAS library when SuperLU is selected
+   as solver
+
 2012-03-14  Stefano Perticaroli and Francesco Lannutti
  * src/spicelib/analysis/dcpss.c
   The PSS Analysis Algorithm has been entirely reviewed and now
