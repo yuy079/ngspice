@@ -86,7 +86,7 @@ void checkseed(void)
 /*   printf("Enter checkseed()\n"); */
    if (cp_getvar("rndseed", CP_NUM, &newseed)) {
       if ((newseed > 0) && (oldseed != newseed)) {
-         srand(newseed); //srandom(newseed);
+         srand((unsigned int) newseed); //srandom(newseed);
          TausSeed();
          oldseed = newseed;
          printf("Seed value for random number generator is set to %d\n", newseed);
@@ -179,7 +179,7 @@ float CombLCGTaus2(void)
    b = (((CombState3 << 3) ^ CombState3) >> 11);
    CombState3 = (((CombState3 & 4294967280UL) << 17) ^ b);
    CombState4 = (1664525 * CombState4 + 1013904223UL);   
-   return ((CombState1 ^ CombState2 ^ CombState3 ^ CombState4) *  2.3283064365387e-10f);
+   return ((float) (CombState1 ^ CombState2 ^ CombState3 ^ CombState4) *  2.3283064365387e-10f);
 }
 
 
