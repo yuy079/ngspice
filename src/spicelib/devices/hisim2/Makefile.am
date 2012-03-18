@@ -4,7 +4,8 @@ EXTRA_DIST =
 
 noinst_LTLIBRARIES = libhisim2.la
 
-libhisim2_la_SOURCES =	hisim2.h	\
+libhisim2_la_SOURCES =	\
+	hisim2.h	\
 			hsm2.c		\
 			hsm2acld.c	\
 			hsm2ask.c	\

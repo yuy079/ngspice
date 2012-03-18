@@ -99,6 +99,11 @@ struct SMPmatrix {
 typedef struct SMPmatrix SMPmatrix ;
 
 
+/* Correction for the Spertica's hack */
+extern void SMPgmo ( SMPmatrix *, int, double * ) ;
+/* End of Correction for the Spertica's hack */
+
+
 #if defined(KLU) || defined(SuperLU) || defined(UMFPACK)
 void SMPmatrix_CSC ( SMPmatrix * ) ;
 void SMPnnz ( SMPmatrix * ) ;
@@ -111,8 +116,7 @@ int SMPcLUfac( SMPmatrix *, double );
 int SMPluFac( SMPmatrix *, double , double );
 int SMPcReorder( SMPmatrix * , double , double , int *);
 int SMPreorder( SMPmatrix * , double , double , double );
-void SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
-		double Spare[], double iSpare[]);
+void SMPcaSolve ( SMPmatrix *, double [], double [], double [], double [] ) ;
 void SMPcSolve( SMPmatrix *, double [], double [], double [], double []);
 void SMPsolve( SMPmatrix *, double [], double []);
 int SMPmatSize( SMPmatrix *);
@@ -126,16 +130,12 @@ int SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent);
 SMPelement * SMPfindElt( SMPmatrix *, int , int , int );
 int SMPcZeroCol(SMPmatrix *eMatrix, int Col);
 int SMPcAddCol(SMPmatrix *eMatrix, int Accum_Col, int Addend_Col);
-int SMPzeroRow(SMPmatrix *eMatrix, int Row);
 
-/* Correction for the Spertica's hack */
-extern void SMPgmo ( SMPmatrix *, int, double * ) ;
-/* End of Correction for the Spertica's hack */
+int SMPzeroRow ( SMPmatrix *eMatrix, int Row ) ;
 
 #ifdef PARALLEL_ARCH
 void SMPcombine(SMPmatrix *Matrix, double RHS[], double Spare[]);
-void SMPcCombine(SMPmatrix *Matrix, double RHS[], double Spare[],
-		 double iRHS[], double iSpare[]);
+void SMPcCombine ( SMPmatrix *Matrix, double RHS[], double Spare[], double iRHS[], double iSpare[] ) ;
 #endif
 
 #endif /*SMP*/

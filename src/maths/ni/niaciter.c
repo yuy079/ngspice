@@ -37,8 +37,9 @@ retry:
     
     if(ckt->CKTniState & NIACSHOULDREORDER) {
 	startTime = SPfrontEnd->IFseconds();
-        error = SMPcReorder(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
-                ckt->CKTpivotRelTol,&ignore);
+
+        error = SMPcReorder (ckt->CKTmatrix,ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol,&ignore) ;
+
 	ckt->CKTstat->STATreorderTime +=
 		SPfrontEnd->IFseconds()- startTime;
         ckt->CKTniState &= ~NIACSHOULDREORDER;
@@ -66,9 +67,9 @@ retry:
         }
     } 
     startTime = SPfrontEnd->IFseconds();
-    SMPcSolve(ckt->CKTmatrix,ckt->CKTrhs, 
-            ckt->CKTirhs, ckt->CKTrhsSpare,
-            ckt->CKTirhsSpare);
+
+    SMPcSolve (ckt->CKTmatrix,ckt->CKTrhs, ckt->CKTirhs, ckt->CKTrhsSpare, ckt->CKTirhsSpare) ;
+
     ckt->CKTstat->STATsolveTime += SPfrontEnd->IFseconds() - startTime;
 
     *ckt->CKTrhs = 0;

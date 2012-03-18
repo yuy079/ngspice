@@ -191,13 +191,11 @@ SMPluFac(SMPmatrix *Matrix, double PivTol, double Gmin)
  * SMPcReorder()
  */
 int
-SMPcReorder(SMPmatrix *Matrix, double PivTol, double PivRel,
-	    int *NumSwaps)
+SMPcReorder (SMPmatrix *Matrix, double PivTol, double PivRel, int *NumSwaps)
 {
     *NumSwaps = 1;
     spSetComplex( Matrix->SPmatrix );
-    return spOrderAndFactor( Matrix->SPmatrix, NULL,
-                             (spREAL)PivRel, (spREAL)PivTol, YES );
+    return spOrderAndFactor (Matrix->SPmatrix, NULL, (spREAL)PivRel, (spREAL)PivTol, YES) ;
 }
 
 /*
@@ -208,17 +206,16 @@ SMPreorder(SMPmatrix *Matrix, double PivTol, double PivRel, double Gmin)
 {
     spSetReal( Matrix->SPmatrix );
     LoadGmin( Matrix, Gmin );
-    return spOrderAndFactor( Matrix->SPmatrix, NULL,
-                             (spREAL)PivRel, (spREAL)PivTol, YES );
+    return spOrderAndFactor (Matrix->SPmatrix, NULL, (spREAL)PivRel, (spREAL)PivTol, YES) ;
 }
 
 /*
  * SMPcaSolve()
  */
 void
-SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
-	   double Spare[], double iSpare[])
+SMPcaSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], double iSpare[])
 {
+    printf ("SMPcaSolve\n") ;
     NG_IGNORE(iSpare);
     NG_IGNORE(Spare);
 
@@ -229,8 +226,7 @@ SMPcaSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
  * SMPcSolve()
  */
 void
-SMPcSolve(SMPmatrix *Matrix, double RHS[], double iRHS[],
-	  double Spare[], double iSpare[])
+SMPcSolve (SMPmatrix *Matrix, double RHS[], double iRHS[], double Spare[], double iSpare[])
 {
     NG_IGNORE(iSpare);
     NG_IGNORE(Spare);
@@ -316,8 +312,7 @@ SMPgetError(SMPmatrix *Matrix, int *Col, int *Row)
 int
 SMPcProdDiag(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 {
-    spDeterminant ( Matrix->SPmatrix, pExponent, &(pMantissa->real),
-                                              &(pMantissa->imag) );
+    spDeterminant (Matrix->SPmatrix, pExponent, &(pMantissa->real), &(pMantissa->imag)) ;
     return spError( Matrix->SPmatrix );
 }
 
@@ -364,7 +359,8 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
 #endif
 
     /* Re-normalize (re or im may be > 2.0 or both < 1.0 */
-    if (re != 0.0) {
+    if (re != 0.0)
+    {
 	y = logb(re);
 	if (im != 0.0)
 	    z = logb(im);
@@ -390,15 +386,13 @@ SMPcDProd(SMPmatrix *Matrix, SPcomplex *pMantissa, int *pExponent)
     x = scalbn(re, (int) -y);
     z = scalbn(im, (int) -y);
 #ifdef debug_print
-    printf(" ** values are: re %g, im %g, y %g, re' %g, im' %g\n",
-	    re, im, y, x, z);
+    printf (" ** values are: re %g, im %g, y %g, re' %g, im' %g\n", re, im, y, x, z) ;
 #endif
     pMantissa->real = scalbn(re, (int) -y);
     pMantissa->imag = scalbn(im, (int) -y);
 
 #ifdef debug_print
-    printf("Determinant 10->2: (%20g,%20g)^%d\n", pMantissa->real,
-	pMantissa->imag, *pExponent);
+    printf ("Determinant 10->2: (%20g,%20g)^%d\n", pMantissa->real, pMantissa->imag, *pExponent) ;
 #endif
     return spError( Matrix->SPmatrix );
 }
@@ -434,7 +428,8 @@ LoadGmin(SMPmatrix *eMatrix, double Gmin)
 
     if (Gmin != 0.0) {
 	Diag = Matrix->Diag;
-	for (I = Matrix->Size; I > 0; I--) {
+	for (I = Matrix->Size ; I > 0 ; I--)
+        {
 	    if ((diag = Diag[I]) != NULL)
 		diag->Real += Gmin;
 	}
@@ -482,9 +477,7 @@ SMPcZeroCol(SMPmatrix *eMatrix, int Col)
 
     Col = Matrix->ExtToIntColMap[Col];
 
-    for (Element = Matrix->FirstInCol[Col];
-	Element != NULL;
-	Element = Element->NextInCol)
+    for (Element = Matrix->FirstInCol [Col] ; Element != NULL ; Element = Element->NextInCol)
     {
 	Element->Real = 0.0;
 	Element->Imag = 0.0;
@@ -507,14 +500,17 @@ SMPcAddCol(SMPmatrix *eMatrix, int Accum_Col, int Addend_Col)
 
     Addend = Matrix->FirstInCol[Addend_Col];
     Prev = &Matrix->FirstInCol[Accum_Col];
-    Accum = *Prev;;
+    Accum = *Prev;
 
-    while (Addend != NULL) {
-	while (Accum && Accum->Row < Addend->Row) {
+    while (Addend != NULL)
+    {
+	while (Accum && Accum->Row < Addend->Row)
+        {
 	    Prev = &Accum->NextInCol;
 	    Accum = *Prev;
 	}
-	if (!Accum || Accum->Row > Addend->Row) {
+	if (!Accum || Accum->Row > Addend->Row)
+        {
 	    Accum = spcCreateElement(Matrix, Addend->Row, Accum_Col, Prev, 0);
 	}
 	Accum->Real += Addend->Real;
@@ -539,18 +535,15 @@ SMPzeroRow(SMPmatrix *eMatrix, int Row)
     if (Matrix->RowsLinked == NO)
 	spcLinkRows(Matrix);
 
-    if (Matrix->PreviousMatrixWasComplex || Matrix->Complex) {
-	for (Element = Matrix->FirstInRow[Row];
-	    Element != NULL;
-	    Element = Element->NextInRow)
+    if (Matrix->PreviousMatrixWasComplex || Matrix->Complex)
+    {
+	for (Element = Matrix->FirstInRow[Row] ; Element != NULL; Element = Element->NextInRow)
 	{
 	    Element->Real = 0.0;
 	    Element->Imag = 0.0;
 	}
     } else {
-	for (Element = Matrix->FirstInRow[Row];
-	    Element != NULL;
-	    Element = Element->NextInRow)
+	for (Element = Matrix->FirstInRow [Row] ; Element != NULL ; Element = Element->NextInRow)
 	{
 	    Element->Real = 0.0;
 	}
@@ -574,8 +567,7 @@ SMPcombine(SMPmatrix *Matrix, double RHS[], double Spare[])
  * SMPcCombine()
  */
 void
-SMPcCombine(SMPmatrix *Matrix, double RHS[], double Spare[],
-	    double iRHS[], double iSpare[])
+SMPcCombine (SMPmatrix *Matrix, double RHS[], double Spare[], double iRHS[], double iSpare[])
 {
     spSetComplex( Matrix->SPmatrix );
     spCombine( Matrix->SPmatrix, RHS, Spare, iRHS, iSpare );

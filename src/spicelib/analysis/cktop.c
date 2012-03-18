@@ -31,8 +31,8 @@ CKTop (CKTcircuit * ckt, long int firstmode, long int continuemode,
 ckt->CKTmode = firstmode;
 
 #if defined(KLU)
-    if (ckt->CKTmatrix->CKTkluMODE) {
-
+    if (ckt->CKTmatrix->CKTkluMODE)
+    {
         int i ;
         int n  = ckt->CKTmatrix->CKTkluN ;
         int nz = ckt->CKTmatrix->CKTklunz ;

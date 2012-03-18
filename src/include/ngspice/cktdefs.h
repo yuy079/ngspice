@@ -105,7 +105,7 @@ struct CKTcircuit {
 #define TRAPEZOIDAL 1
 #define GEAR 2
 
-    SMPmatrix *CKTmatrix;       /* pointer to sparse matrix */
+    SMPmatrix *CKTmatrix;       /* pointer to sparse matrix structure */
     int CKTniState;             /* internal state */
     double *CKTrhs;             /* current rhs value - being loaded */
     double *CKTrhsOld;          /* previous rhs value for convergence

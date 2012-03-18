@@ -52,8 +52,9 @@ retry:
 
 skip:
     if(ckt->CKTniState & NIACSHOULDREORDER) {
-        error = SMPcReorder(ckt->CKTmatrix,ckt->CKTpivotAbsTol,
-                ckt->CKTpivotRelTol,&ignore);
+
+        error = SMPcReorder (ckt->CKTmatrix,ckt->CKTpivotAbsTol, ckt->CKTpivotRelTol,&ignore) ;
+
         ckt->CKTniState &= ~NIACSHOULDREORDER;
         if(error != 0) {
             /* either singular equations or no memory, in either case,
@@ -75,9 +76,8 @@ skip:
             return(error); /* can't handle E_BADMATRIX, so let caller */
         }
     } 
-    SMPcSolve(ckt->CKTmatrix,ckt->CKTrhs, 
-            ckt->CKTirhs, ckt->CKTrhsSpare,
-            ckt->CKTirhsSpare);
+
+    SMPcSolve (ckt->CKTmatrix,ckt->CKTrhs, ckt->CKTirhs, ckt->CKTrhsSpare, ckt->CKTirhsSpare) ;
 
     *ckt->CKTrhs = 0;
     *ckt->CKTrhsSpare = 0;

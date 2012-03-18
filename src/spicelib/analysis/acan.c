@@ -245,14 +245,16 @@ ACan(CKTcircuit *ckt, int restart)
     INIT_STATS();
 
 #ifdef KLU
-   if (ckt->CKTmatrix->CKTkluMODE) {
+   if (ckt->CKTmatrix->CKTkluMODE)
+   {
         int i, m;
         double *temp;
         temp = TMALLOC (double, 2 * ckt->CKTmatrix->CKTklunz) ;
         ckt->CKTmatrix->CKTbind_CSC_Complex = TMALLOC (double *, ckt->CKTmatrix->CKTklunz) ;
         ckt->CKTmatrix->CKTkluIntermediate_Complex = TMALLOC (double, 2 * ckt->CKTmatrix->CKTkluN) ;
-        m = 0;
-        for (i = 0 ; i < ckt->CKTmatrix->CKTklunz ; i++) {
+        m = 0 ;
+        for (i = 0 ; i < ckt->CKTmatrix->CKTklunz ; i++)
+        {
             ckt->CKTmatrix->CKTbind_CSC_Complex [i] = &(temp [m]) ;
             m += 2;
         }
