@@ -65,3 +65,5 @@ Makefile.in
 
 /release*
 /debug*
+
+/vs-dll*
