@@ -145,9 +145,9 @@ AC_ARG_ENABLE([cider],
 AC_ARG_ENABLE([adms],
     [AS_HELP_STRING([--enable-adms], [Enable ADMS code models, (experimental)])])
 
-# --enable-xspice: define XSPICE in the code. This is for xspice support
-AC_ARG_ENABLE([pss],
-    [AS_HELP_STRING([--enable-pss], [Enable PSS analysis, (very experimental)])])
+dnl --enable-pss: enable PSS Analysis
+AC_ARG_ENABLE(pss,
+    AS_HELP_STRING([--enable-pss],[Enable PSS Analysis, (experimental)]))
 
 # --enable-ndev: define NDEV in the code. An interface for external device i.e. numerical device
 AC_ARG_ENABLE([ndev],
@@ -999,18 +999,12 @@ if test "x$enable_openmp" = xyes; then
     AC_MSG_RESULT([OpenMP feature enabled])
 fi
 
-<<<<<<< HEAD
-# Output Files
-# ------------
-=======
-
 if test "$enable_pss" = "yes"; then
     AC_MSG_RESULT(WARNING: PSS analysis enabled)
 fi
 
 dnl Output Files
 dnl ------------
->>>>>>> pss, The PSS Analysis Algorithm has been entirely reviewed
 
 AC_CONFIG_FILES([Makefile
                  man/Makefile

@@ -23,14 +23,6 @@ Reviewers: 2012-02 Francesco Lannutti and Stefano Perticaroli ``spertica''
 #include "ngspice/fteext.h"
 #include "ngspice/missing_math.h"
 
-/* link to GSL */
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_ieee_utils.h>
-#include <gsl/gsl_complex_math.h>
-#include <gsl/gsl_eigen.h>
-
 #ifdef XSPICE
 /* gtri - add - wbk - Add headers */
 #include "ngspice/miftypes.h"
@@ -75,9 +67,6 @@ do { \
 
 int
 CKTfour(long int, int, double *, double *, double *, double, double *, double *, double *, double *,double *);
-
-int
-compute_matrix_multiplication (double, double *, double *, double *, int) ;
 
 int
 DCpss(CKTcircuit *ckt, int restart)
@@ -571,53 +560,6 @@ nextTime:
 		CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
 		psstimes[pss_points_cycle] = ckt->CKTtime;
 		for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
-		/*********************/
-	      /* MONODROMY - START */
-	      if ( pss_points_cycle==0 ) {
-		/* printf("Siamo nella merda Capitano Ano!-1\n"); */
-		SMPgmo (ckt->CKTmatrix, 0, oldMatrix) ;
-		printf("Follows print of first CKT Matrix:\n");
-		for(k=0; k<msize; k++) {
-		  for(k1=0; k1<msize; k1++) {
-		    printf("%1.10g  ",*(oldMatrix+msize*k+k1));
-		  };
-		  printf("\n");
-		};
-		/* printf("Siamo nella merda Capitano Ano!\n"); */
-	      } else {
-		SMPgmo (ckt->CKTmatrix, 1, appMatrix) ;
-		/* printf("Affondiamo!\n"); */
-	      }
-	      if ( pss_points_cycle>0 ) {
-		compute_matrix_multiplication(1.0,appMatrix, oldMatrix, mulMatrix, msize);
-		for(k=0; k<msize; k++) {
-			for(k1=0; k1<msize; k1++) {
-				/* reuse S information to make zero diagonal element on non consistent node *
-				* otherwise matrix multiplication becomes shortly ill-conditioned 	    */
-				if (*(S_old+k1+1)==0) {
-					if (k1==k) {
-						*(oldMatrix+msize*k+k1)=0.0;
-						/* printf("Captain Ano!\n"); */
-					} else {
-						*(oldMatrix+msize*k+k1)=*(mulMatrix+msize*k+k1);
-						/* printf("Il mozzo zozzo!\n"); */
-					}
-				} else {
-					*(oldMatrix+msize*k+k1)=*(mulMatrix+msize*k+k1);
-					/* printf("Pajarulo!\n"); */
-				}
-			}
-		}
-		printf("Follows print of partial Monodromy Matrix:\n");
-		for(k=0; k<msize; k++) {
-		  for(k1=0; k1<msize; k1++) {
-		    printf("%1.10g  ",*(mulMatrix+msize*k+k1));
-		  };
-		  printf("\n");
-		};
-	      }
-	      /* MONODROMY - END */
-	      /*********************/
 		pss_points_cycle++;
 		CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints) );
 	      } else { 
@@ -641,27 +583,8 @@ nextTime:
     /* ***********************************/
     if (in_stabilization) {
 	/* test if stabTime has been reached */
-	if ( AlmostEqualUlps( ckt->CKTtime , ckt->CKTstabTime, 100 ) ) {
-
-	    /* use the 'dirty hack' to get near the fundamental frequency */
-	    /*if (nextTime_count<8192) {
-		for(count_2=1; count_2<nextTime_count-2; count_2++) {
-		    if (times_fft[count_2]>0) {
-			delta_t += (times_fft[count_2]-times_fft[count_2-1])/nextTime_count;
-		    }
-		}
-	    } else {
-		for(count_2=1; count_2<8192; count_2++) {
-		    if (times_fft[count_2]>0) {
-			delta_t += (times_fft[count_2]-times_fft[count_2-1])/8192;
-		    }
-		}
-	    } */
-	    /* if (ckt->CKTguessedFreq>1.1/delta_t/10 || ckt->CKTguessedFreq<0.9/delta_t/10) {*/
-		/* ckt->CKTguessedFreq=1.0/delta_t/10; */ /*** FREQUENCY INITIAL  GUESS ***/
-		/* printf("Frequency initial guess changed to %g from stabilization transient analysis.\n",ckt->CKTguessedFreq);
-	    } */
-
+	if ( AlmostEqualUlps( ckt->CKTtime , ckt->CKTstabTime, 100 ) )
+        {
 	    time_temp=ckt->CKTtime;
 	    ckt->CKTfinalTime=time_temp+2/(ckt->CKTguessedFreq);
 	    /* set the first requested breakpoint */
@@ -701,11 +624,6 @@ nextTime:
 		RHS_min[count_4-1] = ckt->CKTrhsOld[count_4];
 	}
 	err=sqrt(err);
-	/*** FREQUENCY PROJECTION ***/
-	//f_proj=(err-err_last)*(ckt->CKTguessedFreq);
-	//f_proj=pred[1];
-	/***************************/
-
 	err_last=err;
 
 	/* Start frequency estimation */
@@ -990,13 +908,6 @@ nextTime:
 		/* ***************************** */
 		
 		/* Terminates plot in freq domain and frees the allocated memory */
-		printf("Follows print of Monodromy Matrix:\n");
-		for(k=0; k<msize; k++) {
-		  for(k1=0; k1<msize; k1++) {
-		    printf("%1.10g  ",*(oldMatrix+msize*k+k1));
-		  };
-		  printf("\n");
-		};
 		SPfrontEnd->OUTendPlot (job->PSSplot_fd);
 
 
@@ -1010,13 +921,10 @@ nextTime:
                 {
                     for (i4 = 0 ; i4 < msize ; i4++)
                     {
-//                        printf ("ampiezza [%d] [%d]: %.6g\tfreq: %.6g\n", k1, i4, pssResults [k1 * msize + i4], pssfreqs [k1]) ;
-//                        if ((max_freq < pssResults [k1 * msize + i4]) && (pssfreqs [k1] != 0) && (pssResults [k1 * msize + i4] != 0))
                         if (max_freq < pssResults [k1 * msize + i4])
                         {
                             max_freq = pssResults [k1 * msize + i4] ;
                             position = k1 ;
-//                           printf ("CIAO\n") ;
                         }
                     }
                 }
@@ -1027,6 +935,7 @@ nextTime:
                     printf ("The fundamental frequency is: %.6g\n\n", ckt->CKTguessedFreq) ;
                     DCpss (ckt, 1) ;
                 }
+                /****************************/
 
 
 
@@ -1625,27 +1534,4 @@ CKTfour(long int ndata,		/* number of entries in the Time and
     }
     *thd = 100*sqrt(*thd);
     return(OK);
-}
-
-/* Spertica 101102 - Matrix multiplication: C=1*(AxB)+0*C in double precision by CBLAS */
-int compute_matrix_multiplication(double scalar_time_A, double *A_double_matrix, double *B_double_matrix, double *C_double_matrix, int msize)
-{
-  int exit_status;
-  cblas_dgemm (	CblasColMajor,   	// Matrix is in column major order
-	       	CblasNoTrans,    	// Don't transpose A
-	       	CblasNoTrans,    	// Don't transpose B
-	       	msize,         		// Number of rows in A (and C)
-  		msize,     		// Number of columns in B (and C)
-  		msize,      		// Number of columns in A (and rows in B)
-  		scalar_time_A,		// Scalar factor multiplying A
-  		A_double_matrix, 	// Pointer to A
-  		msize, 			// Length of leading dim of A (number of rows for col major)
-  		B_double_matrix, 	// Pointer to B
-  		msize, 			// Length of leading dim of B (number of rows for col major)
-  		0.0,            	// Scalar factor multiplying C
-  		C_double_matrix, 	// Pointer to C
-  		msize 			// Length of leading dim of C (number of rows for col major)
-  );
-  exit_status=0;
-  return exit_status;
 }
