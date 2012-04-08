@@ -148,7 +148,7 @@ AC_ARG_ENABLE(adms3,
 
 dnl --enable-xspice: define XSPICE in the code. This is for xspice support
 AC_ARG_ENABLE(pss,
-    AS_HELP_STRING([--enable-pss],[Enable PSS analysis, (very experimental)]))
+    AS_HELP_STRING([--enable-pss],[Enable PSS analysis, (experimental)]))
 
 dnl --enable-ndev: define NDEV in the code. An interface for external device i.e. numerical device
 AC_ARG_ENABLE(ndev,
@@ -787,10 +787,6 @@ if test "$enable_pzdebug" = "yes"; then
     AC_MSG_RESULT(WARNING: Pole/Zero analysis debug is enabled)
 fi
 if test "$enable_pss" = "yes"; then
-    AC_MSG_RESULT(Checking for GSL library...)
-    AC_CHECK_HEADERS(gsl/gsl_math.h,[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
-    AC_CHECK_LIB([gslcblas],[cblas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
-    AC_CHECK_LIB([gsl],[gsl_blas_dgemm],[],[AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_DEFINE(WITH_PSS,[],[Define if you want PSS analysis])
 fi
 if test "$enable_blktmsdebug" = "yes"; then
