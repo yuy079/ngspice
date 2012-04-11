@@ -1,3 +1,8 @@
+2012-04-11  Francesco Lannutti
+ * src/spicelib/analysis/cktacct.c
+  Corrected a bug that caused segmentation fault
+   if the ACCT was called before a simulation
+
 2012-03-18  Francesco Lannutti
  * src/maths/KLU/Makefile.am
  * src/maths/SuperLU/Makefile.am
