@@ -196,9 +196,9 @@ DCpss(CKTcircuit *ckt, int restart)
 	}
     }
 
-    psstimes   = TMALLOC(double, ckt->CKTpsspoints);
-    pssvalues  = TMALLOC(double, msize*ckt->CKTpsspoints);
-    pssValues  = TMALLOC(double, ckt->CKTpsspoints);
+    psstimes   = TMALLOC(double, ckt->CKTpsspoints + 1);
+    pssvalues  = TMALLOC(double, msize*(ckt->CKTpsspoints + 1));
+    pssValues  = TMALLOC(double, ckt->CKTpsspoints + 1);
     pssfreqs   = TMALLOC(double, ckt->CKTharms);
     pssmags    = TMALLOC(double, ckt->CKTharms);
     pssphases  = TMALLOC(double, ckt->CKTharms);
@@ -214,14 +214,11 @@ DCpss(CKTcircuit *ckt, int restart)
 	pssphases[pippo]=0.0;
     }
     for(pippo=0;pippo<msize*ckt->CKTharms;pippo++)
-    {
-	pssvalues[pippo]=0.0;
 	pssResults[pippo]=0.0;
-    }
-    for(pippo=0;pippo<ckt->CKTpsspoints;pippo++)
-    {
+    for(pippo=0;pippo<ckt->CKTpsspoints+1;pippo++)
 	pssValues[pippo]=0.0;
-    }
+    for(pippo=0;pippo<msize*(ckt->CKTpsspoints+1);pippo++)
+	pssvalues[pippo]=0.0;
 
     /* set first delta time step and circuit time */
     delta=ckt->CKTstep;
@@ -558,16 +555,16 @@ nextTime:
     if ( ckt->CKTin_pss ) {
     
       /* if in PSS store data for Time Domain plots and gather ordered data for FFT computing */
-//	      if ( AlmostEqualUlps( ckt->CKTtime , time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints), 10 ) ) {
-	      if ( AlmostEqualUlps( ckt->CKTtime , time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints), 1000000 ) ) {
-		printf("IN_PSS: time point accepted in evolution for FFT calculations. ");
-		printf("Circuit time %1.10g, final time %1.10g, point index %d and total requested points %ld\n",
-		      ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints), (pss_points_cycle+1), ckt->CKTpsspoints);
-		CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
+	      if ((AlmostEqualUlps (ckt->CKTtime , time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), 1)) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq)) {
+		printf("IN_PSS: time point accepted in evolution for FFT calculations.\n");
+		printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n",
+		      ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
+                CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
 		psstimes[pss_points_cycle] = ckt->CKTtime;
 		for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
 		pss_points_cycle++;
-		CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints) );
+		CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints) );
+                printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
 	      } else { 
 	      /* Algo can enter here but should do nothing */
                   printf("IN_PSS: time point accepted in evolution but dropped for FFT calculations.\n");
@@ -826,14 +823,28 @@ nextTime:
 		    ckt->CKTin_pss=1; /* PERIODIC STEADY STATE NOT REACHED however set the IN_PSS flag */
 		    time_temp=ckt->CKTtime;
 		    printf("time_temp %g\n",time_temp);
-		    CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints) );
+		    printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
+                    printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
+                    CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
+                    psstimes[pss_points_cycle] = ckt->CKTtime;
+                    for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
+                    pss_points_cycle++;
+                    CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints) );
+                    printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
 		} else {
 		    ckt->CKTguessedFreq=gf_history[k-1];
 		    printf("\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %g Hz.\n",k,ckt->CKTguessedFreq);
 		    ckt->CKTin_pss=1; /* PERIODIC STEADY STATE REACHED set the IN_PSS flag */
 		    time_temp=ckt->CKTtime;
 		    printf("time_temp %g\n",time_temp);
-		    CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle+1)/(double)ckt->CKTpsspoints) );
+		    printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
+                    printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
+                    CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
+                    psstimes[pss_points_cycle] = ckt->CKTtime;
+                    for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
+                    pss_points_cycle++;
+                    CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints) );
+                    printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
 		}
 	    }
 	    
@@ -870,8 +881,9 @@ nextTime:
     } else {
 	/* algorithm enters here when in_pss is set and to eventually terminate */
 	/* return on the converged shooting condition */
-	printf("ttemp %1.10g, final_time %1.10g, current_time %1.10g\n",time_temp, time_temp+1/ckt->CKTguessedFreq, ckt->CKTtime);
-	if ( pss_points_cycle==ckt->CKTpsspoints ) {
+	printf("ttemp %1.15g, final_time %1.15g, current_time %1.15g\n",time_temp, time_temp+1/ckt->CKTguessedFreq, ckt->CKTtime);
+	if (pss_points_cycle == ckt->CKTpsspoints + 1)
+        {
 		/* End plot in time domain */
 		SPfrontEnd->OUTendPlot (job->PSSplot_td);
 		/* The following line must be placed just before a new OUTpBeginPlot is called */
