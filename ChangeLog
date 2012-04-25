@@ -241,6 +241,17 @@
  * src/spicelib/parser/inpptree.c :
    use strchr() instead of index()
      which is depreciated
+=======
+2012-04-25  Francesco Lannutti
+ * src/spicelib/analysis/dcpss.c
+  Corrected a bug in which the first time-point of the
+   PSS Time Domain Plot wasn't grabbed, resulting in a
+   truncated plot
+ * examples/pss/colpitt_osc_pss.cir
+  Corrected the .pss line to reach convergence
+ * examples/pss/vdp_osc_pss.cir
+  Corrected the .pss line to reach convergence
+>>>>>>>  * src/spicelib/analysis/dcpss.c
 
 ============================ ngspice-24 ==================================
 2012-01-30  Dietmar Warning
