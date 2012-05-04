@@ -165,6 +165,15 @@ com_version(wordlist *wl)
 
 	fprintf(cp_out, "** %s-%s : %s\n", ft_sim->simulator,
 		ft_sim->version, ft_sim->description);
+#if defined KLU
+	fprintf(cp_out, "** Compiled with KLU Direct Linear Solver\n");
+#elif defined SuperLU
+	fprintf(cp_out, "** Compiled with SuperLU Direct Linear Solver\n");
+#elif defined UMFPACK
+	fprintf(cp_out, "** Compiled with UMFPACK Direct Linear Solver\n");
+#else
+	fprintf(cp_out, "** Compiled with Sparse Direct Linear Solver\n");
+#endif
 	fprintf(cp_out, "** The U. C. Berkeley CAD Group\n");
 	fprintf(cp_out,
 	  "** Copyright 1985-1994, Regents of the University of California.\n");
@@ -188,7 +197,7 @@ com_version(wordlist *wl)
 		fprintf(cp_out, "** Creation Date: %s\n", Spice_Build_Date);
 	    fprintf(cp_out, "******\n");
 	} else if (!strncmp(s, "-f", 2) || !strncmp(s, "-F", 2) )  { 
-	
+
 	    fprintf(cp_out, "******\n");
 
 	    fprintf(cp_out, "** %s-%s : %s\n", ft_sim->simulator,
