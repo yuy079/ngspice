@@ -14,6 +14,7 @@ libcmaths_la_SOURCES = \
 		cmath4.h
 
 if !TCL_MODULE
+if !WINDOWS
 
 noinst_PROGRAMS = test_cx_mag test_cx_j test_cx_ph test_cx_cph
 
@@ -51,8 +52,8 @@ test_cx_j_LDADD = \
 
 TESTS = test_cx_mag test_cx_j test_cx_ph test_cx_cph
 
+endif !WINDOWS
 endif !TCL_MODULE
-
 
 AM_CPPFLAGS = @AM_CPPFLAGS@ -I$(top_srcdir)/src/include -I$(top_srcdir)/src/maths/poly
 
