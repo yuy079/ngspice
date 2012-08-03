@@ -76,7 +76,7 @@ static int numeofs = 0;
  */
 
 #define append(word)                            \
-    wl_append(&wlist, &cw, word)
+    wl_append_word(&wlist, &cw, word)
 
 
 #define newword                                 \
