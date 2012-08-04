@@ -55,7 +55,7 @@ CKTfndDev(CKTcircuit *ckt, int *type, GENinstance **fast, IFuid name, GENmodel *
                here != NULL; 
                here = here->GENnextInstance) 
             {
-               if (!strcmp(here->GENname, name)) {
+               if (here->GENname == name) {
                   if (fast != 0)
                      *fast = here;
                   return OK;
