@@ -731,7 +731,8 @@ MIFget_port_type(
 
       *status = MIF_OK;
     }
-
+    if (temp)
+        tfree(temp);
 }
 
 
@@ -903,6 +904,8 @@ MIFget_port(
             *status = MIF_ERROR;
             return;
         }
+        /* free just the digital ones, the other are still assigned by INPtermInsert*/
+        tfree(*next_token);
         break;
 
     default:
