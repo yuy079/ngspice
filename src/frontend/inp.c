@@ -291,10 +291,10 @@ inp_spsource(FILE *fp, bool comfile, char *filename)
     double startTime, endTime;
 
     /* read in the deck from a file */
-    char *filename_dup = (filename == NULL) ? strdup(".") : strdup(filename);
+    char *filename_dup = ngdirname(filename ? filename : ".");
 
     startTime = seconds();
-    inp_readall(fp, &deck, 0, ngdirname(filename_dup), comfile);
+    inp_readall(fp, &deck, 0, filename_dup, comfile);
     endTime = seconds();
     tfree(filename_dup);
 
