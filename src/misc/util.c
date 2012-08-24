@@ -197,11 +197,11 @@ ngdirname(const char *name)
     const char *end = NULL;
     int start = 0;
 
-/*    if (ret) {
+    if (ret) {
         free(ret);
         ret = NULL;
     }
-*/
+
     if(name && ((name[0] >= 'a' && name[0] <= 'z') ||
                 (name[0] >= 'A' && name[0] <= 'Z')) && name[1] == ':')
         start = 2;
