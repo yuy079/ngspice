@@ -1137,5 +1137,4 @@ consaves(wordlist *wl_control)
     }
 
     com_save(wl);
-    return;
 }

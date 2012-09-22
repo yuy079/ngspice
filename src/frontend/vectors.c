@@ -243,7 +243,6 @@ ft_loadfile(char *file)
     }
     plot_num++;
     plotl_changed = TRUE;
-    return;
 }
 
 
@@ -280,8 +279,6 @@ plot_add(struct plot *pl)
     cp_addkword(CT_PLOT, buf);
     pl->pl_ccom = cp_kwswitch(CT_VECTOR, NULL);
     plot_setcur(pl->pl_typename);
-
-    return;
 }
 
 
@@ -303,7 +300,6 @@ vec_remove(char *name)
 
     /* Remove from the keyword list. */
     cp_remkword(CT_VECTOR, name);
-    return;
 }
 
 
@@ -617,7 +613,6 @@ plot_docoms(wordlist *wl)
     }
     cp_resetcontrol();
     cp_interactive = inter;
-    return;
 }
 
 
@@ -739,7 +734,6 @@ vec_new(struct dvec *d)
     }
     d->v_next = d->v_plot->pl_dvecs;
     d->v_plot->pl_dvecs = d;
-    return;
 }
 
 
@@ -771,8 +765,6 @@ vec_gc(void)
     for (pl = plot_list; pl; pl = pl->pl_next)
         for (d = pl->pl_dvecs; d; d = d->v_next)
             d->v_link2 = NULL;
-
-    return;
 }
 
 
@@ -824,7 +816,6 @@ vec_free_x(struct dvec *v)
         tfree(v->v_compdata);
 
     tfree(v);
-    return;
 }
 
 
@@ -926,7 +917,6 @@ plot_setcur(char *name)
      }
     */
     plot_cur = pl;
-    return;
 }
 
 
@@ -939,8 +929,6 @@ plot_new(struct plot *pl)
 {
     pl->pl_next = plot_list;
     plot_list = pl;
-
-    return;
 }
 
 
