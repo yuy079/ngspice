@@ -2138,7 +2138,7 @@ inp_fix_subckt(char *s)
                     }
                     buf[buf_idx++] = *(p2++);
                 }
-                SKIP_WS_FOR(p1, p2));
+                p1 = skip_ws(p2);
                 if (*p1 == '\0' || !(strchr("+-*/<>=(!,{", p2[-1]) || strchr("+-*/<>=()!,}", *p1))) {
                     if (buf_idx >= buf_len) {
                         buf_len *= 2;
