@@ -5118,7 +5118,7 @@ static void replace_token(char *string, char *token, int wherereplace, int total
             *(actstring + 3) = ' ';
         }
     }
-};
+}
 
 
 /* lines for B sources: no parsing in numparam code, just replacement of parameters.
