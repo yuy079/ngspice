@@ -33,11 +33,7 @@ double cbd, cbhat, cbs, cd, cdhat, tol, vgd, vgdo, vgs;
     {    /* loop through all the instances of the model */
          for (here = model->B3SOIPDinstances; here != NULL ;
               here=here->B3SOIPDnextInstance) 
-	 {    
-	 
-             if (here->B3SOIPDowner != ARCHme)
-                     continue;
-	 
+	 {
 	      vbs = model->B3SOIPDtype 
 		  * (*(ckt->CKTrhsOld+here->B3SOIPDbNode) 
 		  - *(ckt->CKTrhsOld+here->B3SOIPDsNodePrime));

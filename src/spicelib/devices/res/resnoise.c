@@ -56,9 +56,7 @@ RESnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt,
     for (model = firstModel; model != NULL; model = model->RESnextModel) {
         for (inst = model->RESinstances; inst != NULL; 
                 inst = inst->RESnextInstance) {
-            
-            if (inst->RESowner != ARCHme) continue;
-            
+
             if(!inst->RESnoisy) continue; /* Quiet resistors are skipped */
             
             switch (operation) {

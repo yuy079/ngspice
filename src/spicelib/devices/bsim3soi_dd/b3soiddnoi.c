@@ -131,11 +131,7 @@ int i;
     for (; model != NULL; model = model->B3SOIDDnextModel)
     {    for (here = model->B3SOIDDinstances; here != NULL;
 	      here = here->B3SOIDDnextInstance)
-	 {    
-	 
-	      if (here->B3SOIDDowner != ARCHme)
-	              continue;
-
+	 {
 	      pParam = here->pParam;
 	      switch (operation)
 	      {  case N_OPEN:

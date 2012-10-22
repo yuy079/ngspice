@@ -74,15 +74,13 @@ INDsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit *ckt, int *states)
         /* loop through all the instances of the model */
         for (here = model->INDinstances; here != NULL ;
                 here=here->INDnextInstance) {
-	    if (here->INDowner != ARCHme) goto matrixpointers;
 
             here->INDflux = *states;
             *states += 2 ;
             if(ckt->CKTsenInfo && (ckt->CKTsenInfo->SENmode & TRANSEN) ){
                 *states += 2 * (ckt->CKTsenInfo->SENparms);
             }
-            
-matrixpointers:
+
             if(here->INDbrEq == 0) {
                 error = CKTmkCur(ckt,&tmp,here->INDname,"branch");
                 if(error) return(error);

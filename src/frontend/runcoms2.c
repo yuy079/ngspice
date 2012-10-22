@@ -97,43 +97,40 @@ com_resume(wordlist *wl)
                     "Warning: strange file type \"%s\" (using \"ascii\")\n", buf);
     }
 
-    if (dofile) {
-#ifdef PARALLEL_ARCH
-        if (ARCHme == 0) {
-#endif /* PARALLEL_ARCH */
-            if (!last_used_rawfile)
-                rawfileFp = stdout;
+    if (dofile)
+    {
+        if (!last_used_rawfile)
+            rawfileFp = stdout;
 #if defined(__MINGW32__) || defined(_MSC_VER)
-            /* ask if binary or ASCII, open file with w or wb   hvogt 15.3.2000 */
-            else if (ascii) {
-                if ((rawfileFp = fopen(last_used_rawfile, "a")) == NULL) {
-                    setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
-                    perror(last_used_rawfile);
-                    ft_setflag = FALSE;
-                    return;
-                }
-            } else if (!ascii) {
-                if ((rawfileFp = fopen(last_used_rawfile, "ab")) == NULL) {
-                    setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
-                    perror(last_used_rawfile);
-                    ft_setflag = FALSE;
-                    return;
-                }
-            }
-            /*---------------------------------------------------------------------------*/
-#else
-            else if (!(rawfileFp = fopen(last_used_rawfile, "a"))) {
+        /* ask if binary or ASCII, open file with w or wb   hvogt 15.3.2000 */
+        else if (ascii)
+        {
+            if ((rawfileFp = fopen(last_used_rawfile, "a")) == NULL)
+            {
                 setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
                 perror(last_used_rawfile);
                 ft_setflag = FALSE;
                 return;
             }
-#endif
-#ifdef PARALLEL_ARCH
-        } else {
-            rawfileFp = NULL;
+        } else if (!ascii) {
+            if ((rawfileFp = fopen(last_used_rawfile, "ab")) == NULL)
+            {
+                setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
+                perror(last_used_rawfile);
+                ft_setflag = FALSE;
+                return;
+            }
         }
-#endif /* PARALLEL_ARCH */
+        /*---------------------------------------------------------------------------*/
+#else
+        else if (!(rawfileFp = fopen(last_used_rawfile, "a")))
+        {
+            setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
+            perror(last_used_rawfile);
+            ft_setflag = FALSE;
+            return;
+        }
+#endif
         rawfileBinary = !ascii;
     } else {
         rawfileFp = NULL;

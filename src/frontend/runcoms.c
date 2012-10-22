@@ -249,45 +249,43 @@ dosim(
     ft_setflag = TRUE;  /* Don't allow abort upon interrupt during run.  */
     ft_intrpt = FALSE;
     /* command "run" is given with rawfile name in wl */
-    if (dofile) {
-#ifdef PARALLEL_ARCH
-        if (ARCHme == 0) {
-#endif /* PARALLEL_ARCH */
-            if (!*wl->wl_word)
-                rawfileFp = stdout;
+    if (dofile)
+    {
+        if (!*wl->wl_word)
+            rawfileFp = stdout;
 #if defined(__MINGW32__) || defined(_MSC_VER)
-            /* ask if binary or ASCII, open file with wb or w */
-            else if (ascii) {
-                if ((rawfileFp = fopen(wl->wl_word, "w")) == NULL) {
-                    perror(wl->wl_word);
-                    ft_setflag = FALSE;
-                    return 1;
-                }
-                fprintf(cp_out, "ASCII raw file\n");
-            }
-            else if (!ascii) {
-                if ((rawfileFp = fopen(wl->wl_word, "wb")) == NULL) {
-                    perror(wl->wl_word);
-                    ft_setflag = FALSE;
-                    return 1;
-                }
-                fprintf(cp_out, "binary raw file\n");
-            }
-/*---------------------------------------------------------------------------*/
-#else
-            else if (!(rawfileFp = fopen(wl->wl_word, "w"))) {
-                setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
+        /* ask if binary or ASCII, open file with wb or w */
+        else if (ascii)
+        {
+            if ((rawfileFp = fopen(wl->wl_word, "w")) == NULL)
+            {
                 perror(wl->wl_word);
                 ft_setflag = FALSE;
                 return 1;
             }
-#endif /* __MINGW32__ */
-            rawfileBinary = !ascii;
-#ifdef PARALLEL_ARCH
-        } else {
-            rawfileFp = NULL;
+            fprintf(cp_out, "ASCII raw file\n");
         }
-#endif /* PARALLEL_ARCH */
+        else if (!ascii)
+        {
+            if ((rawfileFp = fopen(wl->wl_word, "wb")) == NULL)
+            {
+                perror(wl->wl_word);
+                ft_setflag = FALSE;
+                return 1;
+            }
+            fprintf(cp_out, "binary raw file\n");
+        }
+/*---------------------------------------------------------------------------*/
+#else
+        else if (!(rawfileFp = fopen(wl->wl_word, "w")))
+        {
+            setvbuf(rawfileFp, rawfileBuf, _IOFBF, RAWBUF_SIZE);
+            perror(wl->wl_word);
+            ft_setflag = FALSE;
+            return 1;
+        }
+#endif /* __MINGW32__ */
+        rawfileBinary = !ascii;
     } else {
         rawfileFp = NULL;
     }

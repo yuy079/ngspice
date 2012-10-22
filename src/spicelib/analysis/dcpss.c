@@ -51,7 +51,6 @@ do { \
     startdTime = ckt->CKTstat->STATdecompTime;  \
     startsTime = ckt->CKTstat->STATsolveTime;   \
     startlTime = ckt->CKTstat->STATloadTime;    \
-    startcTime = ckt->CKTstat->STATcombineTime; \
     startkTime = ckt->CKTstat->STATsyncTime;    \
 } while(0)
 
@@ -63,7 +62,6 @@ do { \
     ckt->CKTstat->STATtranDecompTime += ckt->CKTstat->STATdecompTime - startdTime; \
     ckt->CKTstat->STATtranSolveTime += ckt->CKTstat->STATsolveTime - startsTime; \
     ckt->CKTstat->STATtranLoadTime += ckt->CKTstat->STATloadTime - startlTime; \
-    ckt->CKTstat->STATtranCombTime += ckt->CKTstat->STATcombineTime - startcTime; \
     ckt->CKTstat->STATtranSyncTime += ckt->CKTstat->STATsyncTime - startkTime; \
 } while(0)
 
@@ -103,12 +101,9 @@ DCpss(CKTcircuit *ckt, int restart)
     IFuid *nameList;
     int numNames;
     double maxstepsize=0.0;
-
     int ltra_num;
     CKTnode *node;
-#ifdef PARALLEL_ARCH
-    long type = MT_TRANAN, length = 1;
-#endif /* PARALLEL_ARCH */
+
 #ifdef XSPICE
 /* gtri - add - wbk - 12/19/90 - Add IPC stuff */
     Ipc_Boolean_t  ipc_firsttime = IPC_TRUE;
@@ -970,9 +965,6 @@ resume:
         exit(0);
     }
 #endif
-#ifdef PARALLEL_ARCH
-    DGOP_( &type, &(ckt->CKTdelta), &length, "min" );
-#endif /* PARALLEL_ARCH */
 
 #endif /* XSPICE */
 
@@ -1271,9 +1263,6 @@ resume:
 #endif
             }
         }
-#ifdef PARALLEL_ARCH
-        DGOP_( &type, &(ckt->CKTdelta), &length, "min" );
-#endif /* PARALLEL_ARCH */
 
         if (ckt->CKTdelta <= ckt->CKTdelmin) {
             if (olddelta > ckt->CKTdelmin) {

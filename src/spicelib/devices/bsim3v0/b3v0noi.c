@@ -104,11 +104,7 @@ int i;
     for (; model != NULL; model = model->BSIM3v0nextModel)
     {    for (here = model->BSIM3v0instances; here != NULL;
 	      here = here->BSIM3v0nextInstance)
-	 {    
-	 
-              if (here->BSIM3v0owner != ARCHme)
-                      continue;
-
+	 {
 	      pParam = here->pParam;
 	      switch (operation)
 	      {  case N_OPEN:

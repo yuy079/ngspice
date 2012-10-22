@@ -128,11 +128,7 @@ int ByPass, Check, ChargeComputationNeeded = 0, error;
 for (; model != NULL; model = model->BSIM3v1nextModel)
 {    for (here = model->BSIM3v1instances; here != NULL; 
           here = here->BSIM3v1nextInstance)
-     {    
-     
-         if (here->BSIM3v1owner != ARCHme)
-	         continue;
-
+     {
 	  Check = 1;
           ByPass = 0;
 	  pParam = here->pParam;

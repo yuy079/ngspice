@@ -35,7 +35,6 @@ ISRCload(GENmodel *inModel, CKTcircuit *ckt)
         /* loop through all the instances of the model */
         for (here = model->ISRCinstances; here != NULL ;
                 here=here->ISRCnextInstance) {
-            if (here->ISRCowner != ARCHme) continue;
 
             if( (ckt->CKTmode & (MODEDCOP | MODEDCTRANCURVE)) &&
                     here->ISRCdcGiven ) {
@@ -338,7 +337,7 @@ INoi1 1 0  DC 0 TRNOISE(0n 0.5n 1 10n) : generate 1/f noise
                             double V1 = trnoise_state_get(state, ckt, n1);
                             double V2 = trnoise_state_get(state, ckt, n1+1);
 
-                            value = V1 + (V2 - V1) * (time / TS - n1);
+                            value = V1 + (V2 - V1) * (time / TS - (double)n1);
                         }
 
                         /* RTS noise */

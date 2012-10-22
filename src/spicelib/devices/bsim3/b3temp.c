@@ -144,8 +144,7 @@ int Size_Not_Found;
 	 /* MCJ: Length and Width not initialized */
          for (here = model->BSIM3instances; here != NULL;
               here = here->BSIM3nextInstance) 
-	 {    
-	      if (here->BSIM3owner != ARCHme) continue;
+	 {
               pSizeDependParamKnot = model->pSizeDependParamKnot;
 	      Size_Not_Found = 1;
 	      while ((pSizeDependParamKnot != NULL) && Size_Not_Found)
