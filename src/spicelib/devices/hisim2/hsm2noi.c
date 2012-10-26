@@ -30,9 +30,6 @@
  *    all of the MOSFET's is summed with the variable "OnDens".
  */
 
-extern void   NevalSrc();
-extern double Nintegrate();
-
 int HSM2noise (
      int mode, int operation,
      GENmodel *inModel,
@@ -88,7 +85,7 @@ int HSM2noise (
 			     (char *)here->HSM2name, HSM2nNames[i]);
 	      data->namelist = 
 		(IFuid *) trealloc((char *) data->namelist,
-				   (data->numPlots + 1) * sizeof(IFuid));
+				   ((long unsigned int)data->numPlots + 1) * sizeof(IFuid));
 	      if (!data->namelist)
 		return(E_NOMEM);
 	      (*(SPfrontEnd->IFnewUid)) 
@@ -102,7 +99,7 @@ int HSM2noise (
 			     (char *)here->HSM2name, HSM2nNames[i]);
 	      data->namelist = 
 		(IFuid *) trealloc((char *) data->namelist,
-				   (data->numPlots + 1) * sizeof(IFuid));
+				   ((long unsigned int)data->numPlots + 1) * sizeof(IFuid));
 	      if (!data->namelist)
 		return(E_NOMEM);
 	      (*(SPfrontEnd->IFnewUid)) 
@@ -113,7 +110,7 @@ int HSM2noise (
 			     (char *)here->HSM2name, HSM2nNames[i]);
 	      data->namelist = 
 		(IFuid *) trealloc((char *) data->namelist,
-				   (data->numPlots + 1) * sizeof(IFuid));
+				   ((long unsigned int)data->numPlots + 1) * sizeof(IFuid));
 	      if (!data->namelist)
 		return(E_NOMEM);
 	      (*(SPfrontEnd->IFnewUid)) 
