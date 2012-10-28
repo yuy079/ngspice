@@ -39,7 +39,6 @@ do \
     startdTime = ckt->CKTstat->STATdecompTime ;  \
     startsTime = ckt->CKTstat->STATsolveTime ;   \
     startlTime = ckt->CKTstat->STATloadTime ;    \
-    startcTime = ckt->CKTstat->STATcombineTime ; \
     startkTime = ckt->CKTstat->STATsyncTime ;    \
 } while (0)
 
@@ -52,7 +51,6 @@ do \
     ckt->CKTstat->STATtranDecompTime += ckt->CKTstat->STATdecompTime - startdTime ; \
     ckt->CKTstat->STATtranSolveTime += ckt->CKTstat->STATsolveTime - startsTime ; \
     ckt->CKTstat->STATtranLoadTime += ckt->CKTstat->STATloadTime - startlTime ; \
-    ckt->CKTstat->STATtranCombTime += ckt->CKTstat->STATcombineTime - startcTime ; \
     ckt->CKTstat->STATtranSyncTime += ckt->CKTstat->STATsyncTime - startkTime ; \
 } while (0)
 
@@ -72,7 +70,7 @@ DCpss (CKTcircuit *ckt, int restart)
 {
     int i, j, converged, error, firsttime, startIters, oscnNode ;
     double olddelta, delta, newdelta ;
-    double startdTime, startsTime, startlTime, startcTime, startkTime, startTime ;
+    double startdTime, startsTime, startlTime, startkTime, startTime ;
 
     int save_order, numNames, ltra_num ;
     long save_mode ;

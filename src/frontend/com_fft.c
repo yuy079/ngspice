@@ -20,9 +20,9 @@ Author:   2008 Holger Vogt
 #include "../misc/misc_time.h"
 #include "ngspice/fftext.h"
 
-
+#ifndef GREEN
 static void fftext(double*, double*, long int, long int, int);
-
+#endif
 
 void
 com_fft(wordlist *wl)
@@ -581,7 +581,7 @@ done:
     free_pnode(names);
 }
 
-
+#ifndef GREEN
 static void
 fftext(double *x, double *y, long int n, long int nn, int dir)
 {
@@ -668,3 +668,4 @@ fftext(double *x, double *y, long int n, long int nn, int dir)
         }
     }
 }
+#endif

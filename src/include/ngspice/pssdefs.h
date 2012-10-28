@@ -1,5 +1,6 @@
 /**********
 Author: 2010-05 Stefano Perticaroli ``spertica''
+Review: 2012-10 Francesco Lannutti
 **********/
 
 #ifndef PSS_H
@@ -21,8 +22,8 @@ typedef struct {
     long PSSmode;
     long int PSSpoints;
     int PSSharms;
-    void *PSSplot_td;
-    void *PSSplot_fd;
+    runDesc *PSSplot_td;
+    runDesc *PSSplot_fd;
     int sc_iter;
     double steady_coeff;
 } PSSan;
