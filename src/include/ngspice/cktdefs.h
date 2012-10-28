@@ -264,16 +264,16 @@ struct CKTcircuit {
     Enh_Ckt_Data_t *enh;        /* data used by general enhancements */
 #endif
 /* gtri - evt - wbk - 5/20/91 - add event-driven and enhancements data */
+
 #ifdef WITH_PSS
-/* SP: Steady State Analysis - 100609 */
-    double CKTstabTime;		/* PSS stab time */
-    double CKTguessedFreq;	/* PSS guessed frequency */
-    int CKTharms;		/* PSS harmonics */
-    long int CKTpsspoints;	/* PSS number of samples */
-    char *CKToscNode;       	/* PSS oscnode */
-    double CKTsteady_coeff;
-    int CKTsc_iter;
-    int CKTin_pss ;             /* PSS enable flag */
+/* SP: Periodic Steady State Analysis - 100609 */
+    double CKTstabTime ;        /* PSS stab time */
+    double CKTguessedFreq ;     /* PSS guessed frequency */
+    int CKTharms ;              /* PSS harmonics */
+    long int CKTpsspoints ;     /* PSS number of samples */
+    char *CKToscNode ;          /* PSS oscnode */
+    double CKTsteady_coeff ;    /* PSS Steady Coefficient */
+    int CKTsc_iter ;            /* PSS Maximum Number of Shooting Iterations */
 /* SP: 100609 */
 #endif
 
