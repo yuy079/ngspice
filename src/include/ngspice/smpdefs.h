@@ -40,8 +40,4 @@ int SMPcZeroCol(SMPmatrix *eMatrix, int Col);
 int SMPcAddCol(SMPmatrix *eMatrix, int Accum_Col, int Addend_Col);
 int SMPzeroRow(SMPmatrix *eMatrix, int Row);
 
-/* Correction for the Spertica's hack */
-extern void SMPgmo ( SMPmatrix *, int, double * );
-/* End of Correction for the Spertica's hack */
-
 #endif /*SMP*/
