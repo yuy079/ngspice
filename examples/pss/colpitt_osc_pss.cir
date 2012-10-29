@@ -2,7 +2,7 @@ Colpitt's Oscillator Circuit
 * Colpitt is an harmonic oscillator (LC based) which use
 * a capacitive partition of resonator to feed the single 
 * active device.
-* Prediceted frequency is about 3.33945e+06 Hz.
+* Predicted frequency is about 3.30435e+06 Hz.
 
 * Models:
 .model qnl npn(level=1 bf=80 rb=100 ccs=2pf tf=0.3ns tr=6ns cje=3pf cjc=2pf va=50)
