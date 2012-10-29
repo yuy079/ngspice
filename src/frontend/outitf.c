@@ -703,6 +703,8 @@ OUTattributes(runDesc *plotPtr, IFuid varName, int param, IFvalue *value)
     runDesc *run = plotPtr;  // FIXME
     GRIDTYPE type;
 
+    struct dvec *d;
+
     NG_IGNORE(value);
 
     if (param == OUT_SCALE_LIN)
@@ -723,10 +725,12 @@ OUTattributes(runDesc *plotPtr, IFuid varName, int param, IFvalue *value)
         }
     } else {
         if (varName) {
-            struct dvec *d;
             for (d = run->runPlot->pl_dvecs; d; d = d->v_next)
                 if (!strcmp(varName, d->v_name))
                     d->v_gridtype = type;
+        } else if (param == PLOT_COMB) {
+            for (d = run->runPlot->pl_dvecs; d; d = d->v_next)
+                d->v_plottype = param;
         } else {
             run->runPlot->pl_scale->v_gridtype = type;
         }
