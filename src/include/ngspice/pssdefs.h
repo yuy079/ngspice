@@ -1,5 +1,6 @@
 /**********
 Author: 2010-05 Stefano Perticaroli ``spertica''
+Review: 2012-10 Francesco Lannutti
 **********/
 
 #ifndef PSS_H
