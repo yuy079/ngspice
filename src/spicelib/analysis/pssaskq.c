@@ -35,7 +35,7 @@ PSSaskQuest(CKTcircuit *ckt, JOB *anal, int which, IFvalue *value)
         }
         break;
     case PSS_POINTS:
-        value->iValue = job->PSSpoints;
+        value->iValue = (int)job->PSSpoints;
         break;
     case PSS_HARMS:
         value->iValue = job->PSSharms;
