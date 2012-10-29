@@ -21,8 +21,8 @@ typedef struct {
     long PSSmode;
     long int PSSpoints;
     int PSSharms;
-    void *PSSplot_td;
-    void *PSSplot_fd;
+    runDesc *PSSplot_td;
+    runDesc *PSSplot_fd;
     int sc_iter;
     double steady_coeff;
 } PSSan;
