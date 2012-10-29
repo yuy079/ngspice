@@ -1,3 +1,13 @@
+2012-04-25  Francesco Lannutti
+ * src/spicelib/analysis/dcpss.c
+  Corrected a bug in which the first time-point of the
+   PSS Time Domain Plot wasn't grabbed, resulting in a
+   truncated plot
+ * examples/pss/colpitt_osc_pss.cir
+  Corrected the .pss line to reach convergence
+ * examples/pss/vdp_osc_pss.cir
+  Corrected the .pss line to reach convergence
+
 2012-02-19  Holger Vogt
  * com_cdump.c, commands.c, main.c:
    dummy functions for SMPprint() and SMPprintRHS() to allow making of ngnutmeg,
