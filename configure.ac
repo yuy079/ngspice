@@ -787,6 +787,10 @@ if test "x$enable_pzdebug" = xyes; then
     AC_MSG_RESULT([WARNING: Pole/Zero analysis debug is enabled])
 fi
 if test "x$enable_pss" = xyes; then
+    AC_MSG_RESULT([Checking for GSL library...])
+    AC_CHECK_HEADERS([gsl/gsl_math.h], [], [AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gslcblas], [cblas_dgemm], [], [AC_MSG_ERROR(Error!!! GSL library not installed)])
+    AC_CHECK_LIB([gsl], [gsl_blas_dgemm], [], [AC_MSG_ERROR(Error!!! GSL library not installed)])
     AC_DEFINE([WITH_PSS], [], [Define if you want PSS analysis])
 fi
 if test "x$enable_blktmsdebug" = xyes; then
@@ -997,6 +1001,10 @@ if test "x$enable_openmp" = xyes; then
     AC_DEFINE([USE_OMP], [1], [OpenMP parallel processing])
     CFLAGS="$CFLAGS $OPENMP_CFLAGS"
     AC_MSG_RESULT([OpenMP feature enabled])
+fi
+
+if test "x$enable_pss" = "xyes"; then
+    AC_MSG_RESULT([WARNING: PSS analysis enabled])
 fi
 
 # Output Files
