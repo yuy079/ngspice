@@ -656,7 +656,7 @@ dot_pss(char *line, void *ckt, INPtables *tab, card *current,
 		LITERR("Periodic steady state analysis unsupported.\n");
 		return (0);
 	}
-	IFC(newAnalysis, (ckt, which, "Periodic steady state Analysis", &foo, task));
+	IFC(newAnalysis, (ckt, which, "Periodic Steady State Analysis", &foo, task));
 
 	parm = INPgetValue(ckt, &line, IF_REAL, tab);		/* Fguess */
 	GCA(INPapName, (ckt, which, foo, "fguess", parm));
