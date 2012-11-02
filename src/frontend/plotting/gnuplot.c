@@ -126,8 +126,8 @@ ft_gnuplot(double *xlims, double *ylims, char *filename, char *title, char *xlab
     if (xlog) {
         fprintf(file, "set logscale x\n");
         if (xlims)
-            /* fprintf(file, "set xrange [%1.0e:%1.0e]\n",
-                 pow(10, floor(log10(xlims[0]))), pow(10, ceil(log10(xlims[1])))); */
+/*            fprintf(file, "set xrange [%1.0e:%1.0e]\n", 
+                pow(10, (int)floor(log10(xlims[0]))), pow(10, (int)ceil(log10(xlims[1])))); */
             fprintf(file, "set xrange [%e:%e]\n", xlims[0], xlims[1]);
     } else {
         fprintf(file, "unset logscale x \n");
@@ -137,8 +137,8 @@ ft_gnuplot(double *xlims, double *ylims, char *filename, char *title, char *xlab
     if (ylog) {
         fprintf(file, "set logscale y \n");
         if (ylims)
-            fprintf(file, "set yrange [%1.0e:%1.0e]\n",
-                pow(10, floor(log10(ylims[0]))), pow(10, ceil(log10(ylims[1]))));
+            fprintf(file, "set yrange [%1.0e:%1.0e]\n", 
+                pow(10, (int)floor(log10(ylims[0]))), pow(10, (int)ceil(log10(ylims[1]))));
     } else {
         fprintf(file, "unset logscale y \n");
         if (ylims)
