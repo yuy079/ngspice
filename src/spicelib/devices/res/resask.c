@@ -74,62 +74,62 @@ RESask(CKTcircuit *ckt, GENinstance *inst, int which, IFvalue *value,
         value->iValue = fast->RESnoisy;
         return(OK);
     case RES_QUEST_SENS_DC:
-        if (ckt->CKTsenInfo) {
-            value->rValue = *(ckt->CKTsenInfo->SEN_Sap[select->iValue + 1] +
+        if(ckt->CKTsenInfo) {
+            value->rValue = *(ckt->CKTsenInfo->SEN_Sap[select->iValue + 1]+
                               fast->RESsenParmNo);
         }
         return(OK);
     case RES_QUEST_SENS_REAL:
-        if (ckt->CKTsenInfo) {
-            value->rValue = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1] +
+        if(ckt->CKTsenInfo) {
+            value->rValue = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1]+
                               fast->RESsenParmNo);
         }
         return(OK);
     case RES_QUEST_SENS_IMAG:
-        if (ckt->CKTsenInfo) {
-            value->rValue = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1] +
+        if(ckt->CKTsenInfo) {
+            value->rValue = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1]+
                               fast->RESsenParmNo);
         }
         return(OK);
     case RES_QUEST_SENS_MAG:
-        if (ckt->CKTsenInfo) {
+        if(ckt->CKTsenInfo) {
             vr = *(ckt->CKTrhsOld + select->iValue + 1);
             vi = *(ckt->CKTirhsOld + select->iValue + 1);
             vm = sqrt(vr*vr + vi*vi);
-            if (vm == 0) {
+            if(vm == 0) {
                 value->rValue = 0;
                 return(OK);
             }
-            sr = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1] +
+            sr = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1]+
                    fast->RESsenParmNo);
-            si = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1] +
+            si = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1]+
                    fast->RESsenParmNo);
-            value->rValue = (vr * sr + vi * si) / vm;
+            value->rValue = (vr * sr + vi * si)/vm;
         }
         return(OK);
     case RES_QUEST_SENS_PH:
-        if (ckt->CKTsenInfo) {
+        if(ckt->CKTsenInfo) {
             vr = *(ckt->CKTrhsOld + select->iValue + 1);
             vi = *(ckt->CKTirhsOld + select->iValue + 1);
             vm = vr*vr + vi*vi;
-            if (vm == 0) {
+            if(vm == 0) {
                 value->rValue = 0;
                 return(OK);
             }
-            sr = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1] +
+            sr = *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1]+
                    fast->RESsenParmNo);
-            si = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1] +
+            si = *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1]+
                    fast->RESsenParmNo);
-            value->rValue = (vr * si - vi * sr) / vm;
+            value->rValue = (vr * si - vi * sr)/vm;
         }
         return(OK);
     case RES_QUEST_SENS_CPLX:
-        if (ckt->CKTsenInfo) {
+        if(ckt->CKTsenInfo) {
             value->cValue.real=
-                *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1] +
+                *(ckt->CKTsenInfo->SEN_RHS[select->iValue + 1]+
                   fast->RESsenParmNo);
             value->cValue.imag=
-                *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1] +
+                *(ckt->CKTsenInfo->SEN_iRHS[select->iValue + 1]+
                   fast->RESsenParmNo);
         }
         return(OK);
@@ -137,7 +137,7 @@ RESask(CKTcircuit *ckt, GENinstance *inst, int which, IFvalue *value,
         if (ckt->CKTcurrentAnalysis & DOING_AC) {
             errMsg = TMALLOC(char, strlen(msg) + 1);
             errRtn = "RESask";
-            strcpy(errMsg, msg);
+            strcpy(errMsg,msg);
             return(E_ASKCURRENT);
         } else if (ckt->CKTrhsOld) {
             value->rValue = (*(ckt->CKTrhsOld + fast->RESposNode) -
@@ -150,14 +150,14 @@ RESask(CKTcircuit *ckt, GENinstance *inst, int which, IFvalue *value,
             sprintf(msgloc, "No current values available for %s", fast->RESname);
             errMsg = TMALLOC(char, strlen(msgloc) + 1);
             errRtn = "RESask";
-            strcpy(errMsg, msgloc);
+            strcpy(errMsg,msgloc);
             return(E_ASKCURRENT);
         }
     case RES_POWER:
         if (ckt->CKTcurrentAnalysis & DOING_AC) {
             errMsg = TMALLOC(char, strlen(msg) + 1);
             errRtn = "RESask";
-            strcpy(errMsg, msg);
+            strcpy(errMsg,msg);
             return(E_ASKPOWER);
         } else if (ckt->CKTrhsOld) {
             value->rValue = (*(ckt->CKTrhsOld + fast->RESposNode) -
@@ -172,7 +172,7 @@ RESask(CKTcircuit *ckt, GENinstance *inst, int which, IFvalue *value,
             sprintf(msgloc, "No power values available for %s", fast->RESname);
             errMsg = TMALLOC(char, strlen(msgloc) + 1);
             errRtn = "RESask";
-            strcpy(errMsg, msgloc);
+            strcpy(errMsg,msgloc);
             return(E_ASKCURRENT);
         }
         

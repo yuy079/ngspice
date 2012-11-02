@@ -3450,7 +3450,7 @@ get_number_terminals(char *c)
                 area_found = TRUE;
         }
         for (k = i; k >= 0; k--)
-            tfree(name[k]);
+	  tfree(name[k]);
         if (area_found) {
             return i-j-2;
         } else {
@@ -5088,8 +5088,7 @@ inp_compat(struct line *deck)
 
 /* replace a token (length 4 char) in string by spaces, if it is found
     at the correct position and the total number of tokens is o.k. */
-static void
-replace_token(char *string, char *token, int wherereplace, int total)
+static void replace_token(char *string, char *token, int wherereplace, int total)
 {
     char *nexttoken;
     int count = 0, i;
@@ -5461,21 +5460,18 @@ get_quoted_token(char *string, char **token)
     }
 }
 
-
-/* Option RSERIES=rval
- * Lxxx n1 n2 Lval
- * -->
- * Lxxx n1 n2_intern__ Lval
- * RLxxx_n2_intern__ n2_intern__ n2 rval
-*/
-
-static void
-inp_add_series_resistor(struct line *deck)
+        /* Option RSERIES=rval
+           Lxxx n1 n2 Lval
+           -->
+           Lxxx n1 n2_intern__ Lval
+           RLxxx_n2_intern__ n2_intern__ n2 rval
+         */
+static void inp_add_series_resistor(struct line *deck)
 {
     size_t skip_control = 0, xlen, i;
     bool has_rseries = FALSE;
     struct line *card;
-    char *tmp_p, *title_tok, *node1, *node2, *rval = NULL;
+    char *tmp_p, *title_tok, *node1, *node2, *rval=NULL;
     char *ckt_array[10];
     struct line  *tmp_ptr, *param_end = NULL, *param_beg = NULL;
 
@@ -5489,7 +5485,7 @@ inp_add_series_resistor(struct line *deck)
             continue;
         tmp_p = strstr(curr_line, "rseries");
         /* default to "1m" if no value given */
-        if (ciprefix("=", tmp_p)) {
+        if (ciprefix("=", tmp_p)){
             tmp_p = strchr(tmp_p, '=') + 1;
             rval = gettok(&tmp_p);
         }
@@ -5497,17 +5493,15 @@ inp_add_series_resistor(struct line *deck)
             rval = copy("1m");
     }
 
-    if (!has_rseries || !rval)
+    if(!has_rseries || !rval)
         return;
-
-    fprintf(stdout,
-            "\nOption rseries given: \n"
-            "resistor %s Ohms added in series to each inductor L\n\n", rval);
+    else
+        fprintf(stdout, "\nOption rseries given: \nresistor %s Ohms added in series to each inductor L\n\n",
+            rval);
 
     for (card = deck; card; card = card->li_next) {
         char *cut_line;
         char *curr_line = cut_line = card->li_line;
-
         /* exclude any command inside .control ... .endc */
         if (ciprefix(".control", curr_line)) {
             skip_control ++;
@@ -5518,7 +5512,6 @@ inp_add_series_resistor(struct line *deck)
         } else if (skip_control > 0) {
             continue;
         }
-
         if (ciprefix("l", curr_line)) {
             title_tok = gettok(&cut_line);
             node1 =  gettok(&cut_line);
@@ -5562,6 +5555,5 @@ inp_add_series_resistor(struct line *deck)
             tfree(node2);
         }
     }
-
     tfree(rval);
 }

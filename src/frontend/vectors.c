@@ -31,8 +31,7 @@ struct dvec *EVTfindvec(char *node);
 /* Find a named vector in a plot. We are careful to copy the vector if
  * v_link2 is set, because otherwise we will get screwed up.  */
 static struct dvec *
-findvec(char *word, struct plot *pl)
-{
+findvec(char *word, struct plot *pl) {
     struct dvec *d, *newv = NULL, *end = NULL, *v;
     char buf[BSIZE_SP];
 
@@ -378,9 +377,8 @@ vec_get(const char *vec_name)
             word = ++s;
             pl = NULL;  /* NULL pl signifies a wildcard. */
         } else {
-            for (pl = plot_list;
-                 pl && !plot_prefix(buf, pl->pl_typename);
-                 pl = pl->pl_next)
+            for (pl = plot_list; pl && !plot_prefix(buf,
+                                                    pl->pl_typename); pl = pl->pl_next)
                 ;
             if (pl) {
                 word = ++s;
@@ -498,17 +496,17 @@ vec_get(const char *vec_name)
          */
 
         /*
-         * #define va_bool    va_V.vV_bool
-         * #define va_num     va_V.vV_num
-         * #define va_real    va_V.vV_real
-         * #define va_string  va_V.vV_string
-         * #define va_vlist   va_V.vV_list
-         * enum cp_types {
-         *   CP_BOOL,
-         *   CP_NUM,
-         *   CP_REAL,
-         *   CP_STRING,
-         *   CP_LIST
+         * #define va_bool  va_V.vV_bool
+         * #define va_num    va_V.vV_num
+         *#define va_real  va_V.vV_real
+         *#define va_string   va_V.vV_string
+         *#define va_vlist     va_V.vV_list
+         *enum cp_types {
+         *  CP_BOOL,
+         *  CP_NUM,
+         *  CP_REAL,
+         *  CP_STRING,
+         *  CP_LIST
          ° };
         */
 
@@ -527,8 +525,7 @@ vec_get(const char *vec_name)
                 list = TREALLOC(double, list, i);
                 *(list+i-1) = nv->va_real;
                 nv = nv->va_next;
-                if (!nv)
-                    break;
+                if (nv == NULL) break;
             }
             d->v_realdata = list;
             d->v_length = i;
@@ -538,7 +535,7 @@ vec_get(const char *vec_name)
              */
             d->v_dims[1] = 1;
         } else if (vv->va_type == CP_NUM) { /* Variable is an integer */
-            *d->v_realdata = (double) vv->va_num;
+            *d->v_realdata =  (double) vv->va_num;
         } else if (vv->va_type == CP_REAL) { /* Variable is a real */
             if (!(vv->va_next)) {
                 /* Only a real data
@@ -575,8 +572,7 @@ vec_get(const char *vec_name)
                     }
                     nv = nv->va_next;
 
-                    if (!nv)
-                        break;
+                    if (nv == NULL) break;
                 }
 
                 /* To distinguish those does not take anything for print screen to

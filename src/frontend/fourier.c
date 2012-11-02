@@ -216,6 +216,8 @@ fourier(wordlist *wl, struct plot *current_plot)
             }
             newveccount++;
 
+
+
             if (polydegree) {
                 tfree(timescale);
                 tfree(data);

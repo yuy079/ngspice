@@ -737,7 +737,7 @@ static int cm_read_source(FILE *source, Local_Data_t *loc)
                 type = CNV_STRING_TOK;
                 while ( type != CNV_NO_TOK ) {
                     token = CNVget_token(&s, &type);
-                    if (token)
+                    if(token)
                         free(token);
                     j++;
                 }
@@ -809,7 +809,7 @@ static int cm_read_source(FILE *source, Local_Data_t *loc)
                             loc->all_data[i][j-1] = bit_value;
                         }
                     }
-                    if (token)
+                    if(token)
                         free(token);
                 }
                 i++;

@@ -50,27 +50,27 @@ CKTload(CKTcircuit *ckt)
 
     startTime = SPfrontEnd->IFseconds();
     size = SMPmatSize(ckt->CKTmatrix);
-    for (i = 0; i <= size; i++) {
-        *(ckt->CKTrhs+i) = 0;
+    for (i=0; i<=size; i++) {
+        *(ckt->CKTrhs+i)=0;
     }
     SMPclear(ckt->CKTmatrix);
 #ifdef STEPDEBUG
     noncon = ckt->CKTnoncon;
 #endif /* STEPDEBUG */
 
-    for (i = 0; i < DEVmaxnum; i++) {
-        if (DEVices[i] && DEVices[i]->DEVload && ckt->CKThead[i]) {
+    for (i=0; i<DEVmaxnum; i++) {
+        if ( DEVices[i] && DEVices[i]->DEVload && ckt->CKThead[i] ) {
             error = DEVices[i]->DEVload (ckt->CKThead[i], ckt);
             if (ckt->CKTnoncon)
                 ckt->CKTtroubleNode = 0;
 #ifdef STEPDEBUG
-            if (noncon != ckt->CKTnoncon) {
+            if(noncon != ckt->CKTnoncon) {
                 printf("device type %s nonconvergence\n",
                        DEVices[i]->DEVpublic.name);
                 noncon = ckt->CKTnoncon;
             }
 #endif /* STEPDEBUG */
-            if (error) return(error);
+            if(error) return(error);
         }
     }
 
@@ -90,10 +90,10 @@ CKTload(CKTcircuit *ckt)
     /* gtri - begin - Put resistors to ground at all nodes. */
     /* Value of resistor is set by new "rshunt" option.     */
 
-    if (ckt->enh->rshunt_data.enabled) {
+    if(ckt->enh->rshunt_data.enabled) {
         gshunt = ckt->enh->rshunt_data.gshunt;
         num_nodes = ckt->enh->rshunt_data.num_nodes;
-        for (i = 0; i < num_nodes; i++) {
+        for(i = 0; i < num_nodes; i++) {
             *(ckt->enh->rshunt_data.diag[i]) += gshunt;
         }
     }
@@ -101,12 +101,12 @@ CKTload(CKTcircuit *ckt)
     /* gtri - end - Put resistors to ground at all nodes */
 #endif
 
-    if (ckt->CKTmode & MODEDC) {
+    if(ckt->CKTmode & MODEDC) {
         /* consider doing nodeset & ic assignments */
-        if (ckt->CKTmode & (MODEINITJCT | MODEINITFIX)) {
+        if(ckt->CKTmode & (MODEINITJCT | MODEINITFIX)) {
             /* do nodesets */
-            for (node = ckt->CKTnodes; node; node = node->next) {
-                if (node->nsGiven) {
+            for(node=ckt->CKTnodes; node; node=node->next) {
+                if(node->nsGiven) {
                     if (ZeroNoncurRow(ckt->CKTmatrix, ckt->CKTnodes,
                                       node->number)) {
                         *(ckt->CKTrhs+node->number) = 1.0e10 * node->nodeset *
@@ -121,15 +121,15 @@ CKTload(CKTcircuit *ckt)
                      * revert to this.
                      */
                     /*
-                     *  *(ckt->CKTrhs+node->number) += 1.0e10 * node->nodeset;
-                     *  *(node->ptr) += 1.0e10;
-                     */
+                            *(ckt->CKTrhs+node->number) += 1.0e10 * node->nodeset;
+                            *(node->ptr) += 1.0e10;
+                    */
                 }
             }
         }
-        if ((ckt->CKTmode & MODETRANOP) && (!(ckt->CKTmode & MODEUIC))) {
-            for (node = ckt->CKTnodes; node; node = node->next) {
-                if (node->icGiven) {
+        if( (ckt->CKTmode & MODETRANOP) && (!(ckt->CKTmode & MODEUIC))) {
+            for(node=ckt->CKTnodes; node; node=node->next) {
+                if(node->icGiven) {
                     if (ZeroNoncurRow(ckt->CKTmatrix, ckt->CKTnodes,
                                       node->number)) {
                         /* Original code:
@@ -149,9 +149,9 @@ CKTload(CKTcircuit *ckt)
                      * revert to this.
                      */
                     /*
-                     *  *(ckt->CKTrhs+node->number) += 1.0e10 * node->ic;
-                     *  *(node->ptr) += 1.0e10;
-                     */
+                            *(ckt->CKTrhs+node->number) += 1.0e10 * node->ic;
+                            *(node->ptr) += 1.0e10;
+                    */
                 }
             }
         }
@@ -166,9 +166,9 @@ CKTload(CKTcircuit *ckt)
 static int
 ZeroNoncurRow(SMPmatrix *matrix, CKTnode *nodes, int rownum)
 {
-    CKTnode     *n;
-    double      *x;
-    int         currents;
+    CKTnode		*n;
+    double		*x;
+    int		currents;
 
     currents = 0;
     for (n = nodes; n; n = n->next) {
@@ -180,6 +180,5 @@ ZeroNoncurRow(SMPmatrix *matrix, CKTnode *nodes, int rownum)
                 *x = 0.0;
         }
     }
-
     return currents;
 }

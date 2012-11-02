@@ -93,28 +93,25 @@ ckt->CKTmode = firstmode;
 int
 CKTconvTest (CKTcircuit * ckt)
 {
-    int i;
-    int error = OK;
+    int i, error = OK ;
 
-    for (i = 0; i < DEVmaxnum; i++)
+    for (i = 0 ; i < DEVmaxnum ; i++)
     {
-        if (DEVices[i] && DEVices[i]->DEVconvTest && ckt->CKThead[i])
-        {
-            error = DEVices[i]->DEVconvTest (ckt->CKThead[i], ckt);
-        }
+        if (DEVices [i] && DEVices [i]->DEVconvTest && ckt->CKThead [i])
+            error = DEVices [i]->DEVconvTest (ckt->CKThead [i], ckt) ;
 
         if (error)
-            return (error);
+            return (error) ;
 
         if (ckt->CKTnoncon)
         {
             /* printf("convTest: device %s failed\n",
              * DEVices[i]->DEVpublic.name); */
-            return (OK);
+            return (OK) ;
         }
     }
 
-    return (OK);
+    return (OK) ;
 }
 
 

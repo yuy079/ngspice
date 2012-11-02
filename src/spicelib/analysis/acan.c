@@ -311,7 +311,7 @@ ACan(CKTcircuit *ckt, int restart)
                 ckt->CKTsenInfo->SENacpertflag = 0;
             }
             error = CKTsenAC(ckt);
-            if (error)
+            if(error)
                 return (error);
             ckt->CKTmode = save;
             ckt->CKTsenInfo->SENmode = save1;

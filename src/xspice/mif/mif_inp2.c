@@ -281,8 +281,8 @@ card         *current ) /* the card we are to parse                     */
 	if(next_token_type == MIF_PERCENT_TOK) {  /*  we found a %  */
  	   /* get the port type identifier and check it for validity */
 	   if (next_token)
-	       tfree(next_token);
-	   next_token = MIFget_token(&line, &next_token_type);
+           tfree(next_token);
+       next_token = MIFget_token(&line,&next_token_type);
 	   /* Note that MIFget_port_type eats the next token and advances the token pointer in line */
 	   MIFget_port_type(ckt,
 			   tab,
@@ -450,9 +450,9 @@ card         *current ) /* the card we are to parse                     */
 		We'll do that now, since when we enter the loop, we expect next_token
 		to hold the next unprocessed token.
 	    */
-	    if (next_token)
-	        tfree(next_token);
-	    next_token = MIFget_token(&line, &next_token_type);
+	        if (next_token)
+                tfree(next_token);
+            next_token = MIFget_token(&line,&next_token_type);
 
         }  /* ======  array connection processing   ====== */
 
@@ -731,7 +731,6 @@ MIFget_port_type(
 
       *status = MIF_OK;
     }
-
     if (temp)
         tfree(temp);
 }
@@ -905,7 +904,7 @@ MIFget_port(
             *status = MIF_ERROR;
             return;
         }
-        /* free just the digital ones, the other are still assigned by INPtermInsert */
+        /* free just the digital ones, the other are still assigned by INPtermInsert*/
         tfree(*next_token);
         break;
 

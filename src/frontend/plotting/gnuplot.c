@@ -54,7 +54,7 @@ ft_gnuplot(double *xlims, double *ylims, char *filename, char *title, char *xlab
         return;
     }
 
-    extrange = 0.05 * (ylims[1] - ylims[0]);
+    extrange = 0.05 * (ylims[1]-ylims[0]);
 
     if (!cp_getvar("xbrushwidth", CP_NUM, &linewidth))
         linewidth = 1;

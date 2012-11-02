@@ -79,9 +79,9 @@ CKTdestroy(CKTcircuit *ckt)
 }
 
 #ifdef XSPICE
-static int
-evt_dest(Evt_Ckt_Data_t *evt)
+static int evt_dest(Evt_Ckt_Data_t *evt)
 {
+
     int i;
 
     /* Get temporary pointers for fast access */
@@ -94,7 +94,7 @@ evt_dest(Evt_Ckt_Data_t *evt)
     Evt_Port_Info_t     **port_table;
 
     Evt_State_Data_t    *state_data;
-    Evt_State_t         *statenext, *state;
+    Evt_State_t *statenext, *state;
 
     Evt_Node_Data_t     *node_data;
     Evt_Node_t          *rhs, *rhsnext;
@@ -104,14 +104,14 @@ evt_dest(Evt_Ckt_Data_t *evt)
     Evt_Msg_Data_t      *msg_data;
     Evt_Msg_t           *msg, *msgnext;
 
-    Evt_Inst_Event_t    *here;
-    Evt_Inst_Event_t    *next;
+    Evt_Inst_Event_t  *here;
+    Evt_Inst_Event_t  *next;
 
     Evt_Output_Event_t  *outhere;
     Evt_Output_Event_t  *outnext;
 
     /* Exit immediately if no event-driven instances in circuit */
-    if (evt->counts.num_insts == 0)
+    if(evt->counts.num_insts == 0)
         return(OK);
 
     output_queue = &(evt->queue.output);
@@ -128,12 +128,12 @@ evt_dest(Evt_Ckt_Data_t *evt)
     msg_data = evt->data.msg;
 
     /* instance queue */
-    for (i = 0; i < evt->counts.num_insts; i++) {
+    for(i = 0; i < evt->counts.num_insts; i++) {
         here = inst_queue->head[i];
-        while (here) {
+        while(here) {
             next = here->next;
             tfree(here);
-            here = next;
+            here=next;
         }
     }
     tfree(inst_queue->head);
@@ -156,12 +156,12 @@ evt_dest(Evt_Ckt_Data_t *evt)
     tfree(node_queue->changed);
 
     /* output queue */
-    for (i = 0; i < evt->counts.num_outputs; i++) {
+    for(i = 0; i < evt->counts.num_outputs; i++) {
         outhere = output_queue->head[i];
-        while (outhere) {
+        while(outhere) {
             outnext = outhere->next;
             tfree(outhere);
-            outhere = outnext;
+            outhere=outnext;
         }
     }
     tfree(output_queue->head);
@@ -178,14 +178,14 @@ evt_dest(Evt_Ckt_Data_t *evt)
 
     /* state data */
     /* only if digital states are there */
-    if (state_data) {
-        for (i = 0; i < evt->counts.num_insts; i++) {
+    if(state_data) {
+        for(i = 0; i < evt->counts.num_insts; i++) {
             state = state_data->head[i];
-            while (state) {
+            while(state) {
                 statenext = state->next;
                 tfree(state->block);
                 tfree(state);
-                state = statenext;
+                state=statenext;
             }
         }
 
@@ -203,13 +203,13 @@ evt_dest(Evt_Ckt_Data_t *evt)
 
     /* node data */
     /* only if digital nodes are there */
-    if (node_data) {
-        for (i = 0; i < evt->counts.num_nodes; i++) {
+    if(node_data) {
+        for(i = 0; i < evt->counts.num_nodes; i++) {
             node = node_data->head[i];
-            while (node) {
+            while(node) {
                 nodenext = node->next;
                 tfree(node);
-                node = nodenext;
+                node=nodenext;
             }
         }
         tfree(node_data->head);
@@ -220,25 +220,25 @@ evt_dest(Evt_Ckt_Data_t *evt)
         tfree(node_data->modified);
         tfree(node_data->modified_index);
 
-        for (i = 0; i < evt->counts.num_nodes; i++) {
+        for(i = 0; i < evt->counts.num_nodes; i++) {
             rhs = &(node_data->rhs[i]);
-            while (rhs) {
+            while(rhs) {
                 rhsnext = rhs->next;
                 tfree(rhs->inverted_value);
                 tfree(rhs->output_value);
                 tfree(rhs->node_value);
-                rhs = rhsnext;
+                rhs=rhsnext;
             }
         }
         tfree(node_data->rhs);
-        for (i = 0; i < evt->counts.num_nodes; i++) {
+        for(i = 0; i < evt->counts.num_nodes; i++) {
             rhs = &(node_data->rhsold[i]);
-            while (rhs) {
+            while(rhs) {
                 rhsnext = rhs->next;
                 tfree(rhs->inverted_value);
                 tfree(rhs->output_value);
                 tfree(rhs->node_value);
-                rhs = rhsnext;
+                rhs=rhsnext;
             }
         }
         tfree(node_data->rhsold);
@@ -247,13 +247,13 @@ evt_dest(Evt_Ckt_Data_t *evt)
 
     /* msg data */
 
-    if (msg_data) {
-        for (i = 0; i < evt->counts.num_ports; i++) {
+    if(msg_data) {
+        for(i = 0; i < evt->counts.num_ports; i++) {
             msg = msg_data->head[i];
-            while (msg) {
+            while(msg) {
                 msgnext = msg->next;
                 tfree(msg);
-                msg = msgnext;
+                msg=msgnext;
             }
         }
 
@@ -267,10 +267,10 @@ evt_dest(Evt_Ckt_Data_t *evt)
     }
 
     /* still to care for :
-     *   output_table
-     *   node_table
-     *   port_table
-     */
+    output_table
+    node_table
+    port_table
+    */
 
     return(OK);
 }

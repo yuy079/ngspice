@@ -1149,21 +1149,20 @@ consaves(wordlist *wl_control)
     com_save(wl);
 }
 
-
 /* check the input deck (after inpcom and numparam extensions)
    for linear elements. If only linear elements are found,
    ckt->CKTisLinear is set to 1. Return immediately if a first
    non-linear element is found. */
-static void
-cktislinear(CKTcircuit *ckt, struct line *deck)
+static void cktislinear(CKTcircuit *ckt, struct line *deck)
 {
     struct line *dd;
     char firstchar;
 
-    if (deck->li_next)
+    if(deck->li_next)
+    {
         for (dd = deck->li_next; dd; dd = dd->li_next) {
             firstchar = *dd->li_line;
-            switch (firstchar) {
+            switch ( firstchar ) {
                 case 'r':
                 case 'l':
                 case 'c':
@@ -1182,6 +1181,6 @@ cktislinear(CKTcircuit *ckt, struct line *deck)
                     return;
             }
         }
-
+    }
     ckt->CKTisLinear = 1;
 }

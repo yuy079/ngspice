@@ -82,6 +82,7 @@ DCpss(CKTcircuit *ckt, int restart)
     double startdTime;
     double startsTime;
     double startlTime;
+    double startcTime;
     double startkTime;
     double startTime;
     int startIters;
