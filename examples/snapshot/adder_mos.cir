@@ -1,4 +1,4 @@
-  4 BIT ADDER
+  Example: snsave
 * load a circuit (including transistor models and .tran command)
 * starts transient simulation until stop point
 * store intermediate data to file
