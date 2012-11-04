@@ -273,7 +273,6 @@ struct CKTcircuit {
     char *CKToscNode;       	/* PSS oscnode */
     double CKTsteady_coeff;
     int CKTsc_iter;
-    int CKTin_pss;              /* PSS enable flag */
 /* SP: 100609 */
 #endif
     unsigned int CKTisLinear:1; /* flag to indicate that the circuit
