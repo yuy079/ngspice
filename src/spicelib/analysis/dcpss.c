@@ -670,45 +670,45 @@ nextTime:
             if (shooting_cycle_counter>0) printf("NTC_MV: %g || rr: %g || predsum: %g\n", ntc_mv, rr_history[shooting_cycle_counter-1], predsum); /* for debugging purpose */
             printf("Print of dynamically consistent nodes voltages or branches currents:\n");
 
-            for(i=1, node=ckt->CKTnodes->next; node; i++, node=node->next) {
+            for(i=0, node=ckt->CKTnodes->next; node; i++, node=node->next) {
 
                 if (!strstr(node->name, "#")) {
-                    tv_01= MAX(fabs(RHS_max[i-1]), fabs(RHS_min[i-1]));
-                    err_conv_ref += ((RHS_max[i-1] - RHS_min[i-1]) * 1e-3 + 1e-9) * 7 * ckt->CKTsteady_coeff;
-                    if ( fabs(RHS_max[i-1] - RHS_min[i-1]) > 10*1e-6) {
-                        S_diff[i-1] = (RHS_max[i-1] - RHS_min[i-1]) / tv_01 - S_old[i-1];
-                        S_old[i-1]  = (RHS_max[i-1] - RHS_min[i-1]) / tv_01;
-                        if(fabs(S_old[i-1]) > 0.1) printf("[V] %20s: RHSd %-12g || Cref %-12g || RHSM %-12g || RHSm %-12g || S %-12g || P %1.10lg\n", node->name,
-                                                              ckt->CKTrhsOld[i] - RHS_copy_se[i-1],
-                                                              ((RHS_max[i-1] - RHS_min[i-1]) * 1e-3 + 1e-6) * 7 * ckt->CKTsteady_coeff,
-                                                              RHS_max[i-1],
-                                                              RHS_min[i-1],
-                                                              S_diff[i-1],
-                                                              pred[i-1] // (RHS_max[i-1] - RHS_min[i-1]) / (RHS_max[i-1] + RHS_min[i-1]) / 0.5
+                    tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
+                    err_conv_ref += ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-9) * 7 * ckt->CKTsteady_coeff;
+                    if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-6) {
+                        S_diff[i] = (RHS_max[i] - RHS_min[i]) / tv_01 - S_old[i];
+                        S_old[i]  = (RHS_max[i] - RHS_min[i]) / tv_01;
+                        if(fabs(S_old[i]) > 0.1) printf("[V] %20s: RHSd %-12g || Cref %-12g || RHSM %-12g || RHSm %-12g || S %-12g || P %1.10lg\n", node->name,
+                                                              ckt->CKTrhsOld[i+1] - RHS_copy_se[i],
+                                                              ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-6) * 7 * ckt->CKTsteady_coeff,
+                                                              RHS_max[i],
+                                                              RHS_min[i],
+                                                              S_diff[i],
+                                                              pred[i] // (RHS_max[i] - RHS_min[i]) / (RHS_max[i] + RHS_min[i]) / 0.5
                                                              );
                         dynamic_test++; /* test on voltage dynamic consistence */
                     } else {
-                        S_old[i-1]  = 0;
-                        S_diff[i-1] = 0;
+                        S_old[i]  = 0;
+                        S_diff[i] = 0;
                     }
                 } else {
-                    tv_01= MAX(fabs(RHS_max[i-1]), fabs(RHS_min[i-1]));
-                    err_conv_ref += ((RHS_max[i-1] - RHS_min[i-1]) * 1e-3 + 1e-12) * 7 * ckt->CKTsteady_coeff;
-                    if ( fabs(RHS_max[i-1] - RHS_min[i-1]) > 10*1e-9) {
-                        S_diff[i-1] = (RHS_max[i-1] - RHS_min[i-1]) / tv_01 - S_old[i-1];
-                        S_old[i-1]  = (RHS_max[i-1] - RHS_min[i-1]) / tv_01;
-                        if(fabs(S_old[i-1]) > 0.1) printf("[I] %20s: RHSd %-12g || Cref %-12g || RHSM %-12g || RHSm %-12g || S %-12g || P %1.10lg\n", node->name,
-                                                              ckt->CKTrhsOld[i] - RHS_copy_se[i-1],
-                                                              ((RHS_max[i-1] - RHS_min[i-1]) * 1e-3 + 1e-9) * 7 * ckt->CKTsteady_coeff,
-                                                              RHS_max[i-1],
-                                                              RHS_min[i-1],
-                                                              S_diff[i-1],
-                                                              pred[i-1] // (RHS_max[i-1] - RHS_min[i-1]) / (RHS_max[i-1] + RHS_min[i-1]) / 0.5
+                    tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
+                    err_conv_ref += ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-12) * 7 * ckt->CKTsteady_coeff;
+                    if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-9) {
+                        S_diff[i] = (RHS_max[i] - RHS_min[i]) / tv_01 - S_old[i];
+                        S_old[i]  = (RHS_max[i] - RHS_min[i]) / tv_01;
+                        if(fabs(S_old[i]) > 0.1) printf("[I] %20s: RHSd %-12g || Cref %-12g || RHSM %-12g || RHSm %-12g || S %-12g || P %1.10lg\n", node->name,
+                                                              ckt->CKTrhsOld[i+1] - RHS_copy_se[i],
+                                                              ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-9) * 7 * ckt->CKTsteady_coeff,
+                                                              RHS_max[i],
+                                                              RHS_min[i],
+                                                              S_diff[i],
+                                                              pred[i] // (RHS_max[i] - RHS_min[i]) / (RHS_max[i] + RHS_min[i]) / 0.5
                                                              );
                         dynamic_test++; /* test on current dynamic consistence */
                     } else {
-                        S_old[i-1]  = 0;
-                        S_diff[i-1] = 0;
+                        S_old[i]  = 0;
+                        S_diff[i] = 0;
                     }
                 }
             }
