@@ -202,7 +202,6 @@ DCpss(CKTcircuit *ckt, int restart)
     pssResults = TMALLOC(double, msize*ckt->CKTharms);
 
     for (i = 0; i < ckt->CKTharms; i++) {
-        psstimes[i] = 0.0;
         pssfreqs[i] = 0.0;
         pssmags[i] = 0.0;
         pssnmags[i] = 0.0;
@@ -212,8 +211,10 @@ DCpss(CKTcircuit *ckt, int restart)
     for (i = 0; i < msize*ckt->CKTharms; i++)
         pssResults[i] = 0.0;
 
-    for (i = 0; i < ckt->CKTpsspoints+1; i++)
+    for (i = 0; i < ckt->CKTpsspoints+1; i++) {
+        psstimes[i] = 0.0;
         pssValues[i] = 0.0;
+    }
 
     for (i = 0; i < msize*(ckt->CKTpsspoints+1); i++)
         pssvalues[i] = 0.0;
