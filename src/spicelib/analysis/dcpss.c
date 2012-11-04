@@ -802,18 +802,18 @@ nextTime:
                 printf("\nFrequency estimation (FE) and RHS residual (RR) evolution.\n");
 #endif
                 err_0 = rr_history [0];
-                for(count_5=1; count_5<shooting_cycle_counter-1; count_5++) {
+                for (i = 1; i < shooting_cycle_counter - 1; i++) {
 /*#ifdef STEPDEBUG*/
-                    if (count_5==0) {
-                        printf("%-3d -> FE: %15.10g || RR: %15.10g\n",count_5+1,1.0/delta_t/10,rr_history[count_5+1]); /* the very lucky case */
+                    if (i == 0) {
+                        printf("%-3d -> FE: %15.10g || RR: %15.10g\n", i+1, 1.0/delta_t/10, rr_history[i+1]); /* the very lucky case */
                     } else {
-                        printf("%-3d -> FE: %15.10g || RR: %15.10g\n",count_5+1,gf_history[count_5],rr_history[count_5+1]);
+                        printf("%-3d -> FE: %15.10g || RR: %15.10g\n", i+1, gf_history[i], rr_history[i+1]);
                     }
 /*#endif*/
                     /* takes the minimum residual iteration */
-                    if (rr_history[count_5]<err_0) {
-                        err_0=rr_history[count_5];
-                        k=count_5;
+                    if (rr_history[i] < err_0) {
+                        err_0 = rr_history[i];
+                        k = i;
                     }
                 }
                 if (shooting_cycle_counter<=ckt->CKTsc_iter) {
