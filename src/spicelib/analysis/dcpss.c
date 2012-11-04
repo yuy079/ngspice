@@ -66,6 +66,7 @@ do { \
 
 
 /* Define some useful macro */
+#define HISTORY 1024
 #define ERR 1e+30
 
 
@@ -120,7 +121,7 @@ DCpss(CKTcircuit *ckt, int restart)
 #endif
     /* new variables - to be reorganized */
     double err=0, predsum=0, diff=0;
-    double  time_temp=0, gf_history[1024], rr_history[1024];
+    double  time_temp=0, gf_history[HISTORY], rr_history[HISTORY];
     int msize, in_stabilization = 1, shooting_cycle_counter = 0, k=0, pippo=0, pippi=0;
     long int nextTime_count=0, ntc_start_sh=0;
     double *RHS_copy_se, *RHS_derivative, *pred, err_0 = ERR, time_temp_0=0, delta_t=0;
@@ -155,7 +156,7 @@ DCpss(CKTcircuit *ckt, int restart)
     for (pippo = 0; pippo < 4; pippo++)
         ntc_vec[pippo] = 0.0;
 
-    for (pippo = 0; pippo < 1024; pippo++) {
+    for (pippo = 0; pippo < HISTORY; pippo++) {
         rr_history[pippo] = 0.0;
         gf_history[pippo] = 0.0;
     }
