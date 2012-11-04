@@ -561,7 +561,7 @@ nextTime:
                       ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
                 CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
                 psstimes[pss_points_cycle] = ckt->CKTtime;
-                for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
+                for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
                 pss_points_cycle++;
                 CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints) );
                 printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
@@ -609,21 +609,21 @@ nextTime:
         /* error norms of RHS solution on every accepted nextTime if out of stabilization */
         err=0;
         predsum=0;
-        for(count_4 = 1; count_4 <= msize; count_4++) {
-            diff = ckt->CKTrhsOld[count_4] - RHS_copy_se[count_4-1];
+        for(i = 1; i <= msize; i++) {
+            diff = ckt->CKTrhsOld[i] - RHS_copy_se[i-1];
             err += diff * diff;
             /* compute and store derivative */
-            RHS_derivative[count_4-1] = (ckt->CKTrhs[count_4]-ckt->CKTrhsOld[count_4])/ckt->CKTdelta; // *ckt->CKTguessedFreq;
-            // pred[count_4-1] = RHS_derivative[count_4-1];
-            // pred[count_4-1] = (ckt->CKTrhs[count_4]-ckt->CKTrhsOld[count_4]);
-            pred[count_4-1] = RHS_derivative[count_4-1]/diff;
-            if (RHS_derivative[count_4-1] != 0 && pred[count_4-1] < 0.1*ckt->CKTguessedFreq) predsum += pred[count_4-1];
-            /* printf("Se vengo la... %g, %g, %g\n",diff, RHS_derivative[count_4-1], pred[count_4-1]); */
+            RHS_derivative[i-1] = (ckt->CKTrhs[i]-ckt->CKTrhsOld[i])/ckt->CKTdelta; // *ckt->CKTguessedFreq;
+            // pred[i-1] = RHS_derivative[i-1];
+            // pred[i-1] = (ckt->CKTrhs[i]-ckt->CKTrhsOld[i]);
+            pred[i-1] = RHS_derivative[i-1]/diff;
+            if (RHS_derivative[i-1] != 0 && pred[i-1] < 0.1*ckt->CKTguessedFreq) predsum += pred[i-1];
+            /* printf("Se vengo la... %g, %g, %g\n",diff, RHS_derivative[i-1], pred[i-1]); */
             /* save max and min per node or branch on every estimated period */
-            if (RHS_max[count_4-1] < ckt->CKTrhsOld[count_4])
-                RHS_max[count_4-1] = ckt->CKTrhsOld[count_4];
-            if (RHS_min[count_4-1] > ckt->CKTrhsOld[count_4])
-                RHS_min[count_4-1] = ckt->CKTrhsOld[count_4];
+            if (RHS_max[i-1] < ckt->CKTrhsOld[i])
+                RHS_max[i-1] = ckt->CKTrhsOld[i];
+            if (RHS_min[i-1] > ckt->CKTrhsOld[i])
+                RHS_min[i-1] = ckt->CKTrhsOld[i];
         }
         err=sqrt(err);
 
@@ -826,7 +826,7 @@ nextTime:
                     printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
                     CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
                     psstimes[pss_points_cycle] = ckt->CKTtime;
-                    for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
+                    for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
                     pss_points_cycle++;
                     CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
                     printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
@@ -840,7 +840,7 @@ nextTime:
                     printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
                     CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
                     psstimes[pss_points_cycle] = ckt->CKTtime;
-                    for(count_1=1; count_1<=msize; count_1++) pssvalues[count_1-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[count_1];
+                    for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
                     pss_points_cycle++;
                     CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
                     printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
