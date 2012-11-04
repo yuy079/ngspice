@@ -154,7 +154,7 @@ DCpss(CKTcircuit *ckt, int restart)
     printf("PSS stab time %g.\n", ckt->CKTstabTime);
     in_pss=0;
 
-        /* First of all we allocate and clear the memory */
+    /* Variables and memory initialization */
     for (i = 0; i < 4; i++)
         ntc_vec[i] = 0.0;
 
@@ -164,7 +164,7 @@ DCpss(CKTcircuit *ckt, int restart)
     }
 
     msize = SMPmatSize(ckt->CKTmatrix);
-    RHS_copy_se    = TMALLOC(double, msize);
+    RHS_copy_se    = TMALLOC(double, msize);  /* Set the current RHS reference for next Shooting Evaluation */
     RHS_derivative = TMALLOC(double, msize);
     pred           = TMALLOC(double, msize);
     RHS_max        = TMALLOC(double, msize);
@@ -222,13 +222,13 @@ DCpss(CKTcircuit *ckt, int restart)
     for (i = 0; i<ckt->CKTpsspoints; i++)
         pssValues[i] = 0.0;
 
-    /* set first delta time step and circuit time */
+    /* Delta timestep and circuit time setup */
     delta=ckt->CKTstep;
     ckt->CKTtime=ckt->CKTinitTime;
     ckt->CKTfinalTime=ckt->CKTstabTime;
     /* printf("initial delta: %g\n", ckt->CKTdelta); */
 
-    /* 100906 - Paste from dctran.c */
+    /* Starting PSS Algorithm, based on Transient Analysis */
     if(restart || ckt->CKTtime == 0) {
         delta=MIN(1/(ckt->CKTguessedFreq)/100,ckt->CKTstep);
 
@@ -245,13 +245,14 @@ DCpss(CKTcircuit *ckt, int restart)
             maxstepsize = ckt->CKTmaxStep;
 
         ckt->CKTsizeIncr = 10;
-        ckt->CKTtimeIndex = -1; /* before the DC soln has been stored */
+        ckt->CKTtimeIndex = -1;  /* before the DC solution has been stored */
         ckt->CKTtimeListSize = (int)(1 / (ckt->CKTguessedFreq) / maxstepsize + 0.5);
         ltra_num = CKTtypelook("LTRA");
         if (ltra_num >= 0 && ckt->CKThead[ltra_num] != NULL)
             ckt->CKTtimePoints = NEWN(double, ckt->CKTtimeListSize);
         /* end LTRA code addition */
 
+        /* Breakpoints initialization */
         if(ckt->CKTbreaks) FREE(ckt->CKTbreaks);
         ckt->CKTbreaks = TMALLOC(double, 2);
         if(ckt->CKTbreaks == NULL) return(E_NOMEM);
@@ -266,6 +267,7 @@ DCpss(CKTcircuit *ckt, int restart)
         if(ckt->CKTminBreak==0) ckt->CKTminBreak = 10.0 * ckt->CKTdelmin;
 /* gtri - end - wbk - 12/19/90 - Modify setting of CKTminBreak */
 #else
+        /* Minimum Breakpoint Setup */
         if(ckt->CKTminBreak==0) ckt->CKTminBreak=ckt->CKTmaxStep*5e-5;
 #endif
 
@@ -280,9 +282,9 @@ DCpss(CKTcircuit *ckt, int restart)
         g_mif_info.circuit.anal_init = MIF_TRUE;
 /* gtri - end - wbk */
 #endif
+        /* Time Domain plot start and prepared to be filled in later */
         error = CKTnames(ckt,&numNames,&nameList);
         if(error) return(error);
-        /* first Time Domain plot is started here but filled later with data */
         SPfrontEnd->IFnewUid (ckt, &timeUid, NULL,
                               "time", UID_OTHER, NULL);
         error = SPfrontEnd->OUTpBeginPlot (
@@ -293,6 +295,7 @@ DCpss(CKTcircuit *ckt, int restart)
         tfree(nameList);
         if(error) return(error);
 
+        /* Time initialization for Transient Analysis */
         ckt->CKTtime = 0;
         ckt->CKTdelta = 0;
         ckt->CKTbreak=1;
@@ -321,6 +324,7 @@ DCpss(CKTcircuit *ckt, int restart)
 /* gtri - end - wbk - Call EVTop if event-driven instances exist */
         } else
 #endif
+            /* Looking for a working Operating Point */
             converged = CKTop(ckt,
                               (ckt->CKTmode & MODEUIC)|MODETRANOP| MODEINITJCT,
                               (ckt->CKTmode & MODEUIC)|MODETRANOP| MODEINITFLOAT,
@@ -347,6 +351,7 @@ DCpss(CKTcircuit *ckt, int restart)
         }
 #endif
 
+        /* If no convergence reached - NO valid Operating Point */
         if(converged != 0) return(converged);
 #ifdef XSPICE
 /* gtri - add - wbk - 12/19/90 - Add IPC stuff */
@@ -378,10 +383,13 @@ DCpss(CKTcircuit *ckt, int restart)
 /* gtri - end - wbk - Add Breakpoint stuff */
 #endif
         ckt->CKTstat->STATtimePts ++;
+        /* Setting Integration Order to Backward Euler */
         ckt->CKTorder=1;
+        /* Copying the maxStep to every deltaOld */
         for(i=0; i<7; i++) {
             ckt->CKTdeltaOld[i]=ckt->CKTmaxStep;
         }
+        /* Setting DELTA */
         ckt->CKTdelta = delta;
 #ifdef STEPDEBUG
         (void)printf("delta initialized to %g\n",ckt->CKTdelta);
@@ -406,8 +414,10 @@ DCpss(CKTcircuit *ckt, int restart)
         }
 #endif
 
-        ckt->CKTmode = (ckt->CKTmode&MODEUIC)|MODETRAN | MODEINITTRAN;
+        /* Changing Circuit MODE */
         /* modeinittran set here */
+        ckt->CKTmode = (ckt->CKTmode&MODEUIC)|MODETRAN | MODEINITTRAN;
+
         ckt->CKTag[0]=ckt->CKTag[1]=0;
         bcopy(ckt->CKTstate0, ckt->CKTstate1,
               (size_t) ckt->CKTnumStates * sizeof(double));
@@ -420,6 +430,7 @@ DCpss(CKTcircuit *ckt, int restart)
         }
 #endif
 
+        /* Statistics Initialization using a macro at the beginning of this code */
         INIT_STATS();
 #ifdef CLUSTER
         CLUsetup(ckt);
@@ -442,10 +453,11 @@ DCpss(CKTcircuit *ckt, int restart)
             return error;
         }
         /*end saj*/
+        /* Skip nextTime if it isn't the firsttime! :) */
         goto resume;
     }
 
-    /* 650 */
+    /* nextTime */
 nextTime:
 
     nextTime_count=nextTime_count+1;
@@ -475,8 +487,9 @@ nextTime:
     }
     /* end LTRA code addition */
 
+    /* Check for the timepoint acceptance */
     error = CKTaccept(ckt);
-    /* check if current breakpoint is outdated; if so, clear */
+    /* Check if the current breakpoint is outdated; if yes, clear */
     if (ckt->CKTtime > ckt->CKTbreaks[0]) CKTclrBreak(ckt);
 
     /*
@@ -485,7 +498,7 @@ nextTime:
      * breakpoints, because they will never be needed again.
      *
      * t may itself be a breakpoint, or indistinguishably close. DON'T
-     * clear t itself; recognise it as a breakpoint and act accordingly
+     * clear t itself; recognize it as a breakpoint and act accordingly
      *
      * if t is not a breakpoint, limit the timestep so that the next
      * breakpoint is not crossed
@@ -562,9 +575,17 @@ nextTime:
                 printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n",
                       ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
                 CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
+
+                /* Store the Time Base for the DFT */
                 psstimes[pss_points_cycle] = ckt->CKTtime;
+
+                /* Store values for the FFT calculation */
                 for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
+
+                /* Update PSS counter cycle, used to stop the entire algorithm */
                 pss_points_cycle++;
+
+                /* Set the next BreakPoint for PSS */
                 CKTsetBreak( ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints) );
                 printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
               } else {
@@ -587,7 +608,7 @@ nextTime:
     /* ******* SHOOTING CODE BLOCK *******/
     /* ***********************************/
     if (in_stabilization) {
-        /* test if stabTime has been reached */
+        /* Test if stabTime has been reached */
         if ( AlmostEqualUlps( ckt->CKTtime , ckt->CKTstabTime, 100 ) ) {
             time_temp=ckt->CKTtime;
             ckt->CKTfinalTime=time_temp+2/(ckt->CKTguessedFreq);
@@ -595,9 +616,10 @@ nextTime:
             CKTsetBreak(ckt, time_temp+1/(ckt->CKTguessedFreq));
             printf("Exiting from stabilization.\n");
             printf("Time of first shooting evaluation will be %1.10g.\n",time_temp+1/(ckt->CKTguessedFreq));
-            /* next time is no more in stab - unset the flag */
+
+            /* Next time is no more in stabilization - Unset the flag */
             in_stabilization=0;
-            /* print RHS on exiting from stab */
+            /* Print RHS on exiting from stabilization */
             printf("RHS on exiting from stabilization: ");
             for (i = 1; i <= msize; i++) {
                 RHS_copy_se[i-1] = ckt->CKTrhsOld[i];
@@ -622,8 +644,12 @@ nextTime:
             if (RHS_derivative[i] != 0 && pred[i] < 0.1*ckt->CKTguessedFreq) predsum += pred[i];
             /* printf("Se vengo la... %g, %g, %g\n",diff, RHS_derivative[i], pred[i]); */
             /* save max and min per node or branch on every estimated period */
+
+            /* Save max per node or branch of every estimated period */
             if (RHS_max[i] < ckt->CKTrhsOld[i+1])
                 RHS_max[i] = ckt->CKTrhsOld[i+1];
+
+            /* Save min per node or branch of every estimated period */
             if (RHS_min[i] > ckt->CKTrhsOld[i+1])
                 RHS_min[i] = ckt->CKTrhsOld[i+1];
         }
@@ -652,7 +678,7 @@ nextTime:
         }
         err_1=err;
 
-        /* if evolution is near shooting */
+        /* If evolution is near shooting... */
         if ( AlmostEqualUlps( ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq, 10 ) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq) ) {
             if (shooting_cycle_counter == 0) {
                 /* If first time in shooting we warn about that ! */
@@ -674,9 +700,12 @@ nextTime:
 
             for(i=0, node=ckt->CKTnodes->next; node; i++, node=node->next) {
 
+                /* Voltage Node */
                 if (!strstr(node->name, "#")) {
                     tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
                     err_conv_ref += ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-9) * 7 * ckt->CKTsteady_coeff;
+
+                    /* If the dynamic is below 10uV, it's dropped */
                     if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-6) {
                         S_diff[i] = (RHS_max[i] - RHS_min[i]) / tv_01 - S_old[i];
                         S_old[i]  = (RHS_max[i] - RHS_min[i]) / tv_01;
@@ -693,9 +722,13 @@ nextTime:
                         S_old[i]  = 0;
                         S_diff[i] = 0;
                     }
+
+                /* Current Node */
                 } else {
                     tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
                     err_conv_ref += ((RHS_max[i] - RHS_min[i]) * 1e-3 + 1e-12) * 7 * ckt->CKTsteady_coeff;
+
+                    /* If the dynamic is below 10nA, it's dropped */
                     if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-9) {
                         S_diff[i] = (RHS_max[i] - RHS_min[i]) / tv_01 - S_old[i];
                         S_old[i]  = (RHS_max[i] - RHS_min[i]) / tv_01;
@@ -717,7 +750,8 @@ nextTime:
             if (dynamic_test==0) {
                 /* Test for dynamic existence */
                 printf("No detectable dynamic on voltages nodes or currents branches. PSS analysis aborted.\n");
-                /* Terminates plot in time domain and frees the allocated memory */
+
+                /* Terminates plot in Time Domain and frees the allocated memory */
                 SPfrontEnd->OUTendPlot (job->PSSplot_td);
                 FREE(RHS_copy_se);
                 FREE(RHS_max);
@@ -740,7 +774,8 @@ nextTime:
             else if ((time_err_min_0-time_temp)<0) {
                 /* Something has gone wrong... */
                 printf("Cannot find a minimum for error vector in estimated period. Try to adjust tstab! PSS analysis aborted.\n");
-                /* Terminates plot in time domain and frees the allocated memory */
+
+                /* Terminates plot in Time Domain and frees the allocated memory */
                 SPfrontEnd->OUTendPlot (job->PSSplot_td);
                 FREE(RHS_copy_se);
                 FREE(RHS_max);
@@ -761,7 +796,9 @@ nextTime:
                 return(E_PANIC); /* to be corrected with definition of new error macro in iferrmsg.h */
             }
             printf("Global Convergence Error reference: %g, Frequency Projection: %g.\n", err_conv_ref/dynamic_test, predsum/dynamic_test);
+            /***********************************/
             /*** FREQUENCY ESTIMATION UPDATE ***/
+            /***********************************/
             if ( err_min_0==err || err_min_0==ERR ) {
                 /* ***************************************************** */
                 if (predsum < 0.1*ckt->CKTguessedFreq)
@@ -772,9 +809,11 @@ nextTime:
 #ifdef STEPDEBUG
                 printf("Frequency DOWN:  est per %g, err min %g, err min 1 %g, err max %g, ntc %ld, err %g, err_last %g\n", time_err_min_0-time_temp,err_min_0,err_min_1,err_max,nextTime_count,err,err_last);
 #endif
+                /* Temporary variables to store previous occurrence of guessed frequency */
                 gf_last_1=gf_last_0;
                 gf_last_0=ckt->CKTguessedFreq;
             } else {
+                /* Enters here if guessed frequency is lower than the 'real' value */
                 ckt->CKTguessedFreq=1/(time_err_min_0-time_temp);
                 // ckt->CKTguessedFreq = 1/(1/(ckt->CKTguessedFreq) + predsum/dynamic_test);
                 // ckt->CKTguessedFreq = ckt->CKTguessedFreq+predsum * dynamic_test;
@@ -812,44 +851,60 @@ nextTime:
                         printf("%-3d -> FE: %15.10g || RR: %15.10g\n", i+1, gf_history[i], rr_history[i+1]);
                     }
 /*#endif*/
-                    /* takes the minimum residual iteration */
+
+                    /* Take the minimum residual iteration */
                     if (rr_history[i] < err_0) {
                         err_0 = rr_history[i];
                         k = i;
                     }
                 }
                 if (shooting_cycle_counter<=ckt->CKTsc_iter) {
+
+                    /* Update the last valid Guessed Frequency */
                     ckt->CKTguessedFreq=gf_history[shooting_cycle_counter-1];
                     printf("\nConvergence reached. Final circuit time is %1.10g s and predicted fundamental frequency is %g Hz.\n",ckt->CKTtime,ckt->CKTguessedFreq);
                     in_pss = 1; /* PERIODIC STEADY STATE NOT REACHED however set the IN_PSS flag */
+
+                    /* Save the current Time */
                     time_temp = ckt->CKTtime;
                     printf("time_temp %g\n", time_temp);
                     printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
                     printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
+
+                    /* Dump the first PSS point for the FFT */
                     CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
                     psstimes[pss_points_cycle] = ckt->CKTtime;
                     for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
+
+                    /* Update the PSS points counter and set the next Breakpoint */
                     pss_points_cycle++;
                     CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
                     printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
                 } else {
+
+                    /* Update the last valid Guessed Frequency */
                     ckt->CKTguessedFreq=gf_history[k-1];
                     printf("\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %g Hz.\n",k,ckt->CKTguessedFreq);
                     in_pss = 1; /* PERIODIC STEADY STATE REACHED set the IN_PSS flag */
+
+                    /* Save the current Time */
                     time_temp = ckt->CKTtime;
                     printf("time_temp %g\n", time_temp);
                     printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
                     printf("Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n", ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), (pss_points_cycle), ckt->CKTpsspoints);
+
+                    /* Dump the first PSS point for the FFT */
                     CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
                     psstimes[pss_points_cycle] = ckt->CKTtime;
                     for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
+                    /* Update the PSS points counter and set the next Breakpoint */
                     pss_points_cycle++;
                     CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
                     printf ("Next breakpoint set in: %1.15g\n", time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints)) ;
                 }
             }
 
-            /* restore maximum and minimum error for next search */
+            /* Restore maximum and minimum error for next search */
             err_min_0 = ERR;
             err_max = -ERR;
             err_0 = ERR;
@@ -882,9 +937,10 @@ nextTime:
         /* return on the converged shooting condition */
         printf("ttemp %1.15g, final_time %1.15g, current_time %1.15g\n",time_temp, time_temp+1/ckt->CKTguessedFreq, ckt->CKTtime);
         if (pss_points_cycle == ckt->CKTpsspoints + 1) {
-                /* End plot in time domain */
+                /* End plot in Time Domain */
                 SPfrontEnd->OUTendPlot (job->PSSplot_td);
-                /* The following line must be placed just before a new OUTpBeginPlot is called */
+
+                /* Frequency Plot Creation */
                 error = CKTnames(ckt,&numNames,&nameList);
                 if (error) return (error);
                 SPfrontEnd->IFnewUid (ckt, &freqUid, NULL,
@@ -897,9 +953,9 @@ nextTime:
                 tfree(nameList);
                 SPfrontEnd->OUTattributes (job->PSSplot_fd, NULL, PLOT_COMB, NULL);
 
-                /* ************************* */
-                /* Fourier transform on data */
-                /* ************************* */
+                /* ******************** */
+                /* Starting DFT on data */
+                /* ******************** */
                 for(i = 0; i < msize; i++) {
                     for(j=0; j<ckt->CKTpsspoints; j++) {
                         pssValues[j] = pssvalues[j*msize + i];
@@ -918,18 +974,18 @@ nextTime:
                     }
                     CKTdump(ckt, pssfreqs[j], job->PSSplot_fd);
                 }
-                /* ***************************** */
-                /* End Fourier transform on data */
-                /* ***************************** */
+                /* ****************** */
+                /* Ending DFT on data */
+                /* ****************** */
 
-                /* Terminates plot in freq domain and frees the allocated memory */
+                /* Terminates plot in Frequency Domain and frees the allocated memory */
                 SPfrontEnd->OUTendPlot (job->PSSplot_fd);
 
 
 
                 /* Francesco Lannutti's MOD */
 
-                /* verify the frequency found */
+                /* Verify the frequency found */
                 max_freq = pssResults [msize];             /* max_freq = pssResults [1 * msize + 0]; */
                 position = 1;
                 for (j = 1; j < ckt->CKTharms; j++) {
@@ -1092,7 +1148,7 @@ resume:
 /* gtri - end - wbk - Modify Breakpoint stuff */
 #else /* !XSPICE */
 
-        /* don't want to get below delmin for no reason */
+        /* We don't want to get below delmin for no reason */
         ckt->CKTdelta = MAX(ckt->CKTdelta, ckt->CKTdelmin*2.0);
     }
     else if(ckt->CKTtime + ckt->CKTdelta >= ckt->CKTbreaks[0]) {
@@ -1173,7 +1229,7 @@ resume:
 #endif
 #ifdef XSPICE
 /* gtri - add - wbk - 4/17/91 - Fix Berkeley bug */
-        /* This is needed here to allow CAPask to output currents */
+        /* This is needed here to allow CAPask output currents */
         /* during Transient analysis.  A grep for CKTcurrentAnalysis */
         /* indicates that it should not hurt anything else ... */
 
@@ -1365,7 +1421,6 @@ resume:
                 goto chkStep;
 #endif
             }
-            /* se chiude firsttime */
 
             newdelta = ckt->CKTdelta;
             error = CKTtrunc(ckt,&newdelta);
@@ -1428,7 +1483,7 @@ resume:
                 redostep = 0;
                 goto chkStep;
 #endif
-            } else {
+            } else { /* newdelta <= .9 * ckt->CKTdelta */
 #ifndef CLUSTER
                 ckt->CKTtime = ckt->CKTtime -ckt->CKTdelta;
                 ckt->CKTstat->STATrejected ++;
