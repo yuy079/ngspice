@@ -858,9 +858,8 @@ nextTime:
             dynamic_test=0;
             rest=shooting_cycle_counter%2;
             /* Reset actual RHS reference for next shooting evaluation */
-            for(count_6 = 1; count_6 <= msize; count_6++) {
-                RHS_copy_se[count_6-1] = ckt->CKTrhsOld[count_6];
-            }
+            for (i = 1; i <= msize; i++)
+                RHS_copy_se[i-1] = ckt->CKTrhsOld[i];
 #ifdef STEPDEBUG
             printf("RHS on new shooting cycle: ");
             for(count_3 = 1; count_3 <= msize; count_3++) {
