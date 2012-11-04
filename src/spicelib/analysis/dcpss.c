@@ -155,8 +155,6 @@ DCpss(CKTcircuit *ckt, int restart)
     in_pss=0;
 
     /* Variables and memory initialization */
-    for (i = 0; i < 4; i++)
-        ntc_vec[i] = 0.0;
 
     for (i = 0; i < HISTORY; i++) {
         rr_history[i] = 0.0;
@@ -682,20 +680,12 @@ nextTime:
         if ( AlmostEqualUlps( ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq, 10 ) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq) ) {
             if (shooting_cycle_counter == 0) {
                 /* If first time in shooting we warn about that ! */
-                ntc_start_sh=nextTime_count;
                 printf("In shooting...\n");
             }
 
-            /* Take mean value of number of next time steps in one shooting evaluation - 4 frame window */
-            ntc_vec[3]=ntc_vec[2];
-            ntc_vec[2]=ntc_vec[1];
-            ntc_vec[1]=ntc_vec[0];
-            ntc_vec[0]=(double)nextTime_count-ntc_old;
-            ntc_mv=(ntc_vec[0]+ntc_vec[1]+ntc_vec[2]+ntc_vec[3])*0.25;
-            ntc_old=(double)nextTime_count;
             printf("\n----------------\n");
             printf("Shooting cycle iteration number: %3d ||", shooting_cycle_counter);
-            if (shooting_cycle_counter>0) printf("NTC_MV: %g || rr: %g || predsum: %g\n", ntc_mv, rr_history[shooting_cycle_counter-1], predsum); /* for debugging purpose */
+            if (shooting_cycle_counter>0) printf("rr: %g || predsum: %g\n", rr_history[shooting_cycle_counter-1], predsum); /* for debugging purpose */
             printf("Print of dynamically consistent nodes voltages or branches currents:\n");
 
             for(i=0, node=ckt->CKTnodes->next; node; i++, node=node->next) {
