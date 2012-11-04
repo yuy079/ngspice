@@ -65,6 +65,10 @@ do { \
 } while(0)
 
 
+/* Define some useful macro */
+#define ERR 1e+30
+
+
 int
 CKTfour(long int, int, double *, double *, double *, double, double *, double *, double *, double *,double *);
 
@@ -119,12 +123,12 @@ DCpss(CKTcircuit *ckt, int restart)
     double  time_temp=0, gf_history[1024], rr_history[1024];
     int msize, in_stabilization = 1, shooting_cycle_counter = 0, k=0, pippo=0, pippi=0;
     long int nextTime_count=0, ntc_start_sh=0;
-    double *RHS_copy_se, *RHS_derivative, *pred, err_0 = 1.0e30, time_temp_0=0, delta_t=0;
-    double time_err_min_1=0, time_err_min_0=0, err_min_0=1.0e30, err_min_1=0, delta_0=0, delta_1=0;
-    double flag_tu_2=0, times_fft[8192], err_1=0, err_max=1e+30, time_err_max=0;
+    double *RHS_copy_se, *RHS_derivative, *pred, err_0 = ERR, time_temp_0=0, delta_t=0;
+    double time_err_min_1=0, time_err_min_0=0, err_min_0=ERR, err_min_1=0, delta_0=0, delta_1=0;
+    double flag_tu_2=0, times_fft[8192], err_1=0, err_max=ERR, time_err_max=0;
     int flag_tu_1=0, pss_points_cycle=0, i4=0, i5=0, k1=0, rest=0;
     int count_1=0, count_3=0, count_4=0, count_5=0, count_6=0, count_7=0, dynamic_test=0;
-    double ntc_mv=0, ntc_vec[4], ntc_old=0, gf_last_0=1e+30, gf_last_1=313;
+    double ntc_mv=0, ntc_vec[4], ntc_old=0, gf_last_0=ERR, gf_last_1=313;
     double err_last = 0, thd=0, tv_01=0, tv_03=0, tv_04=0;
     double *psstimes, *pssvalues, *pssValues,
           *pssfreqs, *pssmags, *pssphases, *pssnmags, *pssnphases, *pssResults,
@@ -364,8 +368,8 @@ DCpss(CKTcircuit *ckt, int restart)
 /* gtri - begin - wbk - Add Breakpoint stuff */
 
         /* Initialize the temporary breakpoint variables to infinity */
-        g_mif_info.breakpoint.current = 1.0e30;
-        g_mif_info.breakpoint.last    = 1.0e30;
+        g_mif_info.breakpoint.current = ERR;
+        g_mif_info.breakpoint.last    = ERR;
 
 /* gtri - end - wbk - Add Breakpoint stuff */
 #endif
@@ -754,7 +758,7 @@ nextTime:
             }
             printf("Global Convergence Error reference: %g, Frequency Projection: %g.\n", err_conv_ref/dynamic_test, predsum/dynamic_test);
             /*** FREQUENCY ESTIMATION UPDATE ***/
-            if ( err_min_0==err || err_min_0==1e+30 ) {
+            if ( err_min_0==err || err_min_0==ERR ) {
                 /* ***************************************************** */
                 if (predsum < 0.1*ckt->CKTguessedFreq)
                     ckt->CKTguessedFreq = ckt->CKTguessedFreq + predsum;
@@ -842,10 +846,10 @@ nextTime:
             }
 
             /* restore maximum and minimum error for next search */
-            err_min_0=1.0e+30;
-            err_max=-1.0e+30;
-            err_0=1.e30;
-            err_1=-1.0e+30;
+            err_min_0 = ERR;
+            err_max = -ERR;
+            err_0 = ERR;
+            err_1 = -ERR;
             tv_03=err_conv_ref;
             err_conv_ref=0;
             tv_04=dynamic_test;
@@ -865,8 +869,8 @@ nextTime:
             if (ckt->CKTin_pss != 1) {
                 for(count_7 = 1; count_7 <= msize; count_7++) {
                     /* reset max and min per node or branch on every shooting cycle */
-                    RHS_max[count_7-1] = -1.0e+30;
-                    RHS_min[count_7-1] =  1.0e+30;
+                    RHS_max[count_7-1] = -ERR;
+                    RHS_min[count_7-1] =  ERR;
                 }
             }
             printf("----------------\n\n");
@@ -1055,7 +1059,7 @@ resume:
         g_mif_info.breakpoint.last = ckt->CKTtime + ckt->CKTdelta;
     } else {
         /* Else, mark that timestep was not set by temporary breakpoint */
-        g_mif_info.breakpoint.last = 1.0e30;
+        g_mif_info.breakpoint.last = ERR;
     }
 
 /* gtri - end - wbk - Add Breakpoint stuff */
@@ -1121,7 +1125,7 @@ resume:
                 <= (ckt->CKTtime + ckt->CKTdelta)) {
 
             /* Initialize temp analog bkpt to infinity */
-            g_mif_info.breakpoint.current = 1e30;
+            g_mif_info.breakpoint.current = ERR;
 
             /* Pull items off queue and process them */
             EVTdequeue(ckt, g_mif_info.circuit.evt_step);
@@ -1238,7 +1242,7 @@ resume:
 /* gtri - begin - wbk - Add Breakpoint stuff */
 
         /* Initialize temporary breakpoint to infinity */
-        g_mif_info.breakpoint.current = 1.0e30;
+        g_mif_info.breakpoint.current = ERR;
 
 /* gtri - end - wbk - Add Breakpoint stuff */
 
