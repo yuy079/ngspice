@@ -68,6 +68,7 @@ do { \
 /* Define some useful macro */
 #define HISTORY 1024
 #define ERR 1e+30
+#define GF_LAST 313
 
 
 int
@@ -129,7 +130,7 @@ DCpss(CKTcircuit *ckt, int restart)
     double flag_tu_2=0, times_fft[8192], err_1=0, err_max=ERR, time_err_max=0;
     int flag_tu_1=0, pss_points_cycle=0, i4=0, i5=0, k1=0, rest=0;
     int count_1=0, count_3=0, count_4=0, count_5=0, count_6=0, count_7=0, dynamic_test=0;
-    double ntc_mv=0, ntc_vec[4], ntc_old=0, gf_last_0=ERR, gf_last_1=313;
+    double ntc_mv=0, ntc_vec[4], ntc_old=0, gf_last_0=ERR, gf_last_1=GF_LAST;
     double err_last = 0, thd=0, tv_01=0, tv_03=0, tv_04=0;
     double *psstimes, *pssvalues, *pssValues,
           *pssfreqs, *pssmags, *pssphases, *pssnmags, *pssnphases, *pssResults,
