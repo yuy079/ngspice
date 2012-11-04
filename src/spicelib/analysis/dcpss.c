@@ -609,21 +609,21 @@ nextTime:
         /* error norms of RHS solution on every accepted nextTime if out of stabilization */
         err=0;
         predsum=0;
-        for(i = 1; i <= msize; i++) {
-            diff = ckt->CKTrhsOld[i] - RHS_copy_se[i-1];
+        for(i = 0; i < msize; i++) {
+            diff = ckt->CKTrhsOld[i+1] - RHS_copy_se[i];
             err += diff * diff;
             /* compute and store derivative */
-            RHS_derivative[i-1] = (ckt->CKTrhs[i]-ckt->CKTrhsOld[i])/ckt->CKTdelta; // *ckt->CKTguessedFreq;
-            // pred[i-1] = RHS_derivative[i-1];
-            // pred[i-1] = (ckt->CKTrhs[i]-ckt->CKTrhsOld[i]);
-            pred[i-1] = RHS_derivative[i-1]/diff;
-            if (RHS_derivative[i-1] != 0 && pred[i-1] < 0.1*ckt->CKTguessedFreq) predsum += pred[i-1];
-            /* printf("Se vengo la... %g, %g, %g\n",diff, RHS_derivative[i-1], pred[i-1]); */
+            RHS_derivative[i] = (ckt->CKTrhs[i+1]-ckt->CKTrhsOld[i+1])/ckt->CKTdelta; // *ckt->CKTguessedFreq;
+            // pred[i] = RHS_derivative[i];
+            // pred[i] = (ckt->CKTrhs[i+1]-ckt->CKTrhsOld[i+1]);
+            pred[i] = RHS_derivative[i]/diff;
+            if (RHS_derivative[i] != 0 && pred[i] < 0.1*ckt->CKTguessedFreq) predsum += pred[i];
+            /* printf("Se vengo la... %g, %g, %g\n",diff, RHS_derivative[i], pred[i]); */
             /* save max and min per node or branch on every estimated period */
-            if (RHS_max[i-1] < ckt->CKTrhsOld[i])
-                RHS_max[i-1] = ckt->CKTrhsOld[i];
-            if (RHS_min[i-1] > ckt->CKTrhsOld[i])
-                RHS_min[i-1] = ckt->CKTrhsOld[i];
+            if (RHS_max[i] < ckt->CKTrhsOld[i+1])
+                RHS_max[i] = ckt->CKTrhsOld[i+1];
+            if (RHS_min[i] > ckt->CKTrhsOld[i+1])
+                RHS_min[i] = ckt->CKTrhsOld[i+1];
         }
         err=sqrt(err);
 
