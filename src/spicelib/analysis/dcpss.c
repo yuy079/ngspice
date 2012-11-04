@@ -867,10 +867,10 @@ nextTime:
             printf("\n");
 #endif
             if (ckt->CKTin_pss != 1) {
-                for(count_7 = 1; count_7 <= msize; count_7++) {
+                for (i = 1; i <= msize; i++) {
                     /* reset max and min per node or branch on every shooting cycle */
-                    RHS_max[count_7-1] = -ERR;
-                    RHS_min[count_7-1] =  ERR;
+                    RHS_max[i-1] = -ERR;
+                    RHS_min[i-1] =  ERR;
                 }
             }
             printf("----------------\n\n");
