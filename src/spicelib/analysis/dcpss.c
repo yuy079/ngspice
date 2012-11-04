@@ -154,12 +154,12 @@ DCpss(CKTcircuit *ckt, int restart)
     ckt->CKTin_pss=0;
 
         /* First of all we allocate and clear the memory */
-    for (pippo = 0; pippo < 4; pippo++)
-        ntc_vec[pippo] = 0.0;
+    for (i = 0; i < 4; i++)
+        ntc_vec[i] = 0.0;
 
-    for (pippo = 0; pippo < HISTORY; pippo++) {
-        rr_history[pippo] = 0.0;
-        gf_history[pippo] = 0.0;
+    for (i = 0; i < HISTORY; i++) {
+        rr_history[i] = 0.0;
+        gf_history[i] = 0.0;
     }
 
     msize = SMPmatSize(ckt->CKTmatrix);
@@ -174,19 +174,19 @@ DCpss(CKTcircuit *ckt, int restart)
     oldMatrix      = TMALLOC(double, msize*msize);
     mulMatrix      = TMALLOC(double, msize*msize);
 
-    for (pippo = 0; pippo < msize; pippo++) {
-        RHS_copy_se[pippo] = 0.0;
-        RHS_derivative[pippo] = 0.0;
-        pred[pippo] = 0.0;
-        RHS_max[pippo] = 0.0;
-        RHS_min[pippo] = 0.0;
-        S_old[pippo] = 0.0;
-        S_diff[pippo] = 0.0;
+    for (i = 0; i < msize; i++) {
+        RHS_copy_se[i] = 0.0;
+        RHS_derivative[i] = 0.0;
+        pred[i] = 0.0;
+        RHS_max[i] = 0.0;
+        RHS_min[i] = 0.0;
+        S_old[i] = 0.0;
+        S_diff[i] = 0.0;
         for(pippi = 0; pippi < msize; pippi++) {
             /* this is for matrices */
-            appMatrix[msize*pippo+pippi] = 0.0;
-            oldMatrix[msize*pippo+pippi] = 0.0;
-            mulMatrix[msize*pippo+pippi] = 0.0;
+            appMatrix[msize*i+pippi] = 0.0;
+            oldMatrix[msize*i+pippi] = 0.0;
+            mulMatrix[msize*i+pippi] = 0.0;
         }
     }
 
@@ -200,25 +200,25 @@ DCpss(CKTcircuit *ckt, int restart)
     pssnphases = TMALLOC(double, ckt->CKTharms);
     pssResults = TMALLOC(double, msize*ckt->CKTharms);
 
-    for (pippo = 0; pippo < ckt->CKTharms; pippo++) {
-        psstimes[pippo] = 0.0;
-        pssfreqs[pippo] = 0.0;
-        pssmags[pippo] = 0.0;
-        pssnmags[pippo] = 0.0;
-        pssphases[pippo] = 0.0;
+    for (i = 0; i < ckt->CKTharms; i++) {
+        psstimes[i] = 0.0;
+        pssfreqs[i] = 0.0;
+        pssmags[i] = 0.0;
+        pssnmags[i] = 0.0;
+        pssphases[i] = 0.0;
     }
 
-    for (pippo = 0; pippo < msize*ckt->CKTharms; pippo++)
-        pssResults[pippo] = 0.0;
+    for (i = 0; i < msize*ckt->CKTharms; i++)
+        pssResults[i] = 0.0;
 
-    for (pippo = 0; pippo < ckt->CKTpsspoints+1; pippo++)
-        pssValues[pippo] = 0.0;
+    for (i = 0; i < ckt->CKTpsspoints+1; i++)
+        pssValues[i] = 0.0;
 
-    for (pippo = 0; pippo < msize*(ckt->CKTpsspoints+1); pippo++)
-        pssvalues[pippo] = 0.0;
+    for (i = 0; i < msize*(ckt->CKTpsspoints+1); i++)
+        pssvalues[i] = 0.0;
 
-    for (pippo = 0; pippo<ckt->CKTpsspoints; pippo++)
-        pssValues[pippo] = 0.0;
+    for (i = 0; i<ckt->CKTpsspoints; i++)
+        pssValues[i] = 0.0;
 
     /* set first delta time step and circuit time */
     delta=ckt->CKTstep;
