@@ -121,6 +121,7 @@ DCpss(CKTcircuit *ckt, int restart)
     int redostep;
 #endif
     /* new variables - to be reorganized */
+    int in_pss;
     double err=0, predsum=0, diff=0;
     double  time_temp=0, gf_history[HISTORY], rr_history[HISTORY];
     int msize, in_stabilization = 1, shooting_cycle_counter = 0, k=0, pippo=0, pippi=0;
@@ -151,7 +152,7 @@ DCpss(CKTcircuit *ckt, int restart)
     printf("PSS steady coefficient %g.\n", ckt->CKTsteady_coeff);
     printf("PSS sc_iter %d.\n", ckt->CKTsc_iter);
     printf("PSS stab time %g.\n", ckt->CKTstabTime);
-    ckt->CKTin_pss=0;
+    in_pss=0;
 
         /* First of all we allocate and clear the memory */
     for (i = 0; i < 4; i++)
@@ -505,7 +506,7 @@ nextTime:
 
     if(g_ipc.enabled) {
 
-        if ( ckt->CKTin_pss ) {
+        if ( in_pss ) {
             /* Send event-driven results */
             EVTdump(ckt, IPC_ANAL_TRAN, 0.0);
 
@@ -548,11 +549,11 @@ nextTime:
 /* gtri - modify - wbk - 12/19/90 - Send IPC stuff */
 #endif
 #ifdef CLUSTER
-        if ( ckt->CKTin_pss )
+        if ( in_pss )
             CLUoutput(ckt);
 #endif
 
-    if (ckt->CKTin_pss) {
+    if (in_pss) {
 
       /* if in PSS store data for Time Domain plots and gather ordered data for FFT computing */
               if ((AlmostEqualUlps( ckt->CKTtime , time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints), 1)) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq)) {
@@ -605,7 +606,7 @@ nextTime:
         }
 
         /* ELSE not in stabilization but in shooting */
-    } else if ( !ckt->CKTin_pss ) {
+    } else if ( !in_pss ) {
         /* error norms of RHS solution on every accepted nextTime if out of stabilization */
         err=0;
         predsum=0;
@@ -819,7 +820,7 @@ nextTime:
                 if (shooting_cycle_counter<=ckt->CKTsc_iter) {
                     ckt->CKTguessedFreq=gf_history[shooting_cycle_counter-1];
                     printf("\nConvergence reached. Final circuit time is %1.10g s and predicted fundamental frequency is %g Hz.\n",ckt->CKTtime,ckt->CKTguessedFreq);
-                    ckt->CKTin_pss = 1; /* PERIODIC STEADY STATE NOT REACHED however set the IN_PSS flag */
+                    in_pss = 1; /* PERIODIC STEADY STATE NOT REACHED however set the IN_PSS flag */
                     time_temp = ckt->CKTtime;
                     printf("time_temp %g\n", time_temp);
                     printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
@@ -833,7 +834,7 @@ nextTime:
                 } else {
                     ckt->CKTguessedFreq=gf_history[k-1];
                     printf("\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %g Hz.\n",k,ckt->CKTguessedFreq);
-                    ckt->CKTin_pss = 1; /* PERIODIC STEADY STATE REACHED set the IN_PSS flag */
+                    in_pss = 1; /* PERIODIC STEADY STATE REACHED set the IN_PSS flag */
                     time_temp = ckt->CKTtime;
                     printf("time_temp %g\n", time_temp);
                     printf("IN_PSS: FIRST time point accepted in evolution for FFT calculations.\n");
@@ -866,7 +867,7 @@ nextTime:
                 printf("%-15g ", RHS_copy_se[i]);
             printf("\n");
 #endif
-            if (ckt->CKTin_pss != 1) {
+            if (in_pss != 1) {
                 for (i = 0; i < msize; i++) {
                     /* reset max and min per node or branch on every shooting cycle */
                     RHS_max[i] = -ERR;
@@ -992,7 +993,7 @@ resume:
 #ifdef HAS_WINDOWS
     if (ckt->CKTtime == 0.)
         SetAnalyse( "tran init", 0);
-    else if (( !ckt->CKTin_pss ) && (shooting_cycle_counter > 0))
+    else if (( !in_pss ) && (shooting_cycle_counter > 0))
         SetAnalyse( "shooting", shooting_cycle_counter);
     else
         SetAnalyse( "tran", (int)((ckt->CKTtime * 1000.) / ckt->CKTfinalTime));
@@ -1185,7 +1186,7 @@ resume:
         /* ********** CKTtime update ********** */
         /* ************************************ */
         /* delta manipulation */
-        if (!in_stabilization && !ckt->CKTin_pss) {
+        if (!in_stabilization && !in_pss) {
             if ( (ckt->CKTtime-(time_temp+1/ckt->CKTguessedFreq)<1/ckt->CKTguessedFreq/10) && (ckt->CKTbreak==0) ) {
                 if ( !(flag_tu_1) ) flag_tu_2=ckt->CKTdelta; /* store previous delta */
                 if ( (ckt->CKTtime-(time_temp+1/ckt->CKTguessedFreq)<1/ckt->CKTguessedFreq/1.0e5) && (ckt->CKTbreak==0) ) {
@@ -1215,11 +1216,11 @@ resume:
         /* In early PSS implementation I used to take fixed delta when circuit had reached PSS.
         This choice eventually caused the algorithm hang if a non convergence of Newton-Rhapson
         was found. The following lines are kept here as a trace of past errors...*/
-        else if (ckt->CKTin_pss && !in_stabilization) {
+        else if (in_pss && !in_stabilization) {
 #ifdef STEPDEBUG
             printf("Frequenza: %g\n", ckt->CKTguessedFreq);
 #endif
-        } else if (ckt->CKTin_pss && in_stabilization) {
+        } else if (in_pss && in_stabilization) {
             printf("PSS algorithm cannot be IN_PSS and IN_STABILIZATION at the same time. This condition should never be verified. Analysis aborted!\n");
             return(E_PANIC);
         }
@@ -1289,10 +1290,10 @@ resume:
             return(converged);
         }
 
-        if (ckt->CKTin_pss)
-            printf("%d, %d, %d\n", in_stabilization, ckt->CKTin_pss, converged);
+        if (in_pss)
+            printf("%d, %d, %d\n", in_stabilization, in_pss, converged);
 
-        if (converged != 0 && !ckt->CKTin_pss) {
+        if (converged != 0 && !in_pss) {
 #ifndef CLUSTER
             ckt->CKTtime = ckt->CKTtime -ckt->CKTdelta;
             ckt->CKTstat->STATrejected ++;
@@ -1326,7 +1327,7 @@ resume:
 /* gtri - end - wbk - Add Breakpoint stuff */
 #endif
 
-        } else if (converged != 0 && ckt->CKTin_pss) {
+        } else if (converged != 0 && in_pss) {
 #ifdef STEPDEBUG
             printf("Ciao!--------------------- ATime %1.10g, delta %1.10g \n", ckt->CKTtime, ckt->CKTdelta);
 #endif
