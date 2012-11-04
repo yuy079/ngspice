@@ -1,5 +1,6 @@
 Ring CMOS Oscillator
-* Predicted frequency is 3.84841e+09 Hz.
+* Oscillation is taken on node "bout".
+* Predicted frequency is 3.8e+09 Hz.
 *
 * PLOT bout
 
