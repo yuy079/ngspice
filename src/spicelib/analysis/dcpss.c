@@ -862,15 +862,15 @@ nextTime:
                 RHS_copy_se[i-1] = ckt->CKTrhsOld[i];
 #ifdef STEPDEBUG
             printf("RHS on new shooting cycle: ");
-            for (i = 1; i <= msize; i++)
-                printf("%-15g ", RHS_copy_se[i-1]);
+            for (i = 0; i < msize; i++)
+                printf("%-15g ", RHS_copy_se[i]);
             printf("\n");
 #endif
             if (ckt->CKTin_pss != 1) {
-                for (i = 1; i <= msize; i++) {
+                for (i = 0; i < msize; i++) {
                     /* reset max and min per node or branch on every shooting cycle */
-                    RHS_max[i-1] = -ERR;
-                    RHS_min[i-1] =  ERR;
+                    RHS_max[i] = -ERR;
+                    RHS_min[i] =  ERR;
                 }
             }
             printf("----------------\n\n");
