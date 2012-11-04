@@ -597,9 +597,9 @@ nextTime:
             in_stabilization=0;
             /* print RHS on exiting from stab */
             printf("RHS on exiting from stabilization: ");
-            for(count_3 = 1; count_3 <= msize; count_3++) {
-                RHS_copy_se[count_3-1] = ckt->CKTrhsOld[count_3];
-                printf("%-15g ", RHS_copy_se[count_3-1]);
+            for (i = 1; i <= msize; i++) {
+                RHS_copy_se[i-1] = ckt->CKTrhsOld[i];
+                printf("%-15g ", RHS_copy_se[i-1]);
             }
             printf("\n");
         }
@@ -862,9 +862,8 @@ nextTime:
                 RHS_copy_se[i-1] = ckt->CKTrhsOld[i];
 #ifdef STEPDEBUG
             printf("RHS on new shooting cycle: ");
-            for(count_3 = 1; count_3 <= msize; count_3++) {
-                printf("%-15g ", RHS_copy_se[count_3-1]);
-            }
+            for (i = 1; i <= msize; i++)
+                printf("%-15g ", RHS_copy_se[i-1]);
             printf("\n");
 #endif
             if (ckt->CKTin_pss != 1) {
