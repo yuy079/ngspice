@@ -71,8 +71,8 @@ do { \
 #define GF_LAST 313
 
 
-int
-CKTfour(long int, int, double *, double *, double *, double, double *, double *, double *, double *,double *);
+static int
+DFT(long int, int, double *, double *, double *, double, double *, double *, double *, double *, double *);
 
 int
 DCpss(CKTcircuit *ckt, int restart)
@@ -904,9 +904,10 @@ nextTime:
                     for(j=0; j<ckt->CKTpsspoints; j++) {
                         pssValues[j] = pssvalues[j*msize + i];
                     }
-                    CKTfour(ckt->CKTpsspoints, ckt->CKTharms, &thd, psstimes, pssValues,
-                            ckt->CKTguessedFreq, pssfreqs, pssmags, pssphases, pssnmags,
-                            pssnphases);
+
+                    DFT(ckt->CKTpsspoints, ckt->CKTharms, &thd, psstimes, pssValues,
+                        ckt->CKTguessedFreq, pssfreqs, pssmags, pssphases, pssnmags,
+                        pssnphases);
                     for(j = 0; j < ckt->CKTharms; j++) {
                         pssResults[j*msize + i] = pssmags[j];
                     }
@@ -1473,8 +1474,8 @@ chkStep:
     /* NOTREACHED */
 }
 
-int
-CKTfour(long int ndata,		/* number of entries in the Time and
+static int
+DFT(long int ndata,		/* number of entries in the Time and
                                    Value arrays */
         int numFreq,		/* number of harmonics to calculate */
         double *thd,		/* total harmonic distortion (percent)
