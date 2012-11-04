@@ -898,22 +898,22 @@ nextTime:
                 /* ************************* */
                 /* Fourier transform on data */
                 /* ************************* */
-                for(i4 = 0; i4 < msize; i4++) {
-                    for(k1=0; k1<ckt->CKTpsspoints; k1++) {
-                        pssValues[k1] = pssvalues[k1*msize + i4];
+                for(i = 0; i < msize; i++) {
+                    for(j=0; j<ckt->CKTpsspoints; j++) {
+                        pssValues[j] = pssvalues[j*msize + i];
                     }
                     CKTfour(ckt->CKTpsspoints, ckt->CKTharms, &thd, psstimes, pssValues,
                             ckt->CKTguessedFreq, pssfreqs, pssmags, pssphases, pssnmags,
                             pssnphases);
-                    for(k1 = 0; k1 < ckt->CKTharms; k1++) {
-                        pssResults[k1*msize + i4] = pssmags[k1];
+                    for(j = 0; j < ckt->CKTharms; j++) {
+                        pssResults[j*msize + i] = pssmags[j];
                     }
                 }
-                for(k1 = 0; k1 < ckt->CKTharms; k1++) {
-                    for(i4 = 0; i4 < msize; i4++) {
-                        ckt->CKTrhsOld[i4+1] =pssResults[k1*msize+i4];
+                for(j = 0; j < ckt->CKTharms; j++) {
+                    for(i = 0; i < msize; i++) {
+                        ckt->CKTrhsOld[i+1] =pssResults[j*msize+i];
                     }
-                    CKTdump(ckt, pssfreqs[k1], job->PSSplot_fd);
+                    CKTdump(ckt, pssfreqs[j], job->PSSplot_fd);
                 }
                 /* ***************************** */
                 /* End Fourier transform on data */
@@ -929,11 +929,11 @@ nextTime:
                 /* verify the frequency found */
                 max_freq = pssResults [msize];             /* max_freq = pssResults [1 * msize + 0]; */
                 position = 1;
-                for (k1 = 1; k1 < ckt->CKTharms; k1++) {
-                    for (i4 = 0; i4 < msize; i4++) {
-                        if (max_freq < pssResults [k1 * msize + i4]) {
-                            max_freq = pssResults [k1 * msize + i4];
-                            position = k1;
+                for (j = 1; j < ckt->CKTharms; j++) {
+                    for (i = 0; i < msize; i++) {
+                        if (max_freq < pssResults [j * msize + i]) {
+                            max_freq = pssResults [j * msize + i];
+                            position = j;
                         }
                     }
                 }
