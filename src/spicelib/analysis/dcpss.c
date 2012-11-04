@@ -1152,14 +1152,14 @@ resume:
 
 /* gtri - end - wbk - Do event solution */
 #endif
-    for(i5=5; i5>=0; i5--)
-        ckt->CKTdeltaOld[i5+1] = ckt->CKTdeltaOld[i5];
+    for(i = 5; i >= 0; i--)
+        ckt->CKTdeltaOld[i+1] = ckt->CKTdeltaOld[i];
     ckt->CKTdeltaOld[0] = ckt->CKTdelta;
 
     {
         double *temp = ckt->CKTstates[ckt->CKTmaxOrder+1];
-        for(i5=ckt->CKTmaxOrder; i5>=0; i5--)
-            ckt->CKTstates[i5+1] = ckt->CKTstates[i5];
+        for(i = ckt->CKTmaxOrder; i >= 0; i--)
+            ckt->CKTstates[i+1] = ckt->CKTstates[i];
         ckt->CKTstates[0] = temp;
     }
 
