@@ -33,7 +33,7 @@ struct circ *ft_curckt = NULL;
 
 char *cp_program = "sconvert";
 
-ft_stricterror = FALSE ;
+bool ft_stricterror = FALSE ;
 
 #define tfread(ptr, siz, nit, fp)   if (fread((ptr), (siz), \
                         (nit), (fp)) != (nit)) { \
