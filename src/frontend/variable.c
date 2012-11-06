@@ -271,7 +271,7 @@ cp_vset(char *varname, enum cp_types type, void *value)
 struct variable *
 cp_setparse(wordlist *wl)
 {
-    char *name = NULL, *val, *copyval, *s, *ss;
+    char *name = NULL, *val = NULL, *copyval, *s, *ss;
     double *td;
     struct variable *listv = NULL, *vv, *lv = NULL;
     struct variable *vars = NULL;
