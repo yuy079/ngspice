@@ -28,12 +28,12 @@ int cp_maxhistlength;
 bool cp_debug = FALSE;
 char cp_chars[128];
 bool cp_nocc = TRUE;
+bool ft_stricterror = FALSE;
 bool ft_parsedb = FALSE;
 struct circ *ft_curckt = NULL;
 
 char *cp_program = "sconvert";
 
-bool ft_stricterror = FALSE ;
 
 #define tfread(ptr, siz, nit, fp)   if (fread((ptr), (siz), \
                         (nit), (fp)) != (nit)) { \
