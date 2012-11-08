@@ -80,7 +80,7 @@ DCpss(CKTcircuit *ckt, int restart)
     PSSan *job = (PSSan *) ckt->CKTcurJob;
 
     int oscnNode;
-    int i;
+    int i, j;
     double olddelta;
     double delta;
     double newdelta;
@@ -182,11 +182,11 @@ DCpss(CKTcircuit *ckt, int restart)
         RHS_min[i] = 0.0;
         S_old[i] = 0.0;
         S_diff[i] = 0.0;
-        for(pippi = 0; pippi < msize; pippi++) {
+        for(j = 0; j < msize; j++) {
             /* this is for matrices */
-            appMatrix[msize*i+pippi] = 0.0;
-            oldMatrix[msize*i+pippi] = 0.0;
-            mulMatrix[msize*i+pippi] = 0.0;
+            appMatrix[msize*i+j] = 0.0;
+            oldMatrix[msize*i+j] = 0.0;
+            mulMatrix[msize*i+j] = 0.0;
         }
     }
 
