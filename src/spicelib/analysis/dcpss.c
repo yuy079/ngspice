@@ -406,9 +406,9 @@ nextTime:
             /* need more space */
             int need ;
             if (pss_state == STABILIZATION)
-                need = (int)(0.5 + (ckt->CKTstabTime - ckt->CKTtime) / maxstepsize) ; /* FIXME, ceil ? */
+                need = (int) ceil((ckt->CKTstabTime - ckt->CKTtime) / maxstepsize ) ;
             else
-                need = (int)(0.5 + (time_temp + 1 / ckt->CKTguessedFreq - ckt->CKTtime) / maxstepsize) ;
+                need = (int) ceil((time_temp + 1 / ckt->CKTguessedFreq - ckt->CKTtime) / maxstepsize) ;
 
             if (need < ckt->CKTsizeIncr)
                 need = ckt->CKTsizeIncr ;
