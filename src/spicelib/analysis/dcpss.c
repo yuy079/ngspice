@@ -104,9 +104,8 @@ DCpss(CKTcircuit *ckt, int restart)
     double gf_last_0 = ERR, gf_last_1 = GF_LAST;
     double thd = 0;
     double *psstimes, *pssvalues;
-    double *RHS_max, *RHS_min, *err_conv, *appMatrix, *oldMatrix;
+    double *RHS_max, *RHS_min, *err_conv;
 //    double err_conv_ref = 0, tv_01 = 0, *S_old, *S_diff;
-//    double *mulMatrix;
 
     /* Francesco Lannutti's MOD */
     /* Stuff needed by frequency estimation reiteration, based on the DFT result */
@@ -145,9 +144,6 @@ DCpss(CKTcircuit *ckt, int restart)
 //  S_old          = TMALLOC(double, msize);
 //  S_diff         = TMALLOC(double, msize);
     err_conv       = TMALLOC(double, msize);
-    appMatrix      = TMALLOC(double, msize*msize);
-    oldMatrix      = TMALLOC(double, msize*msize);
-//  mulMatrix      = TMALLOC(double, msize*msize);
 
     for (i = 0; i < msize; i++) {
         RHS_copy_se[i] = 0.0;
@@ -158,12 +154,6 @@ DCpss(CKTcircuit *ckt, int restart)
         RHS_min[i] = 0.0;
 //      S_old[i] = 0.0;
 //      S_diff[i] = 0.0;
-        for(j = 0; j < msize; j++) {
-            /* this is for matrices */
-            appMatrix[msize*i+j] = 0.0;
-            oldMatrix[msize*i+j] = 0.0;
-//          mulMatrix[msize*i+j] = 0.0;
-        }
     }
 
     psstimes   = TMALLOC(double, ckt->CKTpsspoints + 1);
@@ -747,9 +737,6 @@ nextTime:
 //              FREE(S_diff);
                 FREE(psstimes);
                 FREE(pssvalues);
-                FREE(appMatrix);
-                FREE(oldMatrix);
-//              FREE(mulMatrix);
                 return(E_PANIC); /* to be corrected with definition of new error macro in iferrmsg.h */
             }
             else if ((time_err_min_0-time_temp)<0) {
@@ -766,9 +753,6 @@ nextTime:
 //              FREE(S_diff);
                 FREE(psstimes);
                 FREE(pssvalues);
-                FREE(appMatrix);
-                FREE(oldMatrix);
-//              FREE(mulMatrix);
                 return(E_PANIC); /* to be corrected with definition of new error macro in iferrmsg.h */
             }
 
@@ -1015,9 +999,6 @@ nextTime:
 //              FREE(S_diff);
                 FREE(psstimes);
                 FREE(pssvalues);
-                FREE(appMatrix);
-                FREE(oldMatrix);
-//              FREE(mulMatrix);
                 return(OK);
         }
     }
