@@ -921,7 +921,7 @@ nextTime:
                     }
                 }
 
-                if (shooting_cycle_counter <= ckt->CKTsc_iter)
+                if (flag_conv == 0)
                 {
                     /* PERIODIC STEADY STATE REACHED set the in_pss flag */
                     /* Flag the entering in PSS status */
