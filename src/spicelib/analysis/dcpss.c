@@ -910,7 +910,7 @@ nextTime:
                 fprintf (stderr, "\nFrequency estimation (FE) and RHS period residual (PR) evolution\n") ;
 #endif
 
-//              err_0 = rr_history [0] ;
+//                err_0 = rr_history [0] ;
                 err_0 = predsum_history [0] ;
                 for (i = 0 ; i < shooting_cycle_counter ; i++)
                 {
@@ -918,10 +918,10 @@ nextTime:
                     fprintf (stderr, "%-3d -> FE: %-15.10g || RR: %15.10g", i, gf_history [i], rr_history [i]) ;
 
                     /* Take the minimum residual iteration */
-//                  if (err_0 > rr_history [i])
+//                    if (err_0 > rr_history [i])
                     if (err_0 > predsum_history [i])
                     {
-//                      err_0 = rr_history [i] ;
+//                        err_0 = rr_history [i] ;
                         err_0 = predsum_history [i] ;
                         k = i ;
                     }
