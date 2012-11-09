@@ -923,7 +923,7 @@ nextTime:
 
                 if (shooting_cycle_counter <= ckt->CKTsc_iter)
                 {
-                    /* PERIODIC STEADY STATE NOT REACHED - however set the in_pss flag */
+                    /* PERIODIC STEADY STATE REACHED set the in_pss flag */
                     /* Flag the entering in PSS status */
                     in_pss = 1 ;
 
@@ -960,7 +960,7 @@ nextTime:
 #endif
 
                 } else {
-                    /* PERIODIC STEADY STATE REACHED set the in_pss flag */
+                    /* PERIODIC STEADY STATE NOT REACHED - however set the in_pss flag */
                     /* Flag the entering in PSS status */
                     in_pss = 1 ;
 
