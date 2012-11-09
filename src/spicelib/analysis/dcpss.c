@@ -1562,7 +1562,10 @@ DFT(long int ndata,		/* number of entries in the Time and
     }
 
     Mag[0] = Phase[0] / (double)ndata;
-    Phase[0]=nMag[0]=nPhase[0]=Freq[0]=0;
+    Phase[0] = 0;
+    nMag[0] = 0;
+    nPhase[0] = 0;
+    Freq[0] = 0;
     *thd = 0;
     for(i=1; i<numFreq; i++) {
         tmp = Mag[i]*2.0 / (double)ndata;
