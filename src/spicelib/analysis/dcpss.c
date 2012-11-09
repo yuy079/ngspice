@@ -374,7 +374,8 @@ DCpss(CKTcircuit *ckt, int restart)
         /* modeinittran set here */
         ckt->CKTmode = (ckt->CKTmode&MODEUIC)|MODETRAN | MODEINITTRAN;
 
-        ckt->CKTag[0]=ckt->CKTag[1]=0;
+        ckt->CKTag[0] = 0;
+        ckt->CKTag[1] = 0;
 
         /* State0 copied into State1 - DEPRECATED LEGACY function - to be replaced with memmove() */
         bcopy(ckt->CKTstate0, ckt->CKTstate1,
