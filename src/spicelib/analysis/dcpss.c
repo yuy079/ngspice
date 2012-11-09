@@ -897,7 +897,7 @@ nextTime:
                     in_pss = 1;
 
                     /* Update the last valid Guessed Frequency */
-                    ckt->CKTguessedFreq=gf_history[k-1];
+                    ckt->CKTguessedFreq = gf_history[k];
 
                     /* Save the current Time */
                     time_temp = ckt->CKTtime;
