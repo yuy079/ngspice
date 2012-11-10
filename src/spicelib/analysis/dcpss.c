@@ -98,7 +98,7 @@ DCpss (CKTcircuit *ckt, int restart)
 
     double err = 0, predsum = 0, diff = 0 ;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
-    int msize, shooting_cycle_counter = 0, k = 0, flag_conv = 0 ;
+    int msize, shooting_cycle_counter = 0, flag_conv = 0 ;
     double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERR ;
     double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERR, err_min_1 = 0 ;
     double err_1 = 0, err_max = ERR ;
@@ -909,6 +909,8 @@ nextTime:
             /* Shooting Exit Condition */
             if ((shooting_cycle_counter > ckt->CKTsc_iter) || (flag_conv == 0))
             {
+                int k;
+
                 pss_state = PSS;
 
 #ifdef STEPDEBUG
@@ -917,6 +919,7 @@ nextTime:
 
 //                err_0 = rr_history [0] ;
                 err_0 = predsum_history [0] ;
+                k = 0 ;
                 for (i = 0 ; i < shooting_cycle_counter ; i++)
                 {
                     /* Print some statistics */
