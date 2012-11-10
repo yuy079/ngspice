@@ -58,6 +58,17 @@ do { \
 #define ERR 1e+30
 #define GF_LAST 313
 
+/*
+ * possible transitions for the tuple (in_pss, in_stabilization)
+ *   (see code below)
+ * in_pss can only be set when 00
+ * in_pss never gets cleared
+ * in_stabilization can only cleared
+ *   initially:   01
+ *   only possible trajectory:
+ *      01 --> 00 --> 10
+ */
+
 
 static int
 DFT (long int, int, double *, double *, double *, double, double *, double *, double *, double *, double *) ;
@@ -438,7 +449,7 @@ nextTime:
         {
             /* need more space */
             int need ;
-            if (in_stabilization)
+            if (in_stabilization)   /* tuple == 01 */
                 need = (int)(0.5 + (ckt->CKTstabTime - ckt->CKTtime) / maxstepsize) ; /* FIXME, ceil ? */
             else
                 need = (int)(0.5 + (time_temp + 1 / ckt->CKTguessedFreq - ckt->CKTtime) / maxstepsize) ;
@@ -491,7 +502,7 @@ nextTime:
 /* gtri - modify - wbk - 12/19/90 - Send IPC stuff */
     if (g_ipc.enabled)
     {
-        if (in_pss)
+        if (in_pss)  /* tuple == 10 */
         {
             /* Send event-driven results */
             EVTdump (ckt, IPC_ANAL_TRAN, 0.0) ;
@@ -536,11 +547,11 @@ nextTime:
 #endif
 
 #ifdef CLUSTER
-    if (in_pss)
+    if (in_pss)                 /* tuple == 10 */
         CLUoutput (ckt) ;
 #endif
 
-    if (in_pss)
+    if (in_pss)                 /* tuple == 10 */
     {
         nextstep = time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints) ;
 
@@ -597,7 +608,7 @@ nextTime:
     /* ***********************************/
     /* ******* SHOOTING CODE BLOCK *******/
     /* ***********************************/
-    if (in_stabilization)
+    if (in_stabilization)       /* tuple == 01 */
     {
         /* Test if stabTime has been reached */
         if (AlmostEqualUlps (ckt->CKTtime, ckt->CKTstabTime, 100))
@@ -613,7 +624,7 @@ nextTime:
             fprintf (stderr, "Time of first shooting evaluation will be %1.10g\n", time_temp + 1 / ckt->CKTguessedFreq) ;
 
             /* Next time is no more in stabilization - Unset the flag */
-            in_stabilization = 0 ;
+            in_stabilization = 0 ;   /* tuple := 00 */
 
             /* Save the RHS_copy_der as the NEW CKTrhsOld */
             for (i = 1 ; i <= msize ; i++)
@@ -630,7 +641,7 @@ nextTime:
 	}
     }
     /* ELSE not in stabilization but in Shooting */
-    else if ((!in_pss) && (!in_stabilization))
+    else if ((!in_pss) && (!in_stabilization)) /* tuple == 00 */
     {
         /* Calculation of error norms of RHS solution of every accepted nextTime */
         err = 0 ;
@@ -932,7 +943,8 @@ nextTime:
                 {
                     /* PERIODIC STEADY STATE REACHED set the in_pss flag */
                     /* Flag the entering in PSS status */
-                    in_pss = 1 ;
+                    /* tuple == 00 */
+                    in_pss = 1 ;  /* tuple := 10 */
 
                     /* Update the last valid Guessed Frequency */
                     ckt->CKTguessedFreq = gf_history [shooting_cycle_counter - 1] ;
@@ -968,7 +980,8 @@ nextTime:
                 } else {
                     /* PERIODIC STEADY STATE NOT REACHED - however set the in_pss flag */
                     /* Flag the entering in PSS status */
-                    in_pss = 1 ;
+                    /* tuple == 00 */
+                    in_pss = 1 ; /* tuple := 10 */
 
                     /* Update the last valid Guessed Frequency */
                     ckt->CKTguessedFreq = gf_history [k] ; /* k problem, k could be zero !! */
@@ -1023,7 +1036,8 @@ nextTime:
             fprintf (stderr, "\n") ;
 #endif
 
-            if (in_pss != 1)
+            /* tuple == 10 or 00 */
+            if (in_pss != 1)    /* == 00 */
             {
                 for (i = 0 ; i < msize ; i++)
                 {
@@ -1165,7 +1179,7 @@ resume:
 #ifdef HAS_WINDOWS
     if (ckt->CKTtime == 0.)
         SetAnalyse ("tran init", 0) ;
-    else if ((!in_pss) && (shooting_cycle_counter > 0))
+    else if ((!in_pss) && (shooting_cycle_counter > 0)) /* either 00 or 01, not 10 */
         SetAnalyse ("shooting", shooting_cycle_counter) ;
     else
         SetAnalyse ("tran", (int)((ckt->CKTtime * 1000.) / ckt->CKTfinalTime)) ;
@@ -1377,7 +1391,7 @@ resume:
         /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
            the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
         /* If it's in Shooting */
-        if ((!in_stabilization) && (!in_pss))
+        if ((!in_stabilization) && (!in_pss)) /* tuple == 00 */
         {
             if ((ckt->CKTtime - time_temp + 1 / ckt->CKTguessedFreq > (1 / ckt->CKTguessedFreq) * 0.5))
             {
@@ -1398,7 +1412,7 @@ resume:
         /* In early PSS implementation I used to take fixed delta when circuit had reached PSS.
         This choice eventually caused the algorithm hang if a non convergence of Newton-Rhapson
         was found. The following lines are kept here as a trace of past errors...*/
-        else if ((in_pss) && (!in_stabilization)) 
+        else if ((in_pss) && (!in_stabilization)) /* tuple == 10 */
         {
 
 #ifdef STEPDEBUG
@@ -1406,7 +1420,7 @@ resume:
 #endif
 
         }
-        else if ((in_pss) && (in_stabilization))
+        else if ((in_pss) && (in_stabilization)) /* tuple == 11, impossible */
         {
             fprintf (stderr, "PSS algorithm cannot be IN_PSS and IN_STABILIZATION at the same time. Analysis aborted!\n");
             return (E_PANIC) ;
@@ -1479,7 +1493,7 @@ resume:
 	    return (converged) ;
 
 #ifdef STEPDEBUG
-        if (in_pss)
+        if (in_pss)             /* == 10 */
             fprintf (stderr, "in_stabilization: %d, in_pss: %d, converged: %d\n", in_stabilization, in_pss, converged) ;
 #endif
 
