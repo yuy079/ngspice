@@ -850,27 +850,29 @@ nextTime:
             if ((shooting_cycle_counter > ckt->CKTsc_iter) || (excessive_err_nodes == 0))
             {
                 int k;
+                double minimum;
+
                 pss_state = PSS;
 
 #ifdef STEPDEBUG
                 fprintf(stderr, "\nFrequency estimation (FE) and RHS period residual (PR) evolution\n");
 #endif
 
-//              err_0 = rr_history [0];
-                err_0 = predsum_history [0];
+//              minimum = rr_history [0];
+                minimum = predsum_history [0];
                 k = 0;
                 for (i = 0; i < shooting_cycle_counter; i++) {
                     /* Print some statistics */
                     fprintf(stderr, "%-3d -> FE: %-15.10g || RR: %15.10g", i, gf_history[i], rr_history[i]);
 
                     /* Take the minimum residual iteration */
-//                  if (err_0 > rr_history[i]) {
-                    if (err_0 > predsum_history [i]) {
-//                      err_0 = rr_history[i];
-                        err_0 = predsum_history [i];
+//                  if (minimum > rr_history[i]) {
+                    if (minimum > predsum_history [i]) {
+//                      minimum = rr_history[i];
+                        minimum = predsum_history [i];
                         k = i;
                     }
-                    fprintf (stderr, " || err_0: %15.10g || predsum/dynamic_test: %15.10g\n", err_0, predsum_history [i]) ;
+                    fprintf (stderr, " || minimum: %15.10g || predsum/dynamic_test: %15.10g\n", minimum, predsum_history [i]) ;
                 }
 
                 if (excessive_err_nodes == 0)  /* SHOOTING has converged */
