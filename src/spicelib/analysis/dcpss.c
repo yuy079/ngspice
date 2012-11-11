@@ -96,7 +96,7 @@ DCpss(CKTcircuit *ckt, int restart)
 
     double err = 0, predsum = 0, diff = 0;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep;
-    int msize, shooting_cycle_counter = 0, flag_conv = 0;
+    int msize, shooting_cycle_counter = 0;
     double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERR;
     double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERR, err_min_1 = 0;
     double err_1 = 0, err_max = ERR;
@@ -677,8 +677,9 @@ nextTime:
         err_1=err;
 
         /* If evolution is near shooting... */
-        if ( AlmostEqualUlps( ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq, 10 ) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq) ) {
-            flag_conv = 0;
+        if ( AlmostEqualUlps( ckt->CKTtime, time_temp+1/ckt->CKTguessedFreq, 10 ) || (ckt->CKTtime > time_temp+1/ckt->CKTguessedFreq) )
+        {
+            int excessive_err_nodes = 0;
 
             if (shooting_cycle_counter == 0) {
                 /* If first time in shooting we warn about that ! */
@@ -704,7 +705,7 @@ nextTime:
 //                  tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
 //                  err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff;
                     if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
-                        flag_conv++;
+                        excessive_err_nodes++;
 
                     /* If the dynamic is below 10uV, it's dropped */
                     if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-6) {
@@ -726,7 +727,7 @@ nextTime:
 //                  tv_01 = MAX (fabs (RHS_max [i]), fabs (RHS_min [i]));
 //                  err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff;
                     if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
-                        flag_conv++;
+                        excessive_err_nodes++;
 
                     /* If the dynamic is below 10nA, it's dropped */
                     if ( fabs(RHS_max[i] - RHS_min[i]) > 10*1e-9) {
@@ -846,7 +847,7 @@ nextTime:
                      time_temp + 1 / ckt->CKTguessedFreq, ckt->CKTtime);
 
             /* Shooting Exit Condition */
-            if ((shooting_cycle_counter > ckt->CKTsc_iter) || (flag_conv == 0))
+            if ((shooting_cycle_counter > ckt->CKTsc_iter) || (excessive_err_nodes == 0))
             {
                 int k;
                 pss_state = PSS;
@@ -872,7 +873,7 @@ nextTime:
                     fprintf (stderr, " || err_0: %15.10g || predsum/dynamic_test: %15.10g\n", err_0, predsum_history [i]) ;
                 }
 
-                if (flag_conv == 0)
+                if (excessive_err_nodes == 0)  /* SHOOTING has converged */
                     ckt->CKTguessedFreq=gf_history[shooting_cycle_counter-1];
                 else
                     ckt->CKTguessedFreq = gf_history[k];
@@ -892,7 +893,7 @@ nextTime:
                 pss_points_cycle++;
                 CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
 
-                if (flag_conv == 0)
+                if (excessive_err_nodes == 0)
                     fprintf(stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %g Hz\n",
                             ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq);
                 else
