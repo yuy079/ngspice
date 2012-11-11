@@ -105,7 +105,7 @@ DCpss (CKTcircuit *ckt, int restart)
     int pss_points_cycle = 0, dynamic_test = 0 ;
     double gf_last_0 = ERR, gf_last_1 = GF_LAST ;
     double thd = 0 ;
-    double *psstimes, *pssvalues, *pssValues, *pssfreqs, *pssmags, *pssphases, *pssnmags, *pssnphases, *pssResults ;
+    double *psstimes, *pssvalues;
     double *RHS_max, *RHS_min, *err_conv, *appMatrix, *oldMatrix ;
 //    double err_conv_ref = 0, tv_01 = 0, *S_old, *S_diff ;
 //    double *mulMatrix ;
@@ -173,31 +173,9 @@ DCpss (CKTcircuit *ckt, int restart)
 
     psstimes = TMALLOC (double, ckt->CKTpsspoints + 1) ;
     pssvalues = TMALLOC (double, msize * (ckt->CKTpsspoints + 1)) ;
-    pssValues = TMALLOC (double, ckt->CKTpsspoints + 1) ;
-    pssfreqs = TMALLOC (double, ckt->CKTharms) ;
-    pssmags = TMALLOC (double, ckt->CKTharms) ;
-    pssphases = TMALLOC (double, ckt->CKTharms) ;
-    pssnmags = TMALLOC (double, ckt->CKTharms) ;
-    pssnphases = TMALLOC (double, ckt->CKTharms) ;
-    pssResults = TMALLOC (double, msize * ckt->CKTharms) ;
-
-    for (i = 0 ; i < ckt->CKTharms ; i++)
-    {
-        pssfreqs [i] = 0.0 ;
-        pssmags [i] = 0.0 ;
-        pssphases [i] = 0.0 ;
-        pssnmags [i] = 0.0 ;
-        pssnphases [i] = 0.0 ;
-    }
-
-    for (i = 0 ; i < msize * ckt->CKTharms ; i++)
-        pssResults [i] = 0.0 ;
 
     for (i = 0 ; i < ckt->CKTpsspoints + 1 ; i++)
-    {
         psstimes [i] = 0.0 ;
-        pssValues [i] = 0.0 ;
-    }
 
     for (i = 0 ; i < msize * (ckt->CKTpsspoints + 1) ; i++)
         pssvalues [i] = 0.0 ;
@@ -813,15 +791,8 @@ nextTime:
                 FREE (RHS_min) ;
 //                FREE (S_old) ;
 //                FREE (S_diff) ;
-                FREE (pssfreqs) ;
                 FREE (psstimes) ;
                 FREE (pssvalues) ;
-                FREE (pssValues) ;
-                FREE (pssResults) ;
-                FREE (pssmags) ;
-                FREE (pssphases) ;
-                FREE (pssnmags) ;
-                FREE (pssnphases) ;
                 FREE (appMatrix) ;
                 FREE (oldMatrix) ;
 //                FREE (mulMatrix) ;
@@ -840,15 +811,8 @@ nextTime:
                 FREE (RHS_min) ;
 //                FREE (S_old) ;
 //                FREE (S_diff) ;
-                FREE (pssfreqs) ;
                 FREE (psstimes) ;
                 FREE (pssvalues) ;
-                FREE (pssValues) ;
-                FREE (pssResults) ;
-                FREE (pssmags) ;
-                FREE (pssphases) ;
-                FREE (pssnmags) ;
-                FREE (pssnphases) ;
                 FREE (appMatrix) ;
                 FREE (oldMatrix) ;
 //                FREE (mulMatrix) ;
@@ -1021,6 +985,14 @@ nextTime:
 
         if ((pss_points_cycle == ckt->CKTpsspoints + 1) || (ckt->CKTtime > ckt->CKTfinalTime))
         {
+            double *pssfreqs   = TMALLOC (double, ckt->CKTharms);
+            double *pssmags    = TMALLOC (double, ckt->CKTharms);
+            double *pssphases  = TMALLOC (double, ckt->CKTharms);
+            double *pssnmags   = TMALLOC (double, ckt->CKTharms);
+            double *pssnphases = TMALLOC (double, ckt->CKTharms);
+            double *pssValues  = TMALLOC (double, ckt->CKTpsspoints + 1);
+            double *pssResults = TMALLOC (double, msize * ckt->CKTharms);
+
             /* End plot in Time Domain */
             SPfrontEnd->OUTendPlot (job->PSSplot_td) ;
 
@@ -1092,6 +1064,13 @@ nextTime:
             /****************************/
 
 
+            FREE (pssResults) ;
+            FREE (pssValues) ;
+            FREE (pssnphases) ;
+            FREE (pssnmags) ;
+            FREE (pssphases) ;
+            FREE (pssmags) ;
+            FREE (pssfreqs) ;
 
             FREE (RHS_copy_se) ;
             FREE (RHS_copy_der) ;
@@ -1099,15 +1078,8 @@ nextTime:
             FREE (RHS_min) ;
 //            FREE (S_old) ;
 //            FREE (S_diff) ;
-            FREE (pssfreqs) ;
             FREE (psstimes) ;
             FREE (pssvalues) ;
-            FREE (pssValues) ;
-            FREE (pssResults) ;
-            FREE (pssmags) ;
-            FREE (pssphases) ;
-            FREE (pssnmags) ;
-            FREE (pssnphases) ;
             FREE (appMatrix) ;
             FREE (oldMatrix) ;
 //            FREE (mulMatrix) ;
