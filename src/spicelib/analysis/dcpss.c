@@ -94,7 +94,7 @@ DCpss(CKTcircuit *ckt, int restart)
     /* New variables */
     int in_stabilization, in_pss;
     double err = 0, predsum = 0, diff = 0;
-    double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], nextstep;
+    double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep;
     int msize, shooting_cycle_counter = 0, k = 0, flag_conv = 0;
     double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERR;
     double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERR, err_min_1 = 0;
@@ -741,8 +741,11 @@ nextTime:
                 }
             }
 
-            /* Take mean value of time prediction trough the dynamic test variable */
+            /* Take the mean value of time prediction trough the dynamic test variable */
             predsum /= dynamic_test;
+
+            /* Store the predsum history as absolute value */
+            predsum_history [shooting_cycle_counter] = fabs (predsum);
 
             if (dynamic_test==0) {
                 /* Test for dynamic existence */
@@ -845,16 +848,20 @@ nextTime:
                 fprintf(stderr, "\nFrequency estimation (FE) and RHS period residual (PR) evolution\n");
 #endif
 
-                err_0 = rr_history [0];
+//              err_0 = rr_history [0];
+                err_0 = predsum_history [0];
                 for (i = 0; i < shooting_cycle_counter; i++) {
                     /* Print some statistics */
-                    fprintf(stderr, "%-3d -> FE: %-15.10g || RR: %15.10g\n", i + 1, gf_history[i], rr_history[i]);
+                    fprintf(stderr, "%-3d -> FE: %-15.10g || RR: %15.10g", i, gf_history[i], rr_history[i]);
 
                     /* Take the minimum residual iteration */
-                    if (rr_history[i] < err_0) {
-                        err_0 = rr_history[i];
+//                  if (err_0 > rr_history[i]) {
+                    if (err_0 > predsum_history [i]) {
+//                      err_0 = rr_history[i];
+                        err_0 = predsum_history [i];
                         k = i;
                     }
+                    fprintf (stderr, " || err_0: %15.10g || predsum/dynamic_test: %15.10g\n", err_0, predsum_history [i]) ;
                 }
                 if (flag_conv == 0) {
                     /* PERIODIC STEADY STATE REACHED set the in_pss flag */
@@ -878,8 +885,8 @@ nextTime:
                     /* Update the PSS points counter and set the next Breakpoint */
                     pss_points_cycle++;
                     CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
-                    fprintf(stderr, "\nConvergence reached. Final circuit time is %1.10g s and predicted fundamental frequency is %g Hz\n",
-                            ckt->CKTtime, ckt->CKTguessedFreq);
+                    fprintf(stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %g Hz\n",
+                            ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq);
 
 #ifdef STEPDEBUG
                     fprintf(stderr, "time_temp %g\n", time_temp);
