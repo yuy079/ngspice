@@ -847,6 +847,7 @@ nextTime:
 
             /* Shooting Exit Condition */
             if ((shooting_cycle_counter > ckt->CKTsc_iter) || (flag_conv == 0)) {
+                pss_state = PSS;
 
 #ifdef STEPDEBUG
                 fprintf(stderr, "\nFrequency estimation (FE) and RHS period residual (PR) evolution\n");
@@ -867,77 +868,42 @@ nextTime:
                     }
                     fprintf (stderr, " || err_0: %15.10g || predsum/dynamic_test: %15.10g\n", err_0, predsum_history [i]) ;
                 }
-                if (flag_conv == 0) {
-                    /* PERIODIC STEADY STATE REACHED set the in_pss flag */
-                    /* Flag the entering in PSS status */
 
-                    pss_state = PSS;
-
-                    /* Update the last valid Guessed Frequency */
+                if (flag_conv == 0)
                     ckt->CKTguessedFreq=gf_history[shooting_cycle_counter-1];
-
-                    /* Save the current Time */
-                    time_temp = ckt->CKTtime;
-
-                    /* Set the new Final Time */
-                    ckt->CKTfinalTime = time_temp + 1 / ckt->CKTguessedFreq;
-
-                    /* Dump the first PSS point for the FFT */
-                    CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
-                    psstimes[pss_points_cycle] = ckt->CKTtime;
-                    for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
-
-                    /* Update the PSS points counter and set the next Breakpoint */
-                    pss_points_cycle++;
-                    CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
-                    fprintf(stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %g Hz\n",
-                            ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq);
-
-#ifdef STEPDEBUG
-                    fprintf(stderr, "time_temp %g\n", time_temp);
-                    fprintf(stderr, "IN_PSS: FIRST time point accepted in evolution for FFT calculations\n");
-                    fprintf(stderr, "Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n",
-                            ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints),
-                            pss_points_cycle, ckt->CKTpsspoints);
-                    fprintf(stderr, "Next breakpoint set in: %1.15g\n",
-                            time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints));
-#endif
-
-                } else {
-                    /* PERIODIC STEADY STATE NOT REACHED - however set the in_pss flag */
-                    /* Flag the entering in PSS status */
-
-                    pss_state = PSS;
-
-                    /* Update the last valid Guessed Frequency */
+                else
                     ckt->CKTguessedFreq = gf_history[k];
 
-                    /* Save the current Time */
-                    time_temp = ckt->CKTtime;
+                /* Save the current Time */
+                time_temp = ckt->CKTtime;
 
-                    /* Set the new Final Time */
-                    ckt->CKTfinalTime = time_temp + 1 / ckt->CKTguessedFreq;
+                /* Set the new Final Time */
+                ckt->CKTfinalTime = time_temp + 1 / ckt->CKTguessedFreq;
 
-                    /* Dump the first PSS point for the FFT */
-                    CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
-                    psstimes[pss_points_cycle] = ckt->CKTtime;
-                    for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
-                    /* Update the PSS points counter and set the next Breakpoint */
-                    pss_points_cycle++;
-                    CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
+                /* Dump the first PSS point for the FFT */
+                CKTdump(ckt, ckt->CKTtime, job->PSSplot_td);
+                psstimes[pss_points_cycle] = ckt->CKTtime;
+                for (i = 1; i <= msize; i++) pssvalues[i-1 + pss_points_cycle*msize] = ckt->CKTrhsOld[i];
+
+                /* Update the PSS points counter and set the next Breakpoint */
+                pss_points_cycle++;
+                CKTsetBreak(ckt, time_temp+1/ckt->CKTguessedFreq*((double)(pss_points_cycle)/(double)ckt->CKTpsspoints));
+
+                if (flag_conv == 0)
+                    fprintf(stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %g Hz\n",
+                            ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq);
+                else
                     fprintf(stderr, "\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %g Hz\n", k, ckt->CKTguessedFreq);
 
 #ifdef STEPDEBUG
-                    fprintf(stderr, "time_temp %g\n", time_temp);
-                    fprintf(stderr, "IN_PSS: FIRST time point accepted in evolution for FFT calculations\n");
-                    fprintf(stderr, "Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n",
-                            ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints),
-                            pss_points_cycle, ckt->CKTpsspoints);
-                    fprintf(stderr, "Next breakpoint set in: %1.15g\n",
-                            time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints));
+                fprintf(stderr, "time_temp %g\n", time_temp);
+                fprintf(stderr, "IN_PSS: FIRST time point accepted in evolution for FFT calculations\n");
+                fprintf(stderr, "Circuit time %1.15g, final time %1.15g, point index %d and total requested points %ld\n",
+                        ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints),
+                        pss_points_cycle, ckt->CKTpsspoints);
+                fprintf(stderr, "Next breakpoint set in: %1.15g\n",
+                        time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints));
 #endif
-
-                }
             }
 
             /* Restore maximum and minimum error for next search */
