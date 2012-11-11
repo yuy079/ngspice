@@ -774,7 +774,7 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
     int  J = 0;
     int I, Row, Col, Size, Top;
     int ElementCount = 0;
-    double  Magnitude;
+    double  Magnitude; 
     double  SmallestElement = 0;
     double  LargestElement = 0.0;
     ElementPtr  pElement, *pImagElements;
@@ -786,9 +786,9 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
     SP_CALLOC(pImagElements, ElementPtr, Printer_Width / 10 + 1);
     if ( pImagElements == NULL)
     {
-        Matrix->Error = spNO_MEMORY;
-        SP_FREE(pImagElements);
-        return;
+	Matrix->Error = spNO_MEMORY;
+	SP_FREE(pImagElements);
+	return;
     }
 
     /* Create a packed external to internal row and column translation
@@ -801,33 +801,33 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
     SP_CALLOC( PrintOrdToIntRowMap, int, Top + 1 );
     if ( PrintOrdToIntRowMap == NULL)
     {
-        Matrix->Error = spNO_MEMORY;
-        SP_FREE(pImagElements);
+	Matrix->Error = spNO_MEMORY;
+	SP_FREE(pImagElements);
         return;
     }
     SP_CALLOC( PrintOrdToIntColMap, int, Top + 1 );
     if (PrintOrdToIntColMap == NULL)
     {
-        Matrix->Error = spNO_MEMORY;
-        SP_FREE(pImagElements);
+	Matrix->Error = spNO_MEMORY;
+	SP_FREE(pImagElements);
         SP_FREE(PrintOrdToIntRowMap);
         return;
     }
     for (I = 1; I <= Size; I++)
     {
-        PrintOrdToIntRowMap[ Matrix->IntToExtRowMap[I] ] = I;
+	PrintOrdToIntRowMap[ Matrix->IntToExtRowMap[I] ] = I;
         PrintOrdToIntColMap[ Matrix->IntToExtColMap[I] ] = I;
     }
 
     /* Pack the arrays. */
     for (J = 1, I = 1; I <= Top; I++)
     {
-        if (PrintOrdToIntRowMap[I] != 0)
+	if (PrintOrdToIntRowMap[I] != 0)
             PrintOrdToIntRowMap[ J++ ] = PrintOrdToIntRowMap[ I ];
     }
     for (J = 1, I = 1; I <= Top; I++)
     {
-        if (PrintOrdToIntColMap[I] != 0)
+	if (PrintOrdToIntColMap[I] != 0)
             PrintOrdToIntColMap[ J++ ] = PrintOrdToIntColMap[ I ];
     }
 
@@ -836,18 +836,18 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
     J = 0;
     while ( J <= Size )
     {
-        /* Print every row ...  */
+	/* Print every row ...  */
         for (I = 1; I <= Size; I++)
         {
-            if (PrintReordered)
+	    if (PrintReordered)
                 Row = I;
             else
                 Row = PrintOrdToIntRowMap[I];
 
-            /* ... in each column of li mejo mortacci de te. */
+	    /* ... in each column of li mejo mortacci de te. */
             for (J = 1; J <= Size; J++)
             {
-                if (PrintReordered)
+		if (PrintReordered)
                     Col = J;
                 else
                     Col = PrintOrdToIntColMap[J];
@@ -860,9 +860,9 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
 
                 if (pElement != NULL)
                 {
-                    *(gsl_matrix_out+(I-1)*Size+(J-1)) = (double)pElement->Real;
+		    *(gsl_matrix_out+(I-1)*Size+(J-1)) = (double)pElement->Real;
 
-                    /* Update status variables */
+		    /* Update status variables */
                     if ( (Magnitude = ELEMENT_MAG(pElement)) > LargestElement )
                         LargestElement = Magnitude;
                     if ((Magnitude < SmallestElement) && (Magnitude != 0.0))
@@ -870,14 +870,15 @@ spGMO(MatrixPtr eMatrix, int PrintReordered, double *gsl_matrix_out)
                     ElementCount++;
                 }
 
-                /* Case where element is structurally zero */
+		/* Case where element is structurally zero */
                 else
                 {
-                    *(gsl_matrix_out+(I-1)*Size+(J-1)) = 0.0;
+		    *(gsl_matrix_out+(I-1)*Size+(J-1)) = 0.0;
                 }
             }
         }
     }
     SP_FREE(PrintOrdToIntColMap);
     SP_FREE(PrintOrdToIntRowMap);
+    return;
 }
