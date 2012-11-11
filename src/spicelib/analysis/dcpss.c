@@ -699,7 +699,7 @@ nextTime:
                 if (!strstr(node->name, "#")) {
 //                  tv_01= MAX(fabs(RHS_max[i]), fabs(RHS_min[i]));
 //                  err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff;
-                    if (fabs (err_conv [i]) > ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
                         flag_conv++;
 
                     /* If the dynamic is below 10uV, it's dropped */
@@ -721,7 +721,7 @@ nextTime:
                 } else {
 //                  tv_01 = MAX (fabs (RHS_max [i]), fabs (RHS_min [i]));
 //                  err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff;
-                    if (fabs (err_conv [i]) > ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
                         flag_conv++;
 
                     /* If the dynamic is below 10nA, it's dropped */
