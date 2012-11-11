@@ -815,6 +815,7 @@ nextTime:
 //                FREE (S_diff) ;
                 FREE (pssfreqs) ;
                 FREE (psstimes) ;
+                FREE (pssvalues) ;
                 FREE (pssValues) ;
                 FREE (pssResults) ;
                 FREE (pssmags) ;
@@ -841,6 +842,7 @@ nextTime:
 //                FREE (S_diff) ;
                 FREE (pssfreqs) ;
                 FREE (psstimes) ;
+                FREE (pssvalues) ;
                 FREE (pssValues) ;
                 FREE (pssResults) ;
                 FREE (pssmags) ;
@@ -1099,6 +1101,7 @@ nextTime:
 //            FREE (S_diff) ;
             FREE (pssfreqs) ;
             FREE (psstimes) ;
+            FREE (pssvalues) ;
             FREE (pssValues) ;
             FREE (pssResults) ;
             FREE (pssmags) ;
