@@ -627,12 +627,12 @@ nextTime:
             RHS_derivative [i] = (ckt->CKTrhsOld [i + 1] - RHS_copy_der [i]) / ckt->CKTdelta ;
 
             /* Check if derivative is bounded by maximum allowable derivative */
-            if (fabs (RHS_derivative [i]) > 2 * 3.14159 * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])))
+            if (fabs (RHS_derivative [i]) > 2 * M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])))
             {
                 if (RHS_derivative [i] < 0)
-                    RHS_derivative [i] = - 3.14159 * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
+                    RHS_derivative [i] = - M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
                 else
-                    RHS_derivative [i] = 3.14159 * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
+                    RHS_derivative [i] =   M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
             } 
 
             /* Save the RHS_copy_der as the NEW CKTrhsOld */
