@@ -685,7 +685,7 @@ nextTime:
 //                      if (fabs (S_old [i]) > 0.1)
 //                          fprintf(stderr, "[V] %20s: RHSd %-12g || ECR %-12g || RHSM %-12g || RHSm %-12g || Dynamic variation %-12g || prediction %1.10lg\n",
 //                                  node->name, ckt->CKTrhsOld [i + 1] - RHS_copy_se [i],
-//                                  ((RHS_max [i] - RHS_min [i - 1]) * ckt->CKTreltol + 1e-6) * ckt->CKTtrtol * ckt->CKTsteady_coeff,
+//                                  ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + 1e-6) * ckt->CKTtrtol * ckt->CKTsteady_coeff,
 //                                  RHS_max [i], RHS_min [i], S_diff [i], 1 / pred [i]);
                         dynamic_test++; /* test on voltage dynamic consistence */
 //                  } else {
