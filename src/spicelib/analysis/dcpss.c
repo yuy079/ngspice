@@ -652,6 +652,14 @@ nextTime:
                     pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
             }
 
+            if (fabs (pred [i]) < 1.0e-6 * ckt->CKTguessedFreq)
+            {
+                if (pred [i] > 0)
+                    pred [i] = 1.0e-6 * ckt->CKTguessedFreq ;
+                else
+                    pred [i] = -1.0e-6 * ckt->CKTguessedFreq ;
+            }
+
             predsum += (1 / pred [i]) ;
 
 #ifdef STEPDEBUG
