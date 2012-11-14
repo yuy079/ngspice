@@ -652,18 +652,10 @@ nextTime:
                     pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
             }
 
-            if (fabs (pred [i]) < 1.0e-6 * ckt->CKTguessedFreq)
-            {
-                if (pred [i] > 0)
-                    pred [i] = 1.0e-6 * ckt->CKTguessedFreq ;
-                else
-                    pred [i] = -1.0e-6 * ckt->CKTguessedFreq ;
-            }
-
-            predsum += (1 / pred [i]) ;
+            predsum += pred [i] ;
 
 #ifdef STEPDEBUG
-            fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", predsum) ;
+            fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", 1 / predsum) ;
             fprintf (stderr, "Current Diff: %g, Derivative: %g, Frequency Projection: %g\n", diff, RHS_derivative [i], pred [i]) ;
 #endif
 
@@ -706,9 +698,9 @@ nextTime:
             fprintf (stderr, "Shooting cycle iteration number: %3d ||", shooting_cycle_counter) ;
 
             if (shooting_cycle_counter > 0)
-                fprintf (stderr, " rr: %g || predsum: %g\n", rr_history [shooting_cycle_counter - 1], predsum) ;
+                fprintf (stderr, " rr: %g || predsum: %g\n", rr_history [shooting_cycle_counter - 1], 1 / predsum) ;
             else
-                fprintf (stderr, " rr: %g || predsum: %g\n", 0.0, predsum) ;
+                fprintf (stderr, " rr: %g || predsum: %g\n", 0.0, 1 / predsum) ;
             /* --------------------- */
 
 //            fprintf (stderr, "Print of dynamically consistent nodes voltages or branches currents:\n") ;
@@ -769,7 +761,7 @@ nextTime:
             }
 
             /* Take the mean value of time prediction trough the dynamic test variable */
-            predsum /= dynamic_test ;
+            predsum = 1 / (predsum * dynamic_test) ;
 
             /* Store the predsum history as absolute value */
             predsum_history [shooting_cycle_counter] = fabs (predsum) ;
