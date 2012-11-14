@@ -1328,7 +1328,7 @@ resume:
         }
 
         /* In early PSS implementation I used to take fixed delta when circuit had reached PSS.
-        This choice eventually caused the algorithm hang if a non convergence of Newton-Rhapson
+        This choice eventually caused the algorithm hang if a non convergence of Newton-Raphson
         was found. The following lines are kept here as a trace of past errors...*/
         else if (pss_state == PSS)
         {
@@ -1443,7 +1443,7 @@ resume:
             g_mif_info.breakpoint.last = ckt->CKTtime + ckt->CKTdelta ;
 
             if (firsttime)
-                ckt->CKTmode = (ckt->CKTmode & MODEUIC)|MODETRAN | MODEINITTRAN ;
+                ckt->CKTmode = (ckt->CKTmode & MODEUIC) | MODETRAN | MODEINITTRAN ;
 
             ckt->CKTorder = 1 ;
 
