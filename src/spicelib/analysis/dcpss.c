@@ -153,8 +153,6 @@ DCpss (CKTcircuit *ckt, int restart)
         RHS_copy_der [i] = 0.0 ;
         RHS_derivative [i] = 0.0 ;
         pred [i] = 0.0 ;
-        RHS_max [i] = 0.0 ;
-        RHS_min [i] = 0.0 ;
 //        S_old [i] = 0.0 ;
 //        S_diff [i] = 0.0 ;
     }
@@ -596,6 +594,13 @@ nextTime:
                 fprintf (stderr, "%-15g ", RHS_copy_se [i - 1]) ;
             }
             fprintf (stderr, "\n") ;
+
+            /* Save the RHS_copy_der as the NEW CKTrhsOld */
+            for (i = 0 ; i < msize ; i++)
+            {
+                RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
+                RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
+            }
 	}
     }
     break;
@@ -607,7 +612,6 @@ nextTime:
         predsum = 0 ;
         for (i = 0 ; i < msize ; i++)
         {
-
             /* Save max per node or branch of every estimated period */
             if (RHS_max [i] < ckt->CKTrhsOld [i + 1])
                 RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
@@ -941,17 +945,17 @@ nextTime:
             fprintf (stderr, "\n") ;
 #endif
 
-            if (pss_state == SHOOTING)
-            {
-                for (i = 0 ; i < msize ; i++)
-                {
+//            if (pss_state == SHOOTING)
+//            {
+//                for (i = 0 ; i < msize ; i++)
+//                {
                     /* Reset max and min per node or branch on every shooting cycle */
 //                    RHS_max [i] = -ERR ;
 //                    RHS_min [i] = ERR ;
-                    RHS_max [i] = 0 ;
-                    RHS_min [i] = 0 ;
-                }
-            }
+//                    RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
+//                    RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
+//                }
+//            }
             fprintf (stderr, "----------------\n\n") ;
         }
     }
