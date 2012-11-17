@@ -292,7 +292,7 @@ inp_spsource(FILE *fp, bool comfile, char *filename)
     double testemp = 0.0;
     bool commands = FALSE;
     wordlist *wl = NULL, *end = NULL, *wl_first = NULL;
-    wordlist *controls = NULL;
+    wordlist *controls = NULL, *pre_controls = NULL;
     FILE *lastin, *lastout, *lasterr;
     double temperature_value;
 
@@ -420,35 +420,28 @@ inp_spsource(FILE *fp, bool comfile, char *filename)
                 else
                     fprintf(cp_err, "Warning: misplaced .endc card\n");
             } else if (commands || prefix("*#", dd->li_line)) {
-                /* more control lines */
-                if (prefix("*#", dd->li_line)) {
-                    s = copy(dd->li_line + 2);
-                } else {
-                    s = dd->li_line;
-                    dd->li_line = 0; /* SJB - prevent line_free() freeing the string (now pointed at by wl->wl_word) */
+                /* assemble all commands starting with pre_ after stripping pre_,
+                to be executed before circuit parsing */
+                if (ciprefix("pre_", dd->li_line)) {
+                    s = copy(dd->li_line + 4);
+                    pre_controls = wl_cons(s, pre_controls);
                 }
-                controls = wl_cons(s, controls);
-                wl = controls;
-                /* Look for set or unset numparams.
-                   If either are found then we evaluate these lines immediately
-                   so they take effect before netlist parsing */
-                while (isspace(*s)) /* step past any white space */
-                    s++;
-                if (ciprefix("set", s))
-                    s += 3;
-                else if (ciprefix("unset", s))
-                    s += 5;
-                if (s != dd->li_line) { /* one of the above must have matched */
-                    while (isspace(*s))  /* step past white space */
-                        s++;
-                    if (ciprefix("numparams", s))
-                        cp_evloop(wl->wl_word);
+                /* assemble all other commands to be executed after circuit parsing */
+                else {
+                    /* special control lines outside of .control section*/
+                    if (prefix("*#", dd->li_line)) {
+                        s = copy(dd->li_line + 2);
+                    /* all commands from within .control section */
+                    } else {
+                        s = dd->li_line;
+                        dd->li_line = 0; /* SJB - prevent line_free() freeing the string (now pointed at by wl->wl_word) */
+                    }
+                    controls = wl_cons(s, controls);
                 }
                 ld->li_next = dd->li_next;
                 line_free(dd, FALSE);
             } else if (!*dd->li_line) {
-                /* So blank lines in com files don't get considered as
-                 * circuits.  */
+                /* So blank lines in com files don't get considered as circuits.  */
                 ld->li_next = dd->li_next;
                 line_free(dd, FALSE);
             } else {
@@ -479,6 +472,14 @@ inp_spsource(FILE *fp, bool comfile, char *filename)
             }
         }  /* end for (dd = deck->li_next . . . .  */
 
+        /* Now that the deck is loaded, do the pre commands, if there are any,
+           before the circuit structure is set up*/
+        if (pre_controls) {
+            pre_controls = wl_reverse(pre_controls);
+            for (wl = pre_controls; wl; wl = wl->wl_next)
+                cp_evloop(wl->wl_word);
+            wl_free(pre_controls);
+        }
         /* set temperature if defined to a preliminary variable which may be used
            in numparam evaluation */
         if (temperature) {
@@ -662,16 +663,17 @@ inp_spsource(FILE *fp, bool comfile, char *filename)
            Do this here before controls are run: .save is thus recognized even if
            .control is used */
         ft_dotsaves();
+
         /* run all 'save' commands upfront, allow same syntax as in .save,
         then remove them from controls, store data in dbs */
         consaves(controls);
-
         /* Now that the deck is loaded, do the commands, if there are any */
         controls = wl_reverse(controls);
         for (wl = controls; wl; wl = wl->wl_next)
             cp_evloop(wl->wl_word);
         wl_free(controls);
     }
+
 
     /* Now reset everything.  Pop the control stack, and fix up the IO
      * as it was before the source.  */
@@ -759,7 +761,7 @@ inp_dodeck(
             else
                 ct->ci_vars = eev = cp_setparse(wl);
             wl_free(wl);
-            while (eev && (eev->va_next))
+            while (eev->va_next)
                 eev = eev->va_next;
         }
         for (eev = ct->ci_vars; eev; eev = eev->va_next) {
@@ -1149,21 +1151,20 @@ consaves(wordlist *wl_control)
     com_save(wl);
 }
 
-
 /* check the input deck (after inpcom and numparam extensions)
    for linear elements. If only linear elements are found,
    ckt->CKTisLinear is set to 1. Return immediately if a first
    non-linear element is found. */
-static void
-cktislinear(CKTcircuit *ckt, struct line *deck)
+static void cktislinear(CKTcircuit *ckt, struct line *deck)
 {
     struct line *dd;
     char firstchar;
 
-    if (deck->li_next)
+    if(deck->li_next)
+    {
         for (dd = deck->li_next; dd; dd = dd->li_next) {
             firstchar = *dd->li_line;
-            switch (firstchar) {
+            switch ( firstchar ) {
                 case 'r':
                 case 'l':
                 case 'c':
@@ -1182,6 +1183,6 @@ cktislinear(CKTcircuit *ckt, struct line *deck)
                     return;
             }
         }
-
+    }
     ckt->CKTisLinear = 1;
 }
