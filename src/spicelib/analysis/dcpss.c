@@ -595,11 +595,11 @@ nextTime:
             }
             fprintf (stderr, "\n") ;
 
-            /* Save the RHS_copy_der as the NEW CKTrhsOld */
+            /* RHS_max and RHS_min initialization - ERRMAX is the maximum machine error */
             for (i = 0 ; i < msize ; i++)
             {
-                RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
-                RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
+                RHS_max [i] = -ERRMAX ;
+                RHS_min [i] = ERRMAX ;
             }
 	}
     }
@@ -945,17 +945,15 @@ nextTime:
             fprintf (stderr, "\n") ;
 #endif
 
-//            if (pss_state == SHOOTING)
-//            {
-//                for (i = 0 ; i < msize ; i++)
-//                {
+            if (pss_state == SHOOTING)
+            {
+                for (i = 0 ; i < msize ; i++)
+                {
                     /* Reset max and min per node or branch on every shooting cycle */
-//                    RHS_max [i] = -ERRMAX ;
-//                    RHS_min [i] = ERRMAX ;
-//                    RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
-//                    RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
-//                }
-//            }
+                    RHS_max [i] = -ERRMAX ;
+                    RHS_min [i] = ERRMAX ;
+                }
+            }
             fprintf (stderr, "----------------\n\n") ;
         }
     }
