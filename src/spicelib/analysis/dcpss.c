@@ -956,6 +956,31 @@ nextTime:
             }
             fprintf (stderr, "----------------\n\n") ;
         }
+
+        /* ************************************ */
+        /* ********** CKTtime update ********** */
+        /* ************************************ */
+
+        /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
+           the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
+        if (ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.995)
+        {
+            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e3) ;
+        }
+        else if ((ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.8) && (ckt->CKTtime - time_temp <= (1 / ckt->CKTguessedFreq) * 0.995))
+        {
+            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e2) ;
+        }
+        else if ((ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.5) && (ckt->CKTtime - time_temp <= (1 / ckt->CKTguessedFreq) * 0.8))
+        {
+            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 1.0e2) ;
+        } else {
+            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e1) ;
+        }
+
+        /* ************************************ */
+        /* ******* END CKTtime update ********* */
+        /* ************************************ */
     }
     break;
 
@@ -1302,47 +1327,6 @@ resume:
 
         olddelta = ckt->CKTdelta ;
         /* time abort? */
-
-
-        /* ************************************ */
-        /* ********** CKTtime update ********** */
-        /* ************************************ */
-
-        /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
-           the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
-        /* If it's in Shooting */
-        if (pss_state == SHOOTING)
-        {
-            if ((ckt->CKTtime - time_temp + 1 / ckt->CKTguessedFreq > (1 / ckt->CKTguessedFreq) * 0.5))
-            {
-                if ((ckt->CKTtime - time_temp + 1 / ckt->CKTguessedFreq > (1 / ckt->CKTguessedFreq) * 0.8))
-                {
-                    if ((ckt->CKTtime - time_temp + 1 / ckt->CKTguessedFreq > (1 / ckt->CKTguessedFreq) * 0.995))
-                    {
-                        CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e3) ;
-                    } else {
-                        CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e2) ;
-                    }
-                } else {
-                    CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 1.0e2) ;
-                }
-            }
-        }
-
-        /* In early PSS implementation I used to take fixed delta when circuit had reached PSS.
-        This choice eventually caused the algorithm hang if a non convergence of Newton-Raphson
-        was found. The following lines are kept here as a trace of past errors...*/
-        else if (pss_state == PSS)
-        {
-
-#ifdef STEPDEBUG
-            fprintf (stderr, "Frequency: %g\n", ckt->CKTguessedFreq) ;
-#endif
-
-        }
-        /* ************************************ */
-        /* ******* END CKTtime update ********* */
-        /* ************************************ */
 
 	ckt->CKTtime += ckt->CKTdelta ;
 
