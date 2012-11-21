@@ -55,7 +55,7 @@ do { \
 
 /* Define some useful macro */
 #define HISTORY 1024
-#define ERR 1e+30
+#define ERRMAX 1e+30
 #define GF_LAST 313
 
 
@@ -97,11 +97,11 @@ DCpss (CKTcircuit *ckt, int restart)
     double err = 0, predsum = 0, diff = 0 ;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
-    double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERR ;
-    double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERR, err_min_1 = 0 ;
-    double err_1 = 0, err_max = ERR ;
+    double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERRMAX ;
+    double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERRMAX, err_min_1 = 0 ;
+    double err_1 = 0, err_max = ERRMAX ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
-    double gf_last_0 = ERR, gf_last_1 = GF_LAST ;
+    double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
     double thd = 0 ;
     double *psstimes, *pssvalues;
     double *RHS_max, *RHS_min, *err_conv ;
@@ -327,8 +327,8 @@ DCpss (CKTcircuit *ckt, int restart)
 
 /* gtri - begin - wbk - Add Breakpoint stuff */
         /* Initialize the temporary breakpoint variables to infinity */
-        g_mif_info.breakpoint.current = ERR ;
-        g_mif_info.breakpoint.last    = ERR ;
+        g_mif_info.breakpoint.current = ERRMAX ;
+        g_mif_info.breakpoint.last    = ERRMAX ;
 
 /* gtri - end - wbk - Add Breakpoint stuff */
 #endif
@@ -813,7 +813,7 @@ nextTime:
             /***********************************/
             /*** FREQUENCY ESTIMATION UPDATE ***/
             /***********************************/
-            if ((err_min_0 == err) || (err_min_0 == ERR))
+            if ((err_min_0 == err) || (err_min_0 == ERRMAX))
             {
                 /* Enters here if guessed frequency is higher than the 'real' value */
                 ckt->CKTguessedFreq = 1 / (1 / ckt->CKTguessedFreq + fabs (predsum)) ;
@@ -927,10 +927,10 @@ nextTime:
             }
 
             /* Restore maximum and minimum error for next search */
-            err_min_0 = ERR ;
-            err_max = -ERR ;
-            err_0 = ERR ;
-            err_1 = -ERR ;
+            err_min_0 = ERRMAX ;
+            err_max = -ERRMAX ;
+            err_0 = ERRMAX ;
+            err_1 = -ERRMAX ;
 //            err_conv_ref = 0 ;
             dynamic_test = 0 ;
 
@@ -950,8 +950,8 @@ nextTime:
 //                for (i = 0 ; i < msize ; i++)
 //                {
                     /* Reset max and min per node or branch on every shooting cycle */
-//                    RHS_max [i] = -ERR ;
-//                    RHS_min [i] = ERR ;
+//                    RHS_max [i] = -ERRMAX ;
+//                    RHS_min [i] = ERRMAX ;
 //                    RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
 //                    RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
 //                }
@@ -1172,7 +1172,7 @@ resume:
         g_mif_info.breakpoint.last = ckt->CKTtime + ckt->CKTdelta ;
     } else {
         /* Else, mark that timestep was not set by temporary breakpoint */
-        g_mif_info.breakpoint.last = ERR ;
+        g_mif_info.breakpoint.last = ERRMAX ;
     }
 /* gtri - end - wbk - Add Breakpoint stuff */
 
@@ -1243,7 +1243,7 @@ resume:
         while ((g_mif_info.circuit.evt_step = EVTnext_time (ckt)) <= (ckt->CKTtime + ckt->CKTdelta))
         {
             /* Initialize temp analog bkpt to infinity */
-            g_mif_info.breakpoint.current = ERR ;
+            g_mif_info.breakpoint.current = ERRMAX ;
 
             /* Pull items off queue and process them */
             EVTdequeue (ckt, g_mif_info.circuit.evt_step) ;
@@ -1365,7 +1365,7 @@ resume:
 #ifdef XSPICE
 /* gtri - begin - wbk - Add Breakpoint stuff */
         /* Initialize temporary breakpoint to infinity */
-        g_mif_info.breakpoint.current = ERR ;
+        g_mif_info.breakpoint.current = ERRMAX ;
 /* gtri - end - wbk - Add Breakpoint stuff */
 
 /* gtri - begin - wbk - add convergence problem reporting flags */
