@@ -94,10 +94,9 @@ DCpss (CKTcircuit *ckt, int restart)
     /* New variables */
     enum {STABILIZATION, SHOOTING, PSS} pss_state = STABILIZATION;
 
-    double err = 0, predsum = 0, diff = 0 ;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
-    double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERRMAX ;
+    double *RHS_copy_se, *RHS_copy_der, *pred, err_0 = ERRMAX ;
     double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERRMAX, err_min_1 = 0 ;
     double err_1 = 0, err_max = ERRMAX ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
@@ -139,7 +138,6 @@ DCpss (CKTcircuit *ckt, int restart)
     msize = SMPmatSize (ckt->CKTmatrix) ;
     RHS_copy_se = TMALLOC (double, msize) ;  /* Set the current RHS reference for next Shooting Evaluation */
     RHS_copy_der = TMALLOC (double, msize) ; /* Used to compute current Derivative */
-    RHS_derivative = TMALLOC (double, msize) ;
     pred = TMALLOC (double, msize) ;
     RHS_max = TMALLOC (double, msize) ;
     RHS_min = TMALLOC (double, msize) ;
@@ -151,7 +149,6 @@ DCpss (CKTcircuit *ckt, int restart)
     {
         RHS_copy_se [i] = 0.0 ;
         RHS_copy_der [i] = 0.0 ;
-        RHS_derivative [i] = 0.0 ;
         pred [i] = 0.0 ;
 //        S_old [i] = 0.0 ;
 //        S_diff [i] = 0.0 ;
@@ -608,10 +605,16 @@ nextTime:
     case SHOOTING:
     {
         /* Calculation of error norms of RHS solution of every accepted nextTime */
-        err = 0 ;
-        predsum = 0 ;
+        double err = 0 ;
         for (i = 0 ; i < msize ; i++)
         {
+            /* CKTrhsOld is the last CORRECT value of RHS */
+
+            double diff = ckt->CKTrhsOld [i + 1] - RHS_copy_se [i] ;
+
+            err_conv [i] = diff ;
+            err += diff * diff ;
+
             /* Save max per node or branch of every estimated period */
             if (RHS_max [i] < ckt->CKTrhsOld [i + 1])
                 RHS_max [i] = ckt->CKTrhsOld [i + 1] ;
@@ -619,50 +622,6 @@ nextTime:
             /* Save min per node or branch of every estimated period */
             if (RHS_min [i] > ckt->CKTrhsOld [i + 1])
                 RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
-
-            /* CKTrhsOld is the last CORRECT value of RHS */
-            diff = ckt->CKTrhsOld [i + 1] - RHS_copy_se [i] ;
-            err_conv [i] = diff ;
-            err += diff * diff ;
-
-            /* Compute and store derivative */
-            RHS_derivative [i] = (ckt->CKTrhsOld [i + 1] - RHS_copy_der [i]) / ckt->CKTdelta ;
-
-            /* Check if derivative is bounded by maximum allowable derivative */
-            if (fabs (RHS_derivative [i]) > 2 * M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])))
-            {
-                if (RHS_derivative [i] < 0)
-                    RHS_derivative [i] = - M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-                else
-                    RHS_derivative [i] =   M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-            } 
-
-            /* Save the RHS_copy_der as the NEW CKTrhsOld */
-            RHS_copy_der [i] = ckt->CKTrhsOld [i + 1] ;
-
-            /* Pitagora ha sempre ragione!!! :))) */
-            /* pred is treated as FREQUENCY to avoid numerical overflow when derivative is close to ZERO */
-            pred [i] = RHS_derivative [i] / diff ;
-
-#ifdef STEPDEBUG
-            fprintf (stderr, "Pred is so high or so low! Diff is: %g\n", diff) ;
-#endif
-
-            if ((fabs (pred [i]) > 1.0e6 * ckt->CKTguessedFreq) || (diff == 0))
-            {
-                if (pred [i] > 0)
-                    pred [i] = 1.0e6 * ckt->CKTguessedFreq ;
-                else
-                    pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
-            }
-
-            predsum += pred [i] ;
-
-#ifdef STEPDEBUG
-            fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", 1 / predsum) ;
-            fprintf (stderr, "Current Diff: %g, Derivative: %g, Frequency Projection: %g\n", diff, RHS_derivative [i], pred [i]) ;
-#endif
-
         }
         err = sqrt (err) ;
 
@@ -690,6 +649,7 @@ nextTime:
         if ((AlmostEqualUlps (ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq, 10)) || (ckt->CKTtime > time_temp + 1 / ckt->CKTguessedFreq))
         {
             int excessive_err_nodes = 0 ;
+            double predsum = 0;
 
             if (shooting_cycle_counter == 0)
             {
@@ -700,6 +660,49 @@ nextTime:
             /* For debugging purpose */
             fprintf (stderr, "\n----------------\n") ;
             fprintf (stderr, "Shooting cycle iteration number: %3d ||", shooting_cycle_counter) ;
+
+
+            // predict time when CKTrhsOld will aproach RHS_copy_se
+            for (i = 0 ; i < msize ; i++)
+            {
+                double diff = ckt->CKTrhsOld [i + 1] - RHS_copy_se [i] ;
+
+                /* Compute and store derivative */
+                double derivative = (ckt->CKTrhsOld [i + 1] - RHS_copy_der [i]) / ckt->CKTdelta ;
+
+                /* Check if derivative is bounded by maximum allowable derivative */
+                if (fabs (derivative) > 2 * M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])))
+                {
+                    if (derivative < 0)
+                        derivative = - M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
+                    else
+                        derivative =   M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
+                }
+
+                /* Pitagora ha sempre ragione!!! :))) */
+                /* pred is treated as FREQUENCY to avoid numerical overflow when derivative is close to ZERO */
+                /* CKTrhsOld is the last CORRECT value of RHS */
+                pred [i] = derivative / diff ;
+
+#ifdef STEPDEBUG
+                fprintf (stderr, "Pred is so high or so low! Diff is: %g\n", diff) ;
+#endif
+                if ((fabs (pred [i]) > 1.0e6 * ckt->CKTguessedFreq) || (diff == 0))
+                {
+                    if (pred [i] > 0)
+                        pred [i] = 1.0e6 * ckt->CKTguessedFreq ;
+                    else
+                        pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
+                }
+
+                predsum += pred [i] ;
+
+#ifdef STEPDEBUG
+                fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", 1 / predsum) ;
+                fprintf (stderr, "Current Diff: %g, Derivative: %g, Frequency Projection: %g\n", diff, derivative, pred [i]) ;
+#endif
+            }
+
 
             if (shooting_cycle_counter > 0)
                 fprintf (stderr, " rr: %g || predsum: %g\n", rr_history [shooting_cycle_counter - 1], 1 / predsum) ;
@@ -956,7 +959,7 @@ nextTime:
             }
             fprintf (stderr, "----------------\n\n") ;
         }
-
+        
         /* ************************************ */
         /* ********** CKTtime update ********** */
         /* ************************************ */
@@ -981,6 +984,8 @@ nextTime:
         /* ************************************ */
         /* ******* END CKTtime update ********* */
         /* ************************************ */
+        for (i = 0 ; i < msize ; i++)
+            RHS_copy_der [i] = ckt->CKTrhsOld [i + 1] ;
     }
     break;
 
