@@ -98,7 +98,7 @@ DCpss (CKTcircuit *ckt, int restart)
     int msize, shooting_cycle_counter = 0;
     double *RHS_copy_se, *RHS_copy_der, *pred, err_0 = ERRMAX ;
     double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERRMAX, err_min_1 = 0 ;
-    double err_1 = 0, err_max = ERRMAX ;
+    double err_1 = 0, err_max = -ERRMAX ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
     double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
     double thd = 0 ;
@@ -640,7 +640,7 @@ nextTime:
 
         if ((err > err_1) && (ckt->CKTtime >= time_temp + 0.1 / ckt->CKTguessedFreq)) /* far enough from time temp... */
         {
-            if (err > err_max)
+            if (err_max < err)
                 err_max = err ;                /* store maximum of RHS vector error */
         }
         err_1 = err ;
