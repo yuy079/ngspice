@@ -757,7 +757,7 @@ nextTime:
             }
 
             /* Take the mean value of time prediction trough the dynamic test variable */
-            predsum /= dynamic_test;
+            predsum /= msize;
             predsum = 1 / predsum ;
 
             /* Store the predsum history as absolute value */
