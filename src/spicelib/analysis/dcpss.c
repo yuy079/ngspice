@@ -628,10 +628,11 @@ nextTime:
         /* Start frequency estimation */
         if ((err < err_0) && (ckt->CKTtime >= time_temp + 0.5 / ckt->CKTguessedFreq)) /* far enough from time temp... */
         {
-            if (err < err_min_0)
+            if (err_min_0 > err)
             {
                 err_min_1 = err_min_0 ;            /* store previous minimum of RHS vector error */
                 err_min_0 = err ;                  /* store minimum of RHS vector error */
+
                 time_err_min_1 = time_err_min_0 ;  /* store previous minimum of RHS vector error time */
                 time_err_min_0 = ckt->CKTtime ;    /* store minimum of RHS vector error time */
             }
