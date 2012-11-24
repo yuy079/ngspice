@@ -96,7 +96,7 @@ DCpss (CKTcircuit *ckt, int restart)
 
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
-    double *RHS_copy_se, *RHS_copy_der, *pred, err_0 = ERRMAX ;
+    double *RHS_copy_se, *RHS_copy_der, *pred;
     double time_err_min_0 = 0, err_min_0 = ERRMAX;
     int pss_points_cycle = 0, dynamic_test = 0 ;
     double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
@@ -625,7 +625,7 @@ nextTime:
         err = sqrt (err) ;
 
         /* Start frequency estimation */
-        if ((err < err_0) && (ckt->CKTtime >= time_temp + 0.5 / ckt->CKTguessedFreq)) /* far enough from time temp... */
+        if ((ckt->CKTtime >= time_temp + 0.5 / ckt->CKTguessedFreq)) /* far enough from time temp... */
         {
             if (err_min_0 > err)
             {
@@ -633,7 +633,6 @@ nextTime:
                 time_err_min_0 = ckt->CKTtime ;    /* store minimum of RHS vector error time */
             }
         }
-        err_0 = err ;
 
         /* If evolution is near shooting... */
         if ((AlmostEqualUlps (ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq, 10)) || (ckt->CKTtime > time_temp + 1 / ckt->CKTguessedFreq))
@@ -921,7 +920,6 @@ nextTime:
 
             /* Restore maximum and minimum error for next search */
             err_min_0 = ERRMAX ;
-            err_0 = ERRMAX ;
 //            err_conv_ref = 0 ;
             dynamic_test = 0 ;
 
