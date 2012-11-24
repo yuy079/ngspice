@@ -98,7 +98,6 @@ DCpss (CKTcircuit *ckt, int restart)
     int msize, shooting_cycle_counter = 0;
     double *RHS_copy_se, *RHS_copy_der, *pred, err_0 = ERRMAX ;
     double time_err_min_0 = 0, err_min_0 = ERRMAX;
-    double err_1 = 0, err_max = -ERRMAX ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
     double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
     double thd = 0 ;
@@ -636,13 +635,6 @@ nextTime:
         }
         err_0 = err ;
 
-        if ((err > err_1) && (ckt->CKTtime >= time_temp + 0.1 / ckt->CKTguessedFreq)) /* far enough from time temp... */
-        {
-            if (err_max < err)
-                err_max = err ;                /* store maximum of RHS vector error */
-        }
-        err_1 = err ;
-
         /* If evolution is near shooting... */
         if ((AlmostEqualUlps (ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq, 10)) || (ckt->CKTtime > time_temp + 1 / ckt->CKTguessedFreq))
         {
@@ -820,8 +812,8 @@ nextTime:
                 ckt->CKTguessedFreq = 1 / (1 / ckt->CKTguessedFreq + fabs (predsum)) ;
                 
 #ifdef STEPDEBUG
-                fprintf (stderr, "Frequency DOWN: est per %g, err min %g, err max %g, err %g\n",
-                         time_err_min_0 - time_temp, err_min_0, err_max, err) ;
+                fprintf (stderr, "Frequency DOWN: est per %g, err min %g, err %g\n",
+                         time_err_min_0 - time_temp, err_min_0, err) ;
 #endif
 
                 /* Temporary variables to store previous occurrence of guessed frequency */
@@ -833,8 +825,8 @@ nextTime:
                 ckt->CKTguessedFreq = 1 / (time_err_min_0 - time_temp) ;
 
 #ifdef STEPDEBUG
-                fprintf (stderr, "Frequency UP:  est per %g, err min %g, err max %g, err %g\n",
-                         time_err_min_0 - time_temp, err_min_0, err_max, err) ;
+                fprintf (stderr, "Frequency UP:  est per %g, err min %g, err %g\n",
+                         time_err_min_0 - time_temp, err_min_0, err) ;
 #endif
 
                 gf_last_1 = gf_last_0 ;
@@ -929,9 +921,7 @@ nextTime:
 
             /* Restore maximum and minimum error for next search */
             err_min_0 = ERRMAX ;
-            err_max = -ERRMAX ;
             err_0 = ERRMAX ;
-            err_1 = -ERRMAX ;
 //            err_conv_ref = 0 ;
             dynamic_test = 0 ;
 
