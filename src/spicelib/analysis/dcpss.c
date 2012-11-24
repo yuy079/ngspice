@@ -97,7 +97,7 @@ DCpss (CKTcircuit *ckt, int restart)
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
     double *RHS_copy_se, *RHS_copy_der, *pred, err_0 = ERRMAX ;
-    double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERRMAX, err_min_1 = 0 ;
+    double time_err_min_0 = 0, err_min_0 = ERRMAX;
     double err_1 = 0, err_max = -ERRMAX ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
     double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
@@ -630,10 +630,7 @@ nextTime:
         {
             if (err_min_0 > err)
             {
-                err_min_1 = err_min_0 ;            /* store previous minimum of RHS vector error */
                 err_min_0 = err ;                  /* store minimum of RHS vector error */
-
-                time_err_min_1 = time_err_min_0 ;  /* store previous minimum of RHS vector error time */
                 time_err_min_0 = ckt->CKTtime ;    /* store minimum of RHS vector error time */
             }
         }
@@ -823,8 +820,8 @@ nextTime:
                 ckt->CKTguessedFreq = 1 / (1 / ckt->CKTguessedFreq + fabs (predsum)) ;
                 
 #ifdef STEPDEBUG
-                fprintf (stderr, "Frequency DOWN: est per %g, err min %g, err min 1 %g, err max %g, err %g\n",
-                         time_err_min_0 - time_temp, err_min_0, err_min_1, err_max, err) ;
+                fprintf (stderr, "Frequency DOWN: est per %g, err min %g, err max %g, err %g\n",
+                         time_err_min_0 - time_temp, err_min_0, err_max, err) ;
 #endif
 
                 /* Temporary variables to store previous occurrence of guessed frequency */
@@ -836,8 +833,8 @@ nextTime:
                 ckt->CKTguessedFreq = 1 / (time_err_min_0 - time_temp) ;
 
 #ifdef STEPDEBUG
-                fprintf (stderr, "Frequency UP:  est per %g, err min %g, err min 1 %g, err max %g, err %g\n",
-                         time_err_min_0 - time_temp, err_min_0, err_min_1, err_max, err) ;
+                fprintf (stderr, "Frequency UP:  est per %g, err min %g, err max %g, err %g\n",
+                         time_err_min_0 - time_temp, err_min_0, err_max, err) ;
 #endif
 
                 gf_last_1 = gf_last_0 ;
