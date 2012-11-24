@@ -757,7 +757,8 @@ nextTime:
             }
 
             /* Take the mean value of time prediction trough the dynamic test variable */
-            predsum = 1 / (predsum * dynamic_test) ;
+            predsum /= dynamic_test;
+            predsum = 1 / predsum ;
 
             /* Store the predsum history as absolute value */
             predsum_history [shooting_cycle_counter] = fabs (predsum) ;
