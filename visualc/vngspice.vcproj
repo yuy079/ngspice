@@ -2053,7 +2053,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hisimhv.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hisimhv.h"
 				>
 			</File>
 			<File
@@ -2085,35 +2085,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvdef.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvdef.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhveval_qover.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhveval_qover.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvevalenv.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvevalenv.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvext.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvext.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvinit.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvinit.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvitf.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvitf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvld_info_eval.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvld_info_eval.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvtemp_eval.h"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvtemp_eval.h"
 				>
 			</File>
 			<File
@@ -5877,79 +5877,79 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhv.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhv.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvacld.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvacld.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvask.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvask.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvcvtest.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvcvtest.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvdel.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvdel.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvdest.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvdest.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhveval.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhveval.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvgetic.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvgetic.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvinit.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvinit.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvld.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvld.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvmask.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvmask.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvmdel.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvmdel.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvmpar.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvmpar.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvnoi.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvnoi.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvpar.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvpar.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvpzld.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvpzld.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvset.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvset.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvtemp.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvtemp.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\hisimhv2\hsmhvtrunc.c"
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvtrunc.c"
 				>
 			</File>
 			<File
