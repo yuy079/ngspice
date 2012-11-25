@@ -55,7 +55,6 @@ do { \
 
 /* Define some useful macro */
 #define HISTORY 1024
-#define ERRMAX 1e+30
 #define GF_LAST 313
 
 
@@ -97,11 +96,11 @@ DCpss (CKTcircuit *ckt, int restart)
     double err = 0, predsum = 0, diff = 0 ;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
-    double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = ERRMAX ;
-    double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = ERRMAX, err_min_1 = 0 ;
-    double err_1 = 0, err_max = ERRMAX ;
+    double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = HUGE_VAL ;
+    double time_err_min_1 = 0, time_err_min_0 = 0, err_min_0 = HUGE_VAL, err_min_1 = 0 ;
+    double err_1 = 0, err_max = HUGE_VAL ;
     int pss_points_cycle = 0, dynamic_test = 0 ;
-    double gf_last_0 = ERRMAX, gf_last_1 = GF_LAST ;
+    double gf_last_0 = HUGE_VAL, gf_last_1 = GF_LAST ;
     double thd = 0 ;
     double *psstimes, *pssvalues;
     double *RHS_max, *RHS_min, *err_conv ;
@@ -327,8 +326,8 @@ DCpss (CKTcircuit *ckt, int restart)
 
 /* gtri - begin - wbk - Add Breakpoint stuff */
         /* Initialize the temporary breakpoint variables to infinity */
-        g_mif_info.breakpoint.current = ERRMAX ;
-        g_mif_info.breakpoint.last    = ERRMAX ;
+        g_mif_info.breakpoint.current = HUGE_VAL ;
+        g_mif_info.breakpoint.last    = HUGE_VAL ;
 
 /* gtri - end - wbk - Add Breakpoint stuff */
 #endif
@@ -595,11 +594,11 @@ nextTime:
             }
             fprintf (stderr, "\n") ;
 
-            /* RHS_max and RHS_min initialization - ERRMAX is the maximum machine error */
+            /* RHS_max and RHS_min initialization - HUGE_VAL is the maximum machine error */
             for (i = 0 ; i < msize ; i++)
             {
-                RHS_max [i] = -ERRMAX ;
-                RHS_min [i] = ERRMAX ;
+                RHS_max [i] = -HUGE_VAL ;
+                RHS_min [i] = HUGE_VAL ;
             }
 	}
     }
@@ -627,15 +626,6 @@ nextTime:
 
             /* Compute and store derivative */
             RHS_derivative [i] = (ckt->CKTrhsOld [i + 1] - RHS_copy_der [i]) / ckt->CKTdelta ;
-
-            /* Check if derivative is bounded by maximum allowable derivative */
-            if (fabs (RHS_derivative [i]) > 2 * M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])))
-            {
-                if (RHS_derivative [i] < 0)
-                    RHS_derivative [i] = - M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-                else
-                    RHS_derivative [i] =   M_PI * ckt->CKTguessedFreq * MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-            } 
 
             /* Save the RHS_copy_der as the NEW CKTrhsOld */
             RHS_copy_der [i] = ckt->CKTrhsOld [i + 1] ;
@@ -813,7 +803,7 @@ nextTime:
             /***********************************/
             /*** FREQUENCY ESTIMATION UPDATE ***/
             /***********************************/
-            if ((err_min_0 == err) || (err_min_0 == ERRMAX))
+            if ((err_min_0 == err) || (err_min_0 == HUGE_VAL))
             {
                 /* Enters here if guessed frequency is higher than the 'real' value */
                 ckt->CKTguessedFreq = 1 / (1 / ckt->CKTguessedFreq + fabs (predsum)) ;
@@ -886,7 +876,7 @@ nextTime:
                         minimum = predsum_history [i] ;
                         k = i ;
                     }
-                    fprintf (stderr, " || minimum: %15.10g || predsum/dynamic_test: %15.10g\n", minimum, predsum_history [i]) ;
+                    fprintf (stderr, " || predsum/dynamic_test: %15.10g || minimum: %15.10g\n", predsum_history [i], minimum) ;
                 }
 
                 if (excessive_err_nodes == 0)  /* SHOOTING has converged  */
@@ -911,9 +901,9 @@ nextTime:
                 CKTsetBreak (ckt, time_temp + (1 / ckt->CKTguessedFreq) * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints)) ;
 
                 if (excessive_err_nodes == 0)
-                    fprintf (stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %g Hz\n", ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq) ;
+                    fprintf (stderr, "\nConvergence reached. Final circuit time is %1.10g seconds (iteration n° %d) and predicted fundamental frequency is %15.10g Hz\n", ckt->CKTtime, shooting_cycle_counter - 1, ckt->CKTguessedFreq) ;
                 else
-                    fprintf (stderr, "\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %g Hz\n", k, ckt->CKTguessedFreq) ;
+                    fprintf (stderr, "\nConvergence not reached. However the most near convergence iteration has predicted (iteration %d) a fundamental frequency of %15.10g Hz\n", k, ckt->CKTguessedFreq) ;
 
 #ifdef STEPDEBUG
                 fprintf (stderr, "time_temp %g\n", time_temp) ;
@@ -927,10 +917,10 @@ nextTime:
             }
 
             /* Restore maximum and minimum error for next search */
-            err_min_0 = ERRMAX ;
-            err_max = -ERRMAX ;
-            err_0 = ERRMAX ;
-            err_1 = -ERRMAX ;
+            err_min_0 = HUGE_VAL ;
+            err_max = -HUGE_VAL ;
+            err_0 = HUGE_VAL ;
+            err_1 = -HUGE_VAL ;
 //            err_conv_ref = 0 ;
             dynamic_test = 0 ;
 
@@ -950,8 +940,8 @@ nextTime:
                 for (i = 0 ; i < msize ; i++)
                 {
                     /* Reset max and min per node or branch on every shooting cycle */
-                    RHS_max [i] = -ERRMAX ;
-                    RHS_min [i] = ERRMAX ;
+                    RHS_max [i] = -HUGE_VAL ;
+                    RHS_min [i] = HUGE_VAL ;
                 }
             }
             fprintf (stderr, "----------------\n\n") ;
@@ -963,19 +953,48 @@ nextTime:
 
         /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
            the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
-        if (ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.995)
+
+        double offset, interval, nextBreak ;
+        int i ;
+
+        if (ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.995)
         {
-            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e3) ;
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.995 ;
+            interval = (1 / ckt->CKTguessedFreq) * (1 - 0.995) / 5.0e3 ; 
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
         }
-        else if ((ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.8) && (ckt->CKTtime - time_temp <= (1 / ckt->CKTguessedFreq) * 0.995))
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.8) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.995))
         {
-            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e2) ;
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.8 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.995 - 0.8) / 5.0e2 ; 
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
         }
-        else if ((ckt->CKTtime - time_temp > (1 / ckt->CKTguessedFreq) * 0.5) && (ckt->CKTtime - time_temp <= (1 / ckt->CKTguessedFreq) * 0.8))
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.5) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.8))
         {
-            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 1.0e2) ;
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.5 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.8 - 0.5) / 2.5e2 ; 
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        }
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.1) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.5))
+        {
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.1 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.5 - 0.1) / 1.0e2 ; 
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+
         } else {
-            CKTsetBreak (ckt, ckt->CKTtime + (1 / ckt->CKTguessedFreq) / 5.0e1) ;
+            offset = time_temp ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.1) / 5.0e1 ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
         }
 
         /* ************************************ */
@@ -1195,7 +1214,7 @@ resume:
         g_mif_info.breakpoint.last = ckt->CKTtime + ckt->CKTdelta ;
     } else {
         /* Else, mark that timestep was not set by temporary breakpoint */
-        g_mif_info.breakpoint.last = ERRMAX ;
+        g_mif_info.breakpoint.last = HUGE_VAL ;
     }
 /* gtri - end - wbk - Add Breakpoint stuff */
 
@@ -1266,7 +1285,7 @@ resume:
         while ((g_mif_info.circuit.evt_step = EVTnext_time (ckt)) <= (ckt->CKTtime + ckt->CKTdelta))
         {
             /* Initialize temp analog bkpt to infinity */
-            g_mif_info.breakpoint.current = ERRMAX ;
+            g_mif_info.breakpoint.current = HUGE_VAL ;
 
             /* Pull items off queue and process them */
             EVTdequeue (ckt, g_mif_info.circuit.evt_step) ;
@@ -1347,7 +1366,7 @@ resume:
 #ifdef XSPICE
 /* gtri - begin - wbk - Add Breakpoint stuff */
         /* Initialize temporary breakpoint to infinity */
-        g_mif_info.breakpoint.current = ERRMAX ;
+        g_mif_info.breakpoint.current = HUGE_VAL ;
 /* gtri - end - wbk - Add Breakpoint stuff */
 
 /* gtri - begin - wbk - add convergence problem reporting flags */
