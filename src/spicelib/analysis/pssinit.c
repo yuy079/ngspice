@@ -12,9 +12,6 @@ int PSSinit(CKTcircuit *ckt, JOB *anal)
 {
     PSSan *job = (PSSan *) anal;
 
-    /* Final time depends on stabilization time requested for PSS
-	and on at least one more oscillation period */
-    ckt->CKTfinalTime = job->PSSstabTime + 2/job->PSSguessedFreq;
     /* Step is chosen empirically to be 1% of PSSguessedFreq */
     ckt->CKTstep = 0.01 * (1/job->PSSguessedFreq);
     /* Init time should be always zero */
