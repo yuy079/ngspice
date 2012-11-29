@@ -93,7 +93,7 @@ DCpss (CKTcircuit *ckt, int restart)
     /* New variables */
     enum {STABILIZATION, SHOOTING, PSS} pss_state = STABILIZATION;
 
-    double err = 0, predsum = 0, diff = 0 ;
+    double err = 0, predsum = 0 ;
     double time_temp = 0, gf_history [HISTORY], rr_history [HISTORY], predsum_history [HISTORY], nextstep ;
     int msize, shooting_cycle_counter = 0;
     double *RHS_copy_se, *RHS_copy_der, *RHS_derivative, *pred, err_0 = HUGE_VAL ;
@@ -104,7 +104,6 @@ DCpss (CKTcircuit *ckt, int restart)
     double thd = 0 ;
     double *psstimes, *pssvalues;
     double *RHS_max, *RHS_min, *err_conv ;
-//    double err_conv_ref = 0, tv_01 = 0, *S_old, *S_diff ;
 
     /* Francesco Lannutti's MOD */
     /* Stuff needed by frequency estimation reiteration, based on the DFT result */
@@ -143,8 +142,6 @@ DCpss (CKTcircuit *ckt, int restart)
     RHS_max = TMALLOC (double, msize) ;
     RHS_min = TMALLOC (double, msize) ;
     err_conv = TMALLOC (double, msize) ;
-//    S_old = TMALLOC (double, msize) ;
-//    S_diff = TMALLOC (double, msize) ;
     
     for (i = 0 ; i < msize ; i++)
     {
@@ -152,8 +149,6 @@ DCpss (CKTcircuit *ckt, int restart)
         RHS_copy_der [i] = 0.0 ;
         RHS_derivative [i] = 0.0 ;
         pred [i] = 0.0 ;
-//        S_old [i] = 0.0 ;
-//        S_diff [i] = 0.0 ;
     }
 
     psstimes = TMALLOC (double, ckt->CKTpsspoints + 1) ;
@@ -570,11 +565,8 @@ nextTime:
         {
             time_temp = ckt->CKTtime ;
 
-            /* Are you sure about 2 times the Period ? */
+            /* Set the new Final Time - This is important because the last breakpoint is always CKTfinalTime */
             ckt->CKTfinalTime = time_temp + 2 / ckt->CKTguessedFreq ;
-
-            /* Set the first requested breakpoint - Maximum of Shooting? - Same consideration as before */
-            CKTsetBreak (ckt, time_temp + 1 / ckt->CKTguessedFreq) ;
             fprintf (stderr, "Exiting from stabilization\n") ;
             fprintf (stderr, "Time of first shooting evaluation will be %1.10g\n", time_temp + 1 / ckt->CKTguessedFreq) ;
 
@@ -608,7 +600,6 @@ nextTime:
     {
         /* Calculation of error norms of RHS solution of every accepted nextTime */
         err = 0 ;
-        predsum = 0 ;
         for (i = 0 ; i < msize ; i++)
         {
             /* Save max per node or branch of every estimated period */
@@ -620,9 +611,8 @@ nextTime:
                 RHS_min [i] = ckt->CKTrhsOld [i + 1] ;
 
             /* CKTrhsOld is the last CORRECT value of RHS */
-            diff = ckt->CKTrhsOld [i + 1] - RHS_copy_se [i] ;
-            err_conv [i] = diff ;
-            err += diff * diff ;
+            err_conv [i] = ckt->CKTrhsOld [i + 1] - RHS_copy_se [i] ;
+            err += err_conv [i] * err_conv [i] ;
 
             /* Compute and store derivative */
             RHS_derivative [i] = (ckt->CKTrhsOld [i + 1] - RHS_copy_der [i]) / ckt->CKTdelta ;
@@ -630,27 +620,8 @@ nextTime:
             /* Save the RHS_copy_der as the NEW CKTrhsOld */
             RHS_copy_der [i] = ckt->CKTrhsOld [i + 1] ;
 
-            /* Pitagora ha sempre ragione!!! :))) */
-            /* pred is treated as FREQUENCY to avoid numerical overflow when derivative is close to ZERO */
-            pred [i] = RHS_derivative [i] / diff ;
-
 #ifdef STEPDEBUG
-            fprintf (stderr, "Pred is so high or so low! Diff is: %g\n", diff) ;
-#endif
-
-            if ((fabs (pred [i]) > 1.0e6 * ckt->CKTguessedFreq) || (diff == 0))
-            {
-                if (pred [i] > 0)
-                    pred [i] = 1.0e6 * ckt->CKTguessedFreq ;
-                else
-                    pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
-            }
-
-            predsum += pred [i] ;
-
-#ifdef STEPDEBUG
-            fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", 1 / predsum) ;
-            fprintf (stderr, "Current Diff: %g, Derivative: %g, Frequency Projection: %g\n", diff, RHS_derivative [i], pred [i]) ;
+            fprintf (stderr, "Pred is so high or so low! Diff is: %g\n", err_conv [i]) ;
 #endif
 
         }
@@ -676,9 +647,98 @@ nextTime:
         }
         err_1 = err ;
 
+
+        /* *************************************** */
+        /* ********** Breakpoint update ********** */
+        /* *************************************** */
+
+        /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
+           the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
+
+        double offset, interval, nextBreak ;
+        int i ;
+
+        if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.995) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq)))
+        {
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.995 ;
+            interval = (1 / ckt->CKTguessedFreq) * (1 - 0.995) * (ckt->CKTsteady_coeff / 10) ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        }
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.8) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.995))
+        {
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.8 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.995 - 0.8) * (ckt->CKTsteady_coeff / 5) ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        }
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.5) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.8))
+        {
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.5 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.8 - 0.5) * (ckt->CKTsteady_coeff / 3) ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        }
+        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.1) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.5))
+        {
+            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.1 ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.5 - 0.1) * (ckt->CKTsteady_coeff / 2) ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        }
+        else if ((ckt->CKTtime > time_temp) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.1))
+        {
+            offset = time_temp ;
+            interval = (1 / ckt->CKTguessedFreq) * (0.1) * (ckt->CKTsteady_coeff) ;
+            i = (int)((ckt->CKTtime - offset) / interval) ;
+            nextBreak = offset + (i + 1) * interval ;
+            CKTsetBreak (ckt, nextBreak) ;
+        } else {
+            fprintf (stderr, "Strange behavior\n\n") ;
+            fprintf (stderr, "CKTtime: %g\ntime_temp: %g\n\n", ckt->CKTtime, time_temp) ;
+        }
+
+        /* *************************************** */
+        /* ******* END Breakpoint update ********* */
+        /* *************************************** */
+
+
         /* If evolution is near shooting... */
         if ((AlmostEqualUlps (ckt->CKTtime, time_temp + 1 / ckt->CKTguessedFreq, 10)) || (ckt->CKTtime > time_temp + 1 / ckt->CKTguessedFreq))
         {
+            /* Calculation of error norms of RHS solution of every accepted nextTime */
+            predsum = 0 ;
+            for (i = 0 ; i < msize ; i++)
+            {
+                /* Pitagora ha sempre ragione!!! :))) */
+                /* pred is treated as FREQUENCY to avoid numerical overflow when derivative is close to ZERO */
+                pred [i] = RHS_derivative [i] / err_conv [i] ;
+
+#ifdef STEPDEBUG
+                fprintf (stderr, "Pred is so high or so low! Diff is: %g\n", err_conv [i]) ;
+#endif
+
+                if ((fabs (pred [i]) > 1.0e6 * ckt->CKTguessedFreq) || (err_conv [i] == 0))
+                {
+                    if (pred [i] > 0)
+                        pred [i] = 1.0e6 * ckt->CKTguessedFreq ;
+                    else
+                        pred [i] = -1.0e6 * ckt->CKTguessedFreq ;
+                }
+
+                predsum += pred [i] ;
+
+#ifdef STEPDEBUG
+                fprintf (stderr, "Predsum in time before to be divided by dynamic_test has value %g\n", 1 / predsum) ;
+                fprintf (stderr, "Current Diff: %g, Derivative: %g, Frequency Projection: %g\n", err_conv [i], RHS_derivative [i], pred [i]) ;
+#endif
+
+            }
+
             int excessive_err_nodes = 0 ;
 
             if (shooting_cycle_counter == 0)
@@ -687,6 +747,7 @@ nextTime:
                 fprintf (stderr, "In shooting...\n") ;
             }
 
+//#ifdef STEPDEBUG
             /* For debugging purpose */
             fprintf (stderr, "\n----------------\n") ;
             fprintf (stderr, "Shooting cycle iteration number: %3d ||", shooting_cycle_counter) ;
@@ -695,70 +756,43 @@ nextTime:
                 fprintf (stderr, " rr: %g || predsum: %g\n", rr_history [shooting_cycle_counter - 1], 1 / predsum) ;
             else
                 fprintf (stderr, " rr: %g || predsum: %g\n", 0.0, 1 / predsum) ;
-            /* --------------------- */
 
 //            fprintf (stderr, "Print of dynamically consistent nodes voltages or branches currents:\n") ;
+            /* --------------------- */
+//#endif
 
             for (i = 0, node = ckt->CKTnodes->next ; node ; i++, node = node->next)
             {
                 /* Voltage Node */
                 if (!strstr (node->name, "#"))
                 {
-//                    tv_01 = MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-
-//                    err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff ;
-
-                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTvoltTol) *
+                        ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    {
                         excessive_err_nodes++ ;
+                    }
 
                     /* If the dynamic is below 10uV, it's dropped */
                     if (fabs (RHS_max [i] - RHS_min [i]) > 10 * 1e-6)
                     {
-//                        S_diff [i] = 2 - ((RHS_max [i] - RHS_min [i]) / tv_01 - S_old [i]) ;
-//                        S_old [i] = (RHS_max [i] - RHS_min [i]) / tv_01 ;
-//                        if (fabs (S_old [i]) > 0.1)
-//                            fprintf (stderr, "[V] %20s: RHSd %-12g || ECR %-12g || RHSM %-12g || RHSm %-12g || Dynamic variation %-12g || prediction %1.10lg\n",
-//                                     node->name, ckt->CKTrhsOld [i + 1] - RHS_copy_se [i],
-//                                     ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + 1e-6) * ckt->CKTtrtol * ckt->CKTsteady_coeff,
-//                                     RHS_max [i], RHS_min [i], S_diff [i], 1 / pred [i]) ;
                         dynamic_test++ ; /* test on voltage dynamic consistence */
-//                    } else {
-//                        S_old [i] = 0 ;
-//                        S_diff [i] = 0 ;
                     }
 
                 /* Current Node */
                 } else {
-//                    tv_01 = MAX (fabs (RHS_max [i]), fabs (RHS_min [i])) ;
-
-//                    err_conv_ref += ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff ;
-
-                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) * ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    if (fabs (err_conv [i]) > (fabs (RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + ckt->CKTabstol) *
+                        ckt->CKTtrtol * ckt->CKTsteady_coeff)
+                    {
                         excessive_err_nodes++ ;
+                    }
 
                     /* If the dynamic is below 10nA, it's dropped */
                     if (fabs (RHS_max [i] - RHS_min [i]) > 10 * 1e-9)
                     {
-//                        S_diff [i] = 2 - ((RHS_max [i] - RHS_min [i]) / tv_01 - S_old [i]) ;
-//                        S_old [i] = (RHS_max [i] - RHS_min [i]) / tv_01 ;
-//                        if (fabs (S_old [i]) > 0.1)
-//                            fprintf (stderr, "[I] %20s: RHSd %-12g || ECR %-12g || RHSM %-12g || RHSm %-12g || Dynamic variation %-12g || prediction %1.10lg\n",
-//                                     node->name, ckt->CKTrhsOld [i + 1] - RHS_copy_se [i],
-//                                     ((RHS_max [i] - RHS_min [i]) * ckt->CKTreltol + 1e-9) * ckt->CKTtrtol * ckt->CKTsteady_coeff,
-//                                     RHS_max [i], RHS_min [i], S_diff [i], 1/pred [i]) ;
                         dynamic_test++ ; /* test on current dynamic consistence */
-//                    } else {
-//                        S_old [i] = 0 ;
-//                        S_diff [i] = 0 ;
                     }
                 }
             }
-
-            /* Take the mean value of time prediction trough the dynamic test variable */
-            predsum = 1 / (predsum * dynamic_test) ;
-
-            /* Store the predsum history as absolute value */
-            predsum_history [shooting_cycle_counter] = fabs (predsum) ;
 
             if (dynamic_test == 0)
             {
@@ -771,8 +805,6 @@ nextTime:
                 FREE (RHS_copy_der) ;
                 FREE (RHS_max) ;
                 FREE (RHS_min) ;
-//                FREE (S_old) ;
-//                FREE (S_diff) ;
                 FREE (psstimes) ;
                 FREE (pssvalues) ;
                 return (E_PANIC) ; /* to be corrected with definition of new error macro in iferrmsg.h */
@@ -788,8 +820,6 @@ nextTime:
                 FREE (RHS_copy_der) ;
                 FREE (RHS_max) ;
                 FREE (RHS_min) ;
-//                FREE (S_old) ;
-//                FREE (S_diff) ;
                 FREE (psstimes) ;
                 FREE (pssvalues) ;
                 return (E_PANIC) ; /* to be corrected with definition of new error macro in iferrmsg.h */
@@ -799,6 +829,12 @@ nextTime:
 //            fprintf (stderr, "Global Convergence Error reference: %g, Time Projection: %g.\n",
 //                     err_conv_ref / dynamic_test, predsum) ;
 //#endif
+
+            /* Take the mean value of time prediction trough the dynamic test variable - predsum becomes TIME */
+            predsum = 1 / (predsum * dynamic_test) ;
+
+            /* Store the predsum history as absolute value */
+            predsum_history [shooting_cycle_counter] = fabs (predsum) ;
 
             /***********************************/
             /*** FREQUENCY ESTIMATION UPDATE ***/
@@ -813,11 +849,7 @@ nextTime:
                          time_err_min_0 - time_temp, err_min_0, err_min_1, err_max, err) ;
 #endif
 
-                /* Temporary variables to store previous occurrence of guessed frequency */
-                gf_last_1 = gf_last_0 ;
-                gf_last_0 = ckt->CKTguessedFreq ;
             } else {
-
                 /* Enters here if guessed frequency is lower than the 'real' value */
                 ckt->CKTguessedFreq = 1 / (time_err_min_0 - time_temp) ;
 
@@ -826,18 +858,14 @@ nextTime:
                          time_err_min_0 - time_temp, err_min_0, err_min_1, err_max, err) ;
 #endif
 
-                gf_last_1 = gf_last_0 ;
-                gf_last_0 = ckt->CKTguessedFreq ;
             }
+
+            /* Temporary variables to store previous occurrence of guessed frequency */
+            gf_last_1 = gf_last_0 ;
+            gf_last_0 = ckt->CKTguessedFreq ;
 
             /* Next evaluation of shooting will be updated time (time_temp) summed to updated guessed period */
             time_temp = ckt->CKTtime ;
-
-            /* IMPORTANT! Final time must be updated! Otherwise delta time can be wrongly calculated */
-            ckt->CKTfinalTime = time_temp + 2 / ckt->CKTguessedFreq ;
-
-            /* Set next the breakpoint */
-            CKTsetBreak (ckt, time_temp + 1 / ckt->CKTguessedFreq) ;
 
             /* Store error history */
             rr_history [shooting_cycle_counter] = err ;
@@ -848,13 +876,40 @@ nextTime:
             fprintf (stderr, "Next shooting evaluation time is %1.10g and current time is %1.10g.\n",
                      time_temp + 1 / ckt->CKTguessedFreq, ckt->CKTtime) ;
 
+            /* Restore maximum and minimum error for next search */
+            err_min_0 = HUGE_VAL ;
+            err_max = -HUGE_VAL ;
+            err_0 = HUGE_VAL ;
+            err_1 = -HUGE_VAL ;
+            dynamic_test = 0 ;
+
+            /* Reset actual RHS reference for next shooting evaluation */
+            for (i = 1 ; i <= msize ; i++)
+                RHS_copy_se [i - 1] = ckt->CKTrhsOld [i] ;
+
+#ifdef STEPDEBUG
+            fprintf (stderr, "RHS on new shooting cycle: ") ;
+            for (i = 0 ; i < msize ; i++)
+                fprintf (stderr, "%-15g ", RHS_copy_se [i]) ;
+            fprintf (stderr, "\n") ;
+#endif
+
+            for (i = 0 ; i < msize ; i++)
+            {
+                /* Reset max and min per node or branch on every shooting cycle */
+                RHS_max [i] = -HUGE_VAL ;
+                RHS_min [i] = HUGE_VAL ;
+            }
+
+            fprintf (stderr, "----------------\n\n") ;
+
             /* Shooting Exit Condition */
             if ((shooting_cycle_counter > ckt->CKTsc_iter) || (excessive_err_nodes == 0))
             {
-                int k;
-                double minimum;
+                int k ;
+                double minimum ;
 
-                pss_state = PSS;
+                pss_state = PSS ;
 
 #ifdef STEPDEBUG
                 fprintf (stderr, "\nFrequency estimation (FE) and RHS period residual (PR) evolution\n") ;
@@ -887,7 +942,7 @@ nextTime:
                 /* Save the current Time */
                 time_temp = ckt->CKTtime ;
 
-                /* Set the new Final Time */
+                /* Set the new Final Time - This is important because the last breakpoint is always CKTfinalTime */
                 ckt->CKTfinalTime = time_temp + 1 / ckt->CKTguessedFreq ;
 
                 /* Dump the first PSS point for the FFT */
@@ -914,92 +969,15 @@ nextTime:
                 fprintf (stderr, "Next breakpoint set in: %1.15g\n",
                          time_temp + 1 / ckt->CKTguessedFreq * ((double)(pss_points_cycle) / (double)ckt->CKTpsspoints)) ;
 #endif
+
+            } else {
+                /* Set the new Final Time - This is important because the last breakpoint is always CKTfinalTime */
+                ckt->CKTfinalTime = time_temp + 1 / ckt->CKTguessedFreq ;
+
+                /* Set next the breakpoint */
+                CKTsetBreak (ckt, time_temp + 1 / ckt->CKTguessedFreq) ;
             }
-
-            /* Restore maximum and minimum error for next search */
-            err_min_0 = HUGE_VAL ;
-            err_max = -HUGE_VAL ;
-            err_0 = HUGE_VAL ;
-            err_1 = -HUGE_VAL ;
-//            err_conv_ref = 0 ;
-            dynamic_test = 0 ;
-
-            /* Reset actual RHS reference for next shooting evaluation */
-            for (i = 1 ; i <= msize ; i++)
-                RHS_copy_se [i - 1] = ckt->CKTrhsOld [i] ;
-
-#ifdef STEPDEBUG
-            fprintf (stderr, "RHS on new shooting cycle: ") ;
-            for (i = 0 ; i < msize ; i++)
-                fprintf (stderr, "%-15g ", RHS_copy_se [i]) ;
-            fprintf (stderr, "\n") ;
-#endif
-
-            if (pss_state == SHOOTING)
-            {
-                for (i = 0 ; i < msize ; i++)
-                {
-                    /* Reset max and min per node or branch on every shooting cycle */
-                    RHS_max [i] = -HUGE_VAL ;
-                    RHS_min [i] = HUGE_VAL ;
-                }
-            }
-            fprintf (stderr, "----------------\n\n") ;
         }
-
-        /* ************************************ */
-        /* ********** CKTtime update ********** */
-        /* ************************************ */
-
-        /* Force the tran analysis to evaluate requested breakpoints. Breakpoints are even more closer as
-           the next occurence of guessed period is approaching. La lunga notte dei robot viventi... */
-
-        double offset, interval, nextBreak ;
-        int i ;
-
-        if (ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.995)
-        {
-            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.995 ;
-            interval = (1 / ckt->CKTguessedFreq) * (1 - 0.995) / 5.0e3 ; 
-            i = (int)((ckt->CKTtime - offset) / interval) ;
-            nextBreak = offset + (i + 1) * interval ;
-            CKTsetBreak (ckt, nextBreak) ;
-        }
-        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.8) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.995))
-        {
-            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.8 ;
-            interval = (1 / ckt->CKTguessedFreq) * (0.995 - 0.8) / 5.0e2 ; 
-            i = (int)((ckt->CKTtime - offset) / interval) ;
-            nextBreak = offset + (i + 1) * interval ;
-            CKTsetBreak (ckt, nextBreak) ;
-        }
-        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.5) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.8))
-        {
-            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.5 ;
-            interval = (1 / ckt->CKTguessedFreq) * (0.8 - 0.5) / 2.5e2 ; 
-            i = (int)((ckt->CKTtime - offset) / interval) ;
-            nextBreak = offset + (i + 1) * interval ;
-            CKTsetBreak (ckt, nextBreak) ;
-        }
-        else if ((ckt->CKTtime > time_temp + (1 / ckt->CKTguessedFreq) * 0.1) && (ckt->CKTtime <= time_temp + (1 / ckt->CKTguessedFreq) * 0.5))
-        {
-            offset = time_temp + (1 / ckt->CKTguessedFreq) * 0.1 ;
-            interval = (1 / ckt->CKTguessedFreq) * (0.5 - 0.1) / 1.0e2 ; 
-            i = (int)((ckt->CKTtime - offset) / interval) ;
-            nextBreak = offset + (i + 1) * interval ;
-            CKTsetBreak (ckt, nextBreak) ;
-
-        } else {
-            offset = time_temp ;
-            interval = (1 / ckt->CKTguessedFreq) * (0.1) / 5.0e1 ;
-            i = (int)((ckt->CKTtime - offset) / interval) ;
-            nextBreak = offset + (i + 1) * interval ;
-            CKTsetBreak (ckt, nextBreak) ;
-        }
-
-        /* ************************************ */
-        /* ******* END CKTtime update ********* */
-        /* ************************************ */
     }
     break;
 
@@ -1104,8 +1082,6 @@ nextTime:
             FREE (RHS_copy_der) ;
             FREE (RHS_max) ;
             FREE (RHS_min) ;
-//            FREE (S_old) ;
-//            FREE (S_diff) ;
             FREE (psstimes) ;
             FREE (pssvalues) ;
             return (OK) ;
