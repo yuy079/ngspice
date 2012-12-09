@@ -19,6 +19,7 @@ Author: 1985 Wayne A. Christopher, U. C. Berkeley CAD Group
 #include "dimens.h"
 #include "../misc/misc_time.h"
 #include "vectors.h"
+#include "ngspice/dstring.h"
 #include "plotting/plotting.h"
 
 #ifdef XSPICE
@@ -27,14 +28,45 @@ struct dvec *EVTfindvec(char *node);
 /* gtri - end   - add function prototype for EVTfindvec */
 #endif
 
+static void vec_rebuild_lookup_table( struct plot *pl )
+{
+    int cnt ;				/* count entries */
+    struct dvec *d ;			/* dynamic vector */
+    NGHASHPTR lookup_p ;		/* lookup table for speed */
+    SPICE_DSTRING dbuf ;		/* dynamic buffer */
+    char *lower_name ;			/* lower case name */
+
+    if( pl->pl_lookup_table ) {
+        nghash_empty( pl->pl_lookup_table, NULL, NULL ) ;
+    } else {
+        cnt = 0 ;
+        for (d = pl->pl_dvecs; d; d = d->v_next) {
+            cnt++ ;
+        }
+        pl->pl_lookup_table = nghash_init(cnt) ;
+        /* allow multiple entries */
+        nghash_unique( pl->pl_lookup_table, FALSE ) ;
+    }
+    lookup_p = pl->pl_lookup_table ;
+    spice_dstring_init( &dbuf ) ;
+    for (d = pl->pl_dvecs; d; d = d->v_next) {
+        spice_dstring_reinit( &dbuf ) ;
+        lower_name = spice_dstring_append_lower( &dbuf, d->v_name, -1 ) ;
+        nghash_insert( lookup_p, lower_name, d ) ;
+    }
+    spice_dstring_free( &dbuf ) ;
+    pl->pl_lookup_valid = TRUE ;
+} /* end vec_rebuild_lookup_table() */
 
 /* Find a named vector in a plot. We are careful to copy the vector if
  * v_link2 is set, because otherwise we will get screwed up.  */
 static struct dvec *
 findvec(char *word, struct plot *pl)
 {
+    SPICE_DSTRING dbuf ;		/* dynamic buffer */
+    char *lower_name ;			/* lower case name */
+    char *node_name ;
     struct dvec *d, *newv = NULL, *end = NULL, *v;
-    char buf[BSIZE_SP];
 
     if (pl == NULL)
         return (NULL);
@@ -115,15 +147,30 @@ findvec(char *word, struct plot *pl)
         return (newv);
     }
 
-    for (d = pl->pl_dvecs; d; d = d->v_next)
-        if (cieq(word, d->v_name) && (d->v_flags & VF_PERMANENT))
+    if(!(pl->pl_lookup_valid))
+        vec_rebuild_lookup_table( pl ) ;
+
+    spice_dstring_init( &dbuf ) ;
+    lower_name = spice_dstring_append_lower( &dbuf, word, -1 ) ;
+
+    for( d = nghash_find( pl->pl_lookup_table, lower_name ) ; d ;
+            d = nghash_find_again( pl->pl_lookup_table, lower_name ) ) {
+        if (d->v_flags & VF_PERMANENT)
             break;
-    if (!d) {
-        (void) sprintf(buf, "v(%s)", word);
-        for (d = pl->pl_dvecs; d; d = d->v_next)
-            if (cieq(buf, d->v_name) && (d->v_flags & VF_PERMANENT))
-                break;
     }
+    if (!d) {
+        spice_dstring_reinit( &dbuf ) ;
+        spice_dstring_append( &dbuf, "v(", -1 ) ;
+        spice_dstring_append_lower( &dbuf, word, -1 ) ;
+        node_name = spice_dstring_append_char( &dbuf, ')' ) ;
+
+        for( d = nghash_find( pl->pl_lookup_table, node_name ) ; d ;
+                d = nghash_find_again( pl->pl_lookup_table, node_name ) ) {
+            if (d->v_flags & VF_PERMANENT)
+                break;
+        }
+    }
+    spice_dstring_free( &dbuf ) ;
 #ifdef XSPICE
     /* gtri - begin - Add processing for getting event-driven vector */
 
@@ -728,6 +775,7 @@ vec_new(struct dvec *d)
     if (plot_cur == NULL) {
         fprintf(cp_err, "vec_new: Internal Error: no cur plot\n");
     }
+    plot_cur->pl_lookup_valid = FALSE ;
     if ((d->v_flags & VF_PERMANENT) && (plot_cur->pl_scale == NULL))
         plot_cur->pl_scale = d;
     if (!d->v_plot)
@@ -784,13 +832,13 @@ void
 vec_free_x(struct dvec *v)
 {
     struct plot *pl;
-
     if ((v == NULL) || (v->v_name == NULL))
         return;
     pl = v->v_plot;
 
     /* Now we have to take this dvec out of the plot list. */
     if (pl != NULL) {
+        pl->pl_lookup_valid = FALSE ;
         if (pl->pl_dvecs == v) {
             pl->pl_dvecs = v->v_next;
         } else {
