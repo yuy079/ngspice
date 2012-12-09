@@ -20,7 +20,14 @@
 #include "com_commands.h"
 #include "com_display.h"
 
+
 static wordlist *measure_parse_line(char *line);
+
+static bool measure_valid[20000];/* TRUE: if measurement no. [xxx] has been done successfully
+                                 (not used anywhere)*/
+static bool just_chk_meas;   /* TRUE: only check if measurement can be done successfully,
+                             no output generated (if option autostop is set)*/
+static bool measures_passed; /* TRUE: stop simulation (if option autostop is set)*/
 
 extern bool ft_batchmode;
 extern bool rflag;
@@ -28,6 +35,7 @@ extern bool rflag;
 #ifdef HAS_WINDOWS    /* hvogt 10.03.99, nach W. Mues */
 extern void SetAnalyse(char * Analyse, int Percent);
 #endif
+
 
 /* measure in interactive mode:
    meas command inside .control ... .endc loop or manually entered.
@@ -107,7 +115,7 @@ com_meas(wordlist *wl)
                 }
             }
         } else {
-            ;   // nothing
+            ;                   // nothing
         }
         wl_index = wl_index->wl_next;
     }
@@ -146,6 +154,8 @@ chkAnalysisType(char *an_type)
     if (strcmp(an_type, "tran") != 0 && strcmp(an_type, "ac") != 0 &&
             strcmp(an_type, "dc") != 0 && strcmp(an_type, "sp") != 0)
         return FALSE;
+    // else if (ft_batchmode == TRUE)
+    //     return FALSE;
     else
         return TRUE;
 }
@@ -155,10 +165,9 @@ chkAnalysisType(char *an_type)
    On error returns FALSE. */
 static bool
 get_double_value(
-    char **line,   /*in|out: pointer to line to be parsed */
-    char *name,    /*in: xxx e.g. 'val' from 'val=0.5' */
-    double *value, /*out: return value (e.g. 0.5) from 'val=0.5'*/
-    bool just_chk_meas /* in: just check measurement if true */
+    char **line,  /*in|out: pointer to line to be parsed */
+    char *name,   /*in: xxx e.g. 'val' from 'val=0.5' */
+    double *value /*out: return value (e.g. 0.5) from 'val=0.5'*/
 )
 {
     char *token     = gettok(line);
@@ -201,44 +210,43 @@ get_double_value(
 /* Entry point for .meas evaluation.
    Called in fcn dosim() from runcoms.c:335, after simulation is finished
    with chk_only set to FALSE.
-   Called from fcn check_autostop(),
-   with chk_only set to TRUE (no printouts, no params set).
-   This function returns TRUE if all measurements are ready and complete;
-   FALSE otherwise.  If called with chk_only, we can exit early if we
-   fail a test in order to reduce execution time.  */
-bool
+   Called from fcn check_autostop()
+   with chk_only set to TRUE (no printouts, no params set). */
+void
 do_measure(
     char *what,   /*in: analysis type*/
     bool chk_only /*in: TRUE if checking for "autostop", FALSE otherwise*/
+    /*global variable measures_passed
+      out: set to FALSE if .meas syntax is violated (used with autostop)*/
 )
 {
     struct line *meas_card, *meas_results = NULL, *end = NULL, *newcard;
     char        *line, *an_name, *an_type, *resname, *meastype, *str_ptr, out_line[1000];
-    int         ok = 0;
-    int         fail;
-    int         num_failed = 0 ;
+    int         idx  = 0, ok = 0;
+    int       fail;
     double      result = 0;
     bool        first_time = TRUE;
-    bool 	    measures_passed ;
     wordlist    *measure_word_list;
     int         precision = measure_get_precision();
+
 
 #ifdef HAS_WINDOWS
     if (!chk_only)
         SetAnalyse( "meas", 0);
 #endif
 
+    just_chk_meas = chk_only;
+
     an_name = strdup(what); /* analysis type, e.g. "tran" */
     strtolower(an_name);
     measure_word_list = NULL;
-    measures_passed = TRUE ;
 
     /* don't allow .meas if batchmode is set by -b and -r rawfile given */
     if (ft_batchmode && rflag) {
         fprintf(cp_err, "\nNo .measure possible in batch mode (-b) with -r rawfile set!\n");
         fprintf(cp_err, "Remove rawfile and use .print or .plot or\n");
         fprintf(cp_err, "select interactive mode (optionally with .control section) instead.\n\n");
-        return(measures_passed);
+        return;
     }
 
     /* Evaluating the linked list of .meas cards, assembled from the input deck
@@ -266,7 +274,7 @@ do_measure(
         meastype = gettok(&line);
 
         if (chkAnalysisType(an_type) != TRUE) {
-            if (!(chk_only)) {
+            if (just_chk_meas != TRUE) {
                 fprintf(cp_err, "Error: unrecognized analysis type '%s' for the following .meas statement on line %d:\n", an_type, meas_card->li_linenum);
                 fprintf(cp_err, "       %s\n", meas_card->li_line);
             }
@@ -280,8 +288,9 @@ do_measure(
         else if (first_time) {
             first_time = FALSE;
 
-            if (!(chk_only) && strcmp(an_type, "tran") == 0) {
+            if (just_chk_meas != TRUE && strcmp(an_type, "tran") == 0) {
                 fprintf(stdout, "\n  Measurements for Transient Analysis\n\n");
+                // plot_cur = setcplot("tran");
             }
         }
 
@@ -304,48 +313,44 @@ do_measure(
         if (measure_word_list) {
             fail = get_measure2(measure_word_list, &result, out_line, chk_only);
             if (fail) {
+                measure_valid[idx++] = FALSE;
                 measures_passed = FALSE;
                 if (!chk_only)
                     fprintf(stderr, " %s failed!\n\n", meas_card->li_line);
-                num_failed++ ;
-                if( chk_only ){
-                    /* added for speed - cleanup last parse and break */
-                    txfree(an_type);
-				    txfree(resname);
-				    txfree(meastype);
-                    break ;
-                }
             } else {
-                if (!(chk_only))
+                if (!(just_chk_meas))
                     nupa_add_param(resname, result);
+                measure_valid[idx++] = TRUE;
             }
             wl_free(measure_word_list);
         } else {
+            measure_valid[idx++] = FALSE;
             measures_passed = FALSE;
-            num_failed++ ;
         }
 
-        if(!(chk_only)){
-            newcard          = alloc(struct line);
-            newcard->li_line = strdup(out_line);
-            newcard->li_next = NULL;
+        newcard          = alloc(struct line);
+        newcard->li_line = strdup(out_line);
+        newcard->li_next = NULL;
 
-            if (meas_results == NULL) {
-                meas_results = end = newcard;
-            } else {
-                end->li_next = newcard;
-                end          = newcard;
-            }
+        if (meas_results == NULL) {
+            meas_results = end = newcard;
+        } else {
+            end->li_next = newcard;
+            end          = newcard;
         }
 
         txfree(an_type);
         txfree(resname);
         txfree(meastype);
 
+        /* see if number of measurements exceeds fixed array size of 20,000 */
+        if (idx >= 20000) {
+            fprintf(stderr, "ERROR: number of measurements exceeds 20,000!\nAborting...\n");
+            controlled_exit(EXIT_FAILURE);
+        }
+
     } /* end of for loop (first pass through .meas lines) */
 
-	if( chk_only )
-        return( measures_passed ) ;
 
     /* second pass through .meas cards: now do param|expr .meas statements */
     newcard = meas_results;
@@ -359,7 +364,7 @@ do_measure(
         meastype = gettok(&line);
 
         if (chkAnalysisType(an_type) != TRUE) {
-            if (!(chk_only)) {
+            if (just_chk_meas != TRUE) {
                 fprintf(cp_err, "Error: unrecognized analysis type '%s' for the following .meas statement on line %d:\n", an_type, meas_card->li_linenum);
                 fprintf(cp_err, "       %s\n", meas_card->li_line);
             }
@@ -378,7 +383,7 @@ do_measure(
 
         if (strncmp(meastype, "param", 5) != 0 && strncmp(meastype, "expr", 4) != 0) {
 
-            if (!(chk_only))
+            if (just_chk_meas != TRUE)
                 fprintf(stdout, "%s", newcard->li_line);
             end     = newcard;
             newcard = newcard->li_next;
@@ -392,24 +397,24 @@ do_measure(
             continue;
         }
 
-        if (!(chk_only))
+        if (just_chk_meas != TRUE)
             fprintf(stdout, "%-20s=", resname);
 
-        if (!(chk_only)) {
+        if (just_chk_meas != TRUE) {
             ok = nupa_eval(meas_card->li_line, meas_card->li_linenum, meas_card->li_linenum_orig);
 
             if (ok) {
                 str_ptr = strstr(meas_card->li_line, meastype);
-                if (!get_double_value(&str_ptr, meastype, &result, chk_only)) {
-                    if (!(chk_only))
+                if (!get_double_value(&str_ptr, meastype, &result)) {
+                    if (just_chk_meas != TRUE)
                         fprintf(stdout, "   failed\n");
                 } else {
-                    if (!(chk_only))
+                    if (just_chk_meas != TRUE)
                         fprintf(stdout, "  %.*e\n", precision, result);
                     nupa_add_param(resname, result);
                 }
             } else {
-                if (!(chk_only))
+                if (just_chk_meas != TRUE)
                     fprintf(stdout, "   failed\n");
             }
         }
@@ -418,33 +423,38 @@ do_measure(
         txfree(meastype);
     }
 
-    if (!(chk_only))
+    if (just_chk_meas != TRUE)
         fprintf(stdout, "\n");
 
     txfree(an_name);
 
     fflush(stdout);
 
-  return( measures_passed ) ;
+    //nupa_list_params();
 }
 
 
 /* called from dctran.c:470, if timepoint is accepted.
    Returns TRUE if measurement (just a check, no output) has been successful.
    If TRUE is returned, transient simulation is stopped.
-   Returns TRUE if "autostop" has been set as an option and if do_measure
-   passes all tests and thereby returns TRUE.  'what' is set to "tran".*/
+   Returns TRUE if "autostop" has been set as an option and if measures_passed not
+   set to FALSE during calling do_measure. 'what' is set to "tran".*/
 
 bool
 check_autostop(char* what)
 {
     bool flag = FALSE;
 
-    if (cp_getvar("autostop", CP_BOOL, NULL))
-        flag = do_measure(what, TRUE);
+    measures_passed = TRUE;
+    if (cp_getvar("autostop", CP_BOOL, NULL)) {
+        do_measure(what, TRUE);
+
+        if (measures_passed == TRUE)
+            flag = TRUE;
+    }
 
     return flag;
-} /* end check_autostop() */
+}
 
 
 /* parses the .meas line into a wordlist (without leading .meas) */
@@ -484,4 +494,4 @@ measure_parse_line(char *line)
     } while (line && *line);
 
     return (wl);
-} /* end measure_parse_line() */
+}

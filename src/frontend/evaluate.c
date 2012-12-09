@@ -893,6 +893,7 @@ apply_func(struct func *func, struct pnode *arg)
     int len, i;
     short type;
     void *data;
+    char buf[BSIZE_SP];
 
     /* Special case. This is not good -- happens when vm(), etc are used
      * and it gets caught as a user-definable function.  Usually v()
@@ -903,9 +904,10 @@ apply_func(struct func *func, struct pnode *arg)
             fprintf(cp_err, "Error: bad v() syntax\n");
             return (NULL);
         }
-        t = vec_fromplot(arg->pn_value->v_name, plot_cur);
+        (void) sprintf(buf, "v(%s)", arg->pn_value->v_name);
+        t = vec_fromplot(buf, plot_cur);
         if (!t) {
-            fprintf(cp_err, "Error: no such vector %s\n", arg->pn_value->v_name);
+            fprintf(cp_err, "Error: no such vector %s\n", buf);
             return (NULL);
         }
         t = vec_copy(t);

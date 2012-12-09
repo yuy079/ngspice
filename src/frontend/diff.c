@@ -2,7 +2,6 @@
 Copyright 1990 Regents of the University of California.  All rights reserved.
 Author: 1985 Wayne A. Christopher, U. C. Berkeley CAD Group
 Modified: 2001 Paolo Nenzi (printnum)
-Patched: 2010/2012 by Bill Swartz (hash table for vectors)
 **********/
 
 /*
@@ -15,40 +14,8 @@ Patched: 2010/2012 by Bill Swartz (hash table for vectors)
 #include "ngspice/sim.h"
 
 #include "diff.h"
-#include <ngspice/hash.h>
-#include <ngspice/dstring.h>
 #include "variable.h"
 
-static char *cannonical_name( char *name, SPICE_DSTRINGPTR dbuf_p )
-{
-    char *tmp ;				/* position in string */
-    char *ptr ;				/* current position in string */
-
-    spice_dstring_reinit( dbuf_p ) ;
-    if(ciprefix("i(",name)) {
-        tmp = name;
-        while ( *tmp != '(' )
-		    tmp++;
-        tmp++;
-        for( ptr = tmp ; *ptr ; ptr++ )
-            if( isupper(*ptr) )
-	            tmp = spice_dstring_append_char( dbuf_p, (char)tolower(*ptr) ) ;
-            else
-	            tmp = spice_dstring_append_char( dbuf_p, *ptr ) ;
-        while ( *tmp != ')' )
-		    tmp++;
-        *tmp = '\0' ;
-        tmp = spice_dstring_append( dbuf_p, "#branch", -1 ) ;
-    } else if (isdigit(*name)){
-        spice_dstring_append( dbuf_p, "v(", -1 ) ;
-        spice_dstring_append( dbuf_p, name, -1 ) ;
-        tmp = spice_dstring_append_char( dbuf_p, ')' ) ;
-    } else {
-        tmp = spice_dstring_append( dbuf_p, name, -1 ) ;
-    }
-
-  return(tmp) ;
-} /* end cannonical_name() */
 
 /* Determine if two vectors have the 'same' name. */
 
@@ -112,10 +79,6 @@ com_diff(wordlist *wl)
     double d1, d2;
     ngcomplex_t c1, c2, c3;
     int i, j;
-    char *v1_name ;         /* cannonical v1 name */
-    char *v2_name ;         /* cannonical v2 name */
-    NGHASHPTR crossref_p ;  /* cross reference hash table */
-    SPICE_DSTRING ibuf ;    /* used to build cannonical name */
     wordlist *tw;
     char numbuf[BSIZE_SP], numbuf2[BSIZE_SP], numbuf3[BSIZE_SP], numbuf4[BSIZE_SP]; /* For printnum */
 
@@ -180,36 +143,23 @@ com_diff(wordlist *wl)
                 "Warning: plots %s and %s seem to be from different circuits\n",
                 p1->pl_typename, p2->pl_typename);
 
-    /* This may not be the best way to do this.  It wasn't :).  The original
-     * was O(n2) - not good.  Now use a hash table to reduce it to O(n). */
+    /* This may not be the best way to do this */
     for (v1 = p1->pl_dvecs; v1; v1 = v1->v_next)
         v1->v_link2 = NULL;
-
-    spice_dstring_init( &ibuf ) ;
-    crossref_p = nghash_init(NGHASH_MIN_SIZE) ;
-    nghash_unique( crossref_p, FALSE ) ;
-    for (v2 = p2->pl_dvecs; v2; v2 = v2->v_next) {
+    for (v2 = p2->pl_dvecs; v2; v2 = v2->v_next)
         v2->v_link2 = NULL;
-	    v2_name = cannonical_name( v2->v_name, &ibuf ) ;
-	    nghash_insert( crossref_p, v2_name, v2 ) ;
-    }
-    for (v1 = p1->pl_dvecs; v1; v1 = v1->v_next) {
-	    v1_name = cannonical_name( v1->v_name, &ibuf ) ;
-	    for( v2 = nghash_find( crossref_p, v1_name) ; v2 ;
-	         v2 = nghash_find_again( crossref_p, v1_name) ){
-            if (!v2->v_link2 &&
-			    ((v1->v_flags & (VF_REAL | VF_COMPLEX)) ==
-                (v2->v_flags & (VF_REAL | VF_COMPLEX))) &&
+
+    for (v1 = p1->pl_dvecs; v1; v1 = v1->v_next)
+        for (v2 = p2->pl_dvecs; v2; v2 = v2->v_next)
+            if (!v2->v_link2 && nameeq(v1->v_name, v2->v_name) &&
+                ((v1->v_flags & (VF_REAL | VF_COMPLEX)) ==
+                 (v2->v_flags & (VF_REAL | VF_COMPLEX))) &&
                 (v1->v_type == v2->v_type))
             {
                 v1->v_link2 = v2;
                 v2->v_link2 = v1;
                 break;
             }
-        }
-    }
-    spice_dstring_free( &ibuf ) ;
-    nghash_free( crossref_p, NULL, NULL ) ;
 
     for (v1 = p1->pl_dvecs; v1; v1 = v1->v_next)
         if (!v1->v_link2)
