@@ -189,6 +189,7 @@ NIiter(CKTcircuit *ckt, int maxIter)
                 /*fprintf(stderr,"too many iterations without convergence: %d iter's (max iter == %d)\n",
                 iterno,maxIter);*/
                 ckt->CKTstat->STATnumIter += iterno;
+                FREE(errMsg);
                 errMsg = TMALLOC(char, strlen(msg) + 1);
                 strcpy(errMsg,msg);
 #ifdef STEPDEBUG
