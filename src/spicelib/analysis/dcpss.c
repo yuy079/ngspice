@@ -1456,7 +1456,7 @@ resume:
 
             if (newdelta > .9 * ckt->CKTdelta)
             {
-                if (ckt->CKTorder == 1)
+                if (ckt->CKTorder == 1 && (ckt->CKTmaxOrder > 1)) /* don't rise the order for backward Euler */
                 {
                     newdelta = ckt->CKTdelta ;
                     ckt->CKTorder = 2 ;
