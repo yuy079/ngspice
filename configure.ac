@@ -991,7 +991,7 @@ AC_ARG_ENABLE([openmp],
 
 # Add OpenMP to ngspice.
 : ${enable_openmp:=no}
-m4_ifdef([AM_OPENMP], [AM_OPENMP])
+m4_ifdef([AC_OPENMP], [AC_OPENMP])
 
 if test "x$enable_openmp" = xyes; then
     AC_DEFINE([USE_OMP], [1], [OpenMP parallel processing])
