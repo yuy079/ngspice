@@ -6,10 +6,6 @@
 #ifndef NIPRED_H_INCLUDED
 #define NIPRED_H_INCLUDED
 
-#ifdef PREDICTOR
 
-int NIpred(register CKTcircuit * ckt);
-
-#endif /* PREDICTOR */
 
 #endif
