@@ -26,7 +26,6 @@ NIpred(CKTcircuit * ckt)
     
 {
     int i;
-    double *temp;
     int size;
     CKTnode *node;
 
