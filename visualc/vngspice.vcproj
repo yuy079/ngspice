@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
@@ -2145,11 +2145,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\parser\inp.h"
+				RelativePath="..\src\frontend\inp.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\frontend\inp.h"
+				RelativePath="..\src\spicelib\parser\inp.h"
 				>
 			</File>
 			<File
@@ -2546,58 +2546,6 @@
 			</File>
 			<File
 				RelativePath="..\src\include\ngspice\ngspice.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niaciter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nicomcof.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niconv.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nidest.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niditer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niinit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niinteg.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niiter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\niniter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nipred.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nipzmeth.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nireinit.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\maths\ni\nisenre.h"
 				>
 			</File>
 			<File
