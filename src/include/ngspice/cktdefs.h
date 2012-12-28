@@ -276,6 +276,7 @@ struct CKTcircuit {
     int CKTsc_iter;        	/* PSS Maximum Number of Shooting Iterations */
 /* SP: 100609 */
 #endif
+
     unsigned int CKTisLinear:1; /* flag to indicate that the circuit
                                    contains only linear elements */
     unsigned int CKTnoopac:1; /* flag to indicate that OP will not be evaluated
@@ -392,12 +393,16 @@ extern int TFsetParm(CKTcircuit *, JOB *, int , IFvalue *);
 extern int TRANaskQuest(CKTcircuit *, JOB *, int , IFvalue *);
 extern int TRANsetParm(CKTcircuit *, JOB *, int , IFvalue *);
 extern int TRANinit(CKTcircuit *, JOB *);
+
+#ifdef WITH_PSS
 /* SP: Steady State Analysis */
-extern int PSSaskQuest( CKTcircuit *, JOB *, int , IFvalue *);
-extern int PSSsetParm( CKTcircuit *, JOB *, int , IFvalue *);
+extern int PSSaskQuest(CKTcircuit *, JOB *, int , IFvalue *);
+extern int PSSsetParm(CKTcircuit *, JOB *, int , IFvalue *);
 extern int PSSinit(CKTcircuit *, JOB *);
-extern int DCpss( CKTcircuit *, int );
+extern int DCpss(CKTcircuit *, int);
 /* SP */
+#endif
+
 extern int NaskQuest(CKTcircuit *, JOB *, int, IFvalue *);
 extern int NsetParm(CKTcircuit *, JOB *, int, IFvalue *);
 extern int NIacIter(CKTcircuit *);
