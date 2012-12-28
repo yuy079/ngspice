@@ -285,10 +285,6 @@ extern  void     spStripFills( MatrixPtr );
 extern  void     spWhereSingular(MatrixPtr, int*, int* );
 extern  void     spConstMult(MatrixPtr, double);
 
-/* Spertica's hack */
-extern  void     spGMO( MatrixPtr, int, double * );
-/* End of Spertica's hack */
-
 /* Functions with argument lists that are dependent on options. */
 
 extern  void     spDeterminant ( MatrixPtr, int*, spREAL*, spREAL* );

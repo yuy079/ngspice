@@ -109,7 +109,6 @@ extern double logb(double);
 static void LoadGmin(SMPmatrix *eMatrix, double Gmin);
 
 
-
 /*
  * SMPaddElt()
  */
