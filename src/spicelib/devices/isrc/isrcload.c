@@ -382,6 +382,8 @@ loadDone:
 
             *(ckt->CKTrhs + (here->ISRCposNode)) += value;
             *(ckt->CKTrhs + (here->ISRCnegNode)) -= value;
+            *(ckt->CKTfvk + (here->ISRCposNode)) += value;
+            *(ckt->CKTfvk + (here->ISRCnegNode)) -= value;
 
 /* gtri - end - wbk - modify to process srcFact, etc. for all sources */
 
