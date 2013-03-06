@@ -8,7 +8,7 @@ X3    9 0  sub_in_lib
 Vcheck 9 check0  1.0V
 
 .subckt  sub1  n1 n2
-.lib 'ex1.lib' RES
+.lib 'ex1X.lib' Res
 X1  n1 n2  sub_in_lib
 .ends
 

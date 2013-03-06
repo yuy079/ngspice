@@ -5,7 +5,7 @@ X1     9 0  sub1
 
 Vcheck 9 check0  1.0V
 
-.lib 'ex1.lib' RES
+.lib 'ex1X.lib' Res
 
 .subckt  sub1  n1 n2
 X2  n1 n2  sub_in_lib

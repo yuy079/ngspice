@@ -1,6 +1,6 @@
 * -*- spice -*-
 
-.LIB RES
+.LIB ReS
 
 .subckt  sub_in_lib  n1 n2
 R3   n1 n2   2k
