@@ -8,7 +8,6 @@
 /*******************/
 /*   Defines       */
 /*******************/
-#define CS
 
 #ifdef _MSC_VER
 #define SHAREDSPICE_version "25.1"
@@ -61,14 +60,14 @@ myfputc(const char inp, FILE* f)
 
 #if defined(__MINGW32__) || defined(_MSC_VER)
 //#if defined(_MSC_VER)
-#ifdef CS
-#define mutex_lock(a) EnterCriticalSection(a)
-#define mutex_unlock(a) LeaveCriticalSection(a)
-typedef CRITICAL_SECTION mutexType;
-#else
+#ifdef SRW
 #define mutex_lock(a) AcquireSRWLockExclusive(a)
 #define mutex_unlock(a) ReleaseSRWLockExclusive(a)
 typedef SRWLOCK mutexType;
+#else
+#define mutex_lock(a) EnterCriticalSection(a)
+#define mutex_unlock(a) LeaveCriticalSection(a)
+typedef CRITICAL_SECTION mutexType;
 #endif
 #define thread_self() GetCurrentThread()
 #define threadid_self() GetThreadId(GetCurrentThread())
@@ -336,7 +335,7 @@ _thread_stop(void)
             ft_intrpt = TRUE;
             timeout++;
 #if defined(__MINGW32__) || defined(_MSC_VER)
-            Sleep(100); // va: windows native
+            Sleep(50); // va: windows native
 #else
             usleep(10000);
 #endif
@@ -502,14 +501,14 @@ ngSpice_Init(SendChar* printfcn, SendStat* statusfcn, ControlledExit* ngspiceexi
     pthread_mutex_init(&allocMutex, NULL);
     pthread_mutex_init(&fputsMutex, NULL);
 #else
-#ifdef CS
-    InitializeCriticalSection(&triggerMutex);
-    InitializeCriticalSection(&allocMutex);
-    InitializeCriticalSection(&fputsMutex);
-#else
+#ifdef SRW
     InitializeSRWLock(&triggerMutex);
     InitializeSRWLock(&allocMutex);
     InitializeSRWLock(&fputsMutex);
+#else
+    InitializeCriticalSection(&triggerMutex);
+    InitializeCriticalSection(&allocMutex);
+    InitializeCriticalSection(&fputsMutex);
 #endif
 #endif
     // Id of primary thread
@@ -1408,6 +1407,7 @@ int sh_ExecutePerLoop(void)
 {
     struct dvec *d;
     int i, veclen;
+    double testval;
     struct plot *pl = plot_cur;
     /* return immediately if callback not wanted */
     if (nodatawanted)
@@ -1419,6 +1419,7 @@ int sh_ExecutePerLoop(void)
         /* test if real */
         if (d->v_flags & VF_REAL) {
             curvecvalsall->vecsa[i]->is_complex = FALSE;
+            testval = d->v_realdata[veclen];
             curvecvalsall->vecsa[i]->creal = d->v_realdata[veclen];
             curvecvalsall->vecsa[i]->cimag = 0.;
         }
