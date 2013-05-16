@@ -351,21 +351,40 @@ for (; model != NULL; model = model->BSIM3v32nextModel)
                   + here->BSIM3v32sourcePerimeter
                   * model->BSIM3v32jctSidewallTempSatCurDensity;
               }
+            if ((here->BSIM3v32drainArea <= 0.0) && (here->BSIM3v32drainPerimeter <= 0.0))
+            {   DrainSatCurrent = 1.0e-14;
+            }
+            else
+            {   DrainSatCurrent = here->BSIM3v32drainArea
+                                * model->BSIM3v32jctTempSatCurDensity
+                                + here->BSIM3v32drainPerimeter
+                                * model->BSIM3v32jctSidewallTempSatCurDensity;
+            }
           }
           else
           {
-            SourceSatCurrent = 0.0;
-            if (!here->BSIM3v32sourceAreaGiven)
-            {
-              here->BSIM3v32sourceArea = 2.0 * model->BSIM3v32hdif * pParam->BSIM3v32weff;
-            }
-            SourceSatCurrent = here->BSIM3v32sourceArea * model->BSIM3v32jctTempSatCurDensity;
-            if (!here->BSIM3v32sourcePerimeterGiven)
-            {
-              here->BSIM3v32sourcePerimeter = 4.0 * model->BSIM3v32hdif + 2.0 * pParam->BSIM3v32weff;
-            }
-            SourceSatCurrent = SourceSatCurrent + here->BSIM3v32sourcePerimeter * model->BSIM3v32jctSidewallTempSatCurDensity;
-            if (SourceSatCurrent <= 0.0) SourceSatCurrent = 1.0e-14;
+            if (
+            ACM_saturationCurrents(
+            model->BSIM3v32acmMod,
+            model->BSIM3v32calcacm,
+            here->BSIM3v32geo,
+            model->BSIM3v32hdif,
+            model->BSIM3v32wmlt,
+            here->BSIM3v32w,
+            model->BSIM3v32xw,
+            model->BSIM3v32jctTempSatCurDensity,
+            model->BSIM3v32jctSidewallTempSatCurDensity,
+            here->BSIM3v32drainAreaGiven,
+            here->BSIM3v32drainArea,
+            here->BSIM3v32drainPerimeterGiven,
+            here->BSIM3v32drainPerimeter,
+            here->BSIM3v32sourceAreaGiven,
+            here->BSIM3v32sourceArea,
+            here->BSIM3v32sourcePerimeterGiven,
+            here->BSIM3v32sourcePerimeter,
+            &DrainSatCurrent,
+            &SourceSatCurrent
+            ) == 0) printf("load IDsat: %g ISsat: %g\n",DrainSatCurrent,SourceSatCurrent);
           }
           if (SourceSatCurrent <= 0.0)
           {   here->BSIM3v32gbs = ckt->CKTgmin;
@@ -408,34 +427,6 @@ for (; model != NULL; model = model->BSIM3v32nextModel)
               }
           }
 
-          /* acm model */
-          if (model->BSIM3v32acmMod == 0)
-          {
-            if ((here->BSIM3v32drainArea <= 0.0) && (here->BSIM3v32drainPerimeter <= 0.0))
-            {   DrainSatCurrent = 1.0e-14;
-            }
-            else
-            {   DrainSatCurrent = here->BSIM3v32drainArea
-                                * model->BSIM3v32jctTempSatCurDensity
-                                + here->BSIM3v32drainPerimeter
-                                * model->BSIM3v32jctSidewallTempSatCurDensity;
-            }
-          }
-          else
-          {
-            DrainSatCurrent = 0.0;
-            if (!here->BSIM3v32drainAreaGiven)
-            {
-              here->BSIM3v32drainArea = 2.0 * model->BSIM3v32hdif * pParam->BSIM3v32weff;
-            }
-            DrainSatCurrent = here->BSIM3v32drainArea * model->BSIM3v32jctTempSatCurDensity;
-            if (!here->BSIM3v32drainPerimeterGiven)
-            {
-              here->BSIM3v32drainPerimeter = 4.0 * model->BSIM3v32hdif + 2.0 * pParam->BSIM3v32weff;
-            }
-            DrainSatCurrent = DrainSatCurrent + here->BSIM3v32drainPerimeter * model->BSIM3v32jctSidewallTempSatCurDensity;
-            if (DrainSatCurrent <= 0.0) DrainSatCurrent = 1.0e-14;
-          }
           if (DrainSatCurrent <= 0.0)
           {   here->BSIM3v32gbd = ckt->CKTgmin;
               here->BSIM3v32cbd = here->BSIM3v32gbd * vbd;
@@ -2460,6 +2451,8 @@ finished:
                            along gate side
                */
 
+            if (model->BSIM3v32acmMod == 0)
+            {
               /* Added revision dependent code */
               switch (model->BSIM3v32intVersion) {
                 case BSIM3v32V324:
@@ -2535,6 +2528,35 @@ finished:
                         * pParam->BSIM3v32weff;
                   }
               }
+            } else {
+                  if(
+                  ACM_junctionCapacitances(
+                  model->BSIM3v32acmMod,
+                  model->BSIM3v32calcacm,
+                  here->BSIM3v32geo,
+                  model->BSIM3v32hdif,
+                  model->BSIM3v32wmlt,
+                  here->BSIM3v32w,
+                  model->BSIM3v32xw,
+                  here->BSIM3v32drainAreaGiven,
+                  here->BSIM3v32drainArea,
+                  here->BSIM3v32drainPerimeterGiven,
+                  here->BSIM3v32drainPerimeter,
+                  here->BSIM3v32sourceAreaGiven,
+                  here->BSIM3v32sourceArea,
+                  here->BSIM3v32sourcePerimeterGiven,
+                  here->BSIM3v32sourcePerimeter,
+                  model->BSIM3v32unitAreaTempJctCap,
+                  model->BSIM3v32unitLengthSidewallTempJctCap,
+                  model->BSIM3v32unitLengthGateSidewallJctCap,
+                  &czbd,
+                  &czbdsw,
+                  &czbdswg,
+                  &czbs,
+                  &czbssw,
+                  &czbsswg
+                  ) == 0) printf("load Cda: %g Cdsw: %g Cdswg: %g Csa: %g Cssw: %g Csswg %g\n",czbd,czbdsw,czbdswg,czbs,czbssw,czbsswg);
+            }
 
               MJ = model->BSIM3v32bulkJctBotGradingCoeff;
               MJSW = model->BSIM3v32bulkJctSideGradingCoeff;
