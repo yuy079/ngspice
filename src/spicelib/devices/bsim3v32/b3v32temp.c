@@ -880,10 +880,10 @@ int Size_Not_Found, error;
               /* ACM model */
               if (model->BSIM3v32acmMod == 0)
               {
-                 here->BSIM3v32drainConductance = model->BSIM3v32sheetResistance
-                                                 * here->BSIM3v32drainSquares;
-                 here->BSIM3v32sourceConductance = model->BSIM3v32sheetResistance
-                                                  * here->BSIM3v32sourceSquares;
+                  here->BSIM3v32drainConductance = model->BSIM3v32sheetResistance
+                                                  * here->BSIM3v32drainSquares;
+                  here->BSIM3v32sourceConductance = model->BSIM3v32sheetResistance
+                                                   * here->BSIM3v32sourceSquares;
               }
               else /* ACM > 0 */
               {
@@ -977,41 +977,41 @@ int Size_Not_Found, error;
                     return(error);
               }
 
-                if ((SourceSatCurrent > 0.0) && (model->BSIM3v32ijth > 0.0))
-                {   here->BSIM3v32vjsm = Nvtm * log(model->BSIM3v32ijth
-                                    / SourceSatCurrent + 1.0);
-                    /* Added revision dependent code */
-                    switch (model->BSIM3v32intVersion) {
-                    case BSIM3v32V324:
-                    case BSIM3v32V323:
-                    case BSIM3v32V322:
-                            here->BSIM3v32IsEvjsm =
-                                    SourceSatCurrent * exp(here->BSIM3v32vjsm / Nvtm);
-                            break;
-                    case BSIM3v32V32:
-                    default:
-                            /* Do nothing */
-                        break;
-                    }
-                }
+              if ((SourceSatCurrent > 0.0) && (model->BSIM3v32ijth > 0.0))
+              {   here->BSIM3v32vjsm = Nvtm * log(model->BSIM3v32ijth
+                                  / SourceSatCurrent + 1.0);
+                  /* Added revision dependent code */
+                  switch (model->BSIM3v32intVersion) {
+                  case BSIM3v32V324:
+                  case BSIM3v32V323:
+                  case BSIM3v32V322:
+                          here->BSIM3v32IsEvjsm =
+                                  SourceSatCurrent * exp(here->BSIM3v32vjsm / Nvtm);
+                          break;
+                  case BSIM3v32V32:
+                  default:
+                          /* Do nothing */
+                      break;
+                  }
+              }
 
-                if ((DrainSatCurrent > 0.0) && (model->BSIM3v32ijth > 0.0))
-                {   here->BSIM3v32vjdm = Nvtm * log(model->BSIM3v32ijth
-                                    / DrainSatCurrent + 1.0);
-                    /* Added revision dependent code */
-                    switch (model->BSIM3v32intVersion) {
-                    case BSIM3v32V324:
-                    case BSIM3v32V323:
-                    case BSIM3v32V322:
-                            here->BSIM3v32IsEvjdm =
-                                    DrainSatCurrent * exp(here->BSIM3v32vjdm / Nvtm);
-                            break;
-                    case BSIM3v32V32:
-                    default:
-                            /* Do nothing */
-                        break;
-                    }
-                }
+              if ((DrainSatCurrent > 0.0) && (model->BSIM3v32ijth > 0.0))
+              {   here->BSIM3v32vjdm = Nvtm * log(model->BSIM3v32ijth
+                                  / DrainSatCurrent + 1.0);
+                  /* Added revision dependent code */
+                  switch (model->BSIM3v32intVersion) {
+                  case BSIM3v32V324:
+                  case BSIM3v32V323:
+                  case BSIM3v32V322:
+                          here->BSIM3v32IsEvjdm =
+                                  DrainSatCurrent * exp(here->BSIM3v32vjdm / Nvtm);
+                          break;
+                  case BSIM3v32V32:
+                  default:
+                          /* Do nothing */
+                      break;
+                  }
+              }
          }
     }
     return(OK);
