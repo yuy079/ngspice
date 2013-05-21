@@ -177,22 +177,22 @@ FILE *fplog;
 
         /* ACM model */
         if (model->BSIM3acmMod == 0) {
-      if (model->BSIM3unitLengthSidewallJctCap > 0.0 || 
-            model->BSIM3unitLengthGateSidewallJctCap > 0.0)
-      {
-        if (here->BSIM3drainPerimeter < pParam->BSIM3weff)
-        {   fprintf(fplog, "Warning: Pd = %g is less than W.\n",
-                    here->BSIM3drainPerimeter);
-            printf("Warning: Pd = %g is less than W.\n",
-                    here->BSIM3drainPerimeter);
-        }
-        if (here->BSIM3sourcePerimeter < pParam->BSIM3weff)
-        {   fprintf(fplog, "Warning: Ps = %g is less than W.\n",
-                    here->BSIM3sourcePerimeter);
-            printf("Warning: Ps = %g is less than W.\n",
-                    here->BSIM3sourcePerimeter);
-        }
-      }
+            if (model->BSIM3unitLengthSidewallJctCap > 0.0 ||
+                  model->BSIM3unitLengthGateSidewallJctCap > 0.0)
+            {
+              if (here->BSIM3drainPerimeter < pParam->BSIM3weff)
+              {   fprintf(fplog, "Warning: Pd = %g is less than W.\n",
+                          here->BSIM3drainPerimeter);
+                  printf("Warning: Pd = %g is less than W.\n",
+                          here->BSIM3drainPerimeter);
+              }
+              if (here->BSIM3sourcePerimeter < pParam->BSIM3weff)
+              {   fprintf(fplog, "Warning: Ps = %g is less than W.\n",
+                          here->BSIM3sourcePerimeter);
+                  printf("Warning: Ps = %g is less than W.\n",
+                          here->BSIM3sourcePerimeter);
+              }
+            }
         }
 
         if ((model->BSIM3calcacm > 0) && (model->BSIM3acmMod != 12))
