@@ -36,6 +36,7 @@ SENstartup(CKTcircuit *ckt, int restart)
     ckt->CKTsenInfo->SENpertfac = 1e-4;
     ckt->CKTsenInfo->SENinitflag = ON; /* allocate memory in NIsenReinit */
 
+    parmtemp.iValue = 1;
     parmtemp.rValue = 1.0;
 
     for (i = 0; i < ckt->CKTsenInfo->SENnumVal; i++) {
