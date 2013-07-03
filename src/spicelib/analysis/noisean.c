@@ -49,6 +49,7 @@ NOISEan (CKTcircuit *ckt, int restart)
     if (code != -1) {
         // assert(third && *third == NULL);
         error = CKTfndDev(ckt, NULL, &inst, job->input);
+        error = inst ? OK : E_NODEV;
 	if (!error && !((VSRCinstance *)inst)->VSRCacGiven) {
 	    errMsg = TMALLOC(char, strlen(noacinput) + 1);
 	    strcpy(errMsg,noacinput);
@@ -60,6 +61,7 @@ NOISEan (CKTcircuit *ckt, int restart)
     if (code != -1 && inst==NULL) {
         // assert(third && *third == NULL);
         error = CKTfndDev(ckt, NULL, &inst, job->input);
+        error = inst ? OK : E_NODEV;
         if (error) {
 	    /* XXX ??? */
             SPfrontEnd->IFerror (ERR_WARNING,
