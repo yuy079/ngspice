@@ -617,7 +617,7 @@ finddev_special(
     int type = -1;
 
     // assert(third && *third == NULL); for all invocations
-    err = ft_sim->findInstance (ckt, &type, devptr, name);
+    *devptr = ft_sim->findInstance (ckt, &type, devptr, name);
     err = *devptr ? OK : E_NODEV;
     if (err == OK) {
         *device_or_model = 0;
@@ -1220,7 +1220,7 @@ finddev(CKTcircuit *ckt, char *name, GENinstance **devptr, GENmodel **modptr)
     int type = -1;
 
     // assert(third && *third == NULL); for all invocations
-    err = ft_sim->findInstance (ckt, &type, devptr, name);
+    *devptr = ft_sim->findInstance (ckt, &type, devptr, name);
     err = *devptr ? OK : E_NODEV;
     if (err == OK)
         return (type);
