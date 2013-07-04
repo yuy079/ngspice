@@ -623,7 +623,6 @@ finddev_special(
     }
 
     type = -1;
-    *devptr = NULL;
 
     err = ft_sim->findModel (ckt, &type, modptr, name);
     if (err == OK) {
@@ -1222,7 +1221,6 @@ finddev(CKTcircuit *ckt, char *name, GENinstance **devptr, GENmodel **modptr)
         return (*devptr)->GENmodPtr->GENmodType;
 
     type = -1;
-    *devptr = NULL;
 
     err = ft_sim->findModel (ckt, &type, modptr, name);
     if (err == OK)
