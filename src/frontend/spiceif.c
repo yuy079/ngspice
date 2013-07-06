@@ -631,7 +631,6 @@ finddev_special(
         return (*modptr)->GENmodType;
     }
 
-    *modptr = NULL;
     *device_or_model = 2;
     return (-1);
 }
@@ -1228,7 +1227,6 @@ finddev(CKTcircuit *ckt, char *name, GENinstance **devptr, GENmodel **modptr)
     if (*modptr)
         return (*modptr)->GENmodType;
 
-    *modptr = NULL;
     return (-1);
 }
 
