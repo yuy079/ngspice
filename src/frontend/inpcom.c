@@ -18,6 +18,9 @@ Author: 1985 Wayne A. Christopher
 #include "ngspice/fteinp.h"
 #include "ngspice/compatmode.h"
 
+#include <limits.h>
+#include <stdlib.h>
+
 #include "inpcom.h"
 #include "variable.h"
 #include "subckt.h"
@@ -42,7 +45,7 @@ Author: 1985 Wayne A. Christopher
 #define N_SUBCKT_W_PARAMS 4000
 
 static struct library {
-    char *name;
+    char *realpath;
     struct line *deck;
 } libraries[N_LIBRARIES];
 
@@ -159,7 +162,7 @@ find_lib(char *name)
     int i;
 
     for (i = 0; i < num_libraries; i++)
-        if (cieq(libraries[i].name, name))
+        if (cieq(libraries[i].realpath, name))
             return & libraries[i];
 
     return NULL;
@@ -206,9 +209,10 @@ find_section_definition(struct line *c, char *name)
 }
 
 
-static bool
+static struct library *
 read_a_lib(char *y, int call_depth, char *dir_name)
 {
+    struct library *lib;
     char *copyy = NULL;
 
     if (*y == '~') {
@@ -217,15 +221,14 @@ read_a_lib(char *y, int call_depth, char *dir_name)
             y = copyy; /* reuse y, but remember, buffer still points to allocated memory */
     }
 
-    if (!find_lib(y)) {
-
-        struct library *lib;
+    {
+        char big_buff2[5000];
+        char *yy;
 
         bool dir_name_flag = FALSE;
         FILE *newfp = inp_pathopen(y, "r");
 
         if (!newfp) {
-            char big_buff2[5000];
 
             if (dir_name)
                 sprintf(big_buff2, "%s/%s", dir_name, y);
@@ -240,26 +243,43 @@ read_a_lib(char *y, int call_depth, char *dir_name)
             }
 
             dir_name_flag = TRUE;
+            y = big_buff2;
         }
 
-        lib = new_lib();
+        // a variant of realpath(, NULL)
+        //   fixme on windows we need _fullpath or some other crap
+        yy = canonicalize_file_name(y);
 
-        lib->name = strdup(y);
+        if (!yy) {
+            fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
+            controlled_exit(EXIT_FAILURE);
+        }
 
-        if (dir_name_flag == FALSE) {
-            char *y_dir_name = ngdirname(y);
-            lib->deck = inp_readall(newfp, call_depth+1, y_dir_name, FALSE, FALSE);
-            tfree(y_dir_name);
-        } else {
-            lib->deck = inp_readall(newfp, call_depth+1, dir_name, FALSE, FALSE);
+        lib = find_lib(yy);
+
+        if (!lib) {
+
+            lib = new_lib();
+
+            lib->realpath = strdup(yy);
+
+            if (dir_name_flag == FALSE) {
+                char *y_dir_name = ngdirname(y);
+                lib->deck = inp_readall(newfp, call_depth+1, y_dir_name, FALSE, FALSE);
+                tfree(y_dir_name);
+            } else {
+                lib->deck = inp_readall(newfp, call_depth+1, dir_name, FALSE, FALSE);
+            }
         }
 
         fclose(newfp);
+
+        free(yy);
     }
 
     tfree(copyy);   /* allocated by the cp_tildexpand() above */
 
-    return TRUE;
+    return lib;
 }
 
 
@@ -2391,15 +2411,7 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
                         s = copys;
                 }
 
-                lib = find_lib(s);
-
-                if (!lib) {
-
-                    if(!read_a_lib(s, call_depth, dir_name))
-                        controlled_exit(EXIT_FAILURE);
-
-                    lib = find_lib(s);
-                }
+                lib = read_a_lib(s, call_depth, dir_name);
 
                 if (!lib) {
                     fprintf(stderr, "ERROR, library file %s not found\n", s);
