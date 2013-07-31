@@ -939,6 +939,23 @@ inp_read(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile)
 }
 
 
+static bool
+is_absolute_pathname(const char *p)
+{
+#if defined(__MINGW32__) || defined(_MSC_VER)
+    /* /... or \... or D:\... or D:/... */
+    return
+        p[0] == DIR_TERM  ||
+        p[0] == DIR_TERM_LINUX  ||
+        (isalpha(p[0]) && p[1] == ':' &&
+         (p[2] == DIR_TERM_LINUX || p[2] == DIR_TERM));
+#else
+    return
+        p[0] == DIR_TERM;
+#endif
+}
+
+
 /*-------------------------------------------------------------------------*
   Look up the variable sourcepath and try everything in the list in order
   if the file isn't in . and it isn't an abs path name.
@@ -963,10 +980,7 @@ inp_pathopen(char *name, char *mode)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))/* D:\... or  D:/... etc */
-        || (name[0] == DIR_TERM)
-        || (name[0] == DIR_TERM_LINUX)
-        || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
 #else
 
@@ -1035,10 +1049,7 @@ inp_pathresolve(char *name)
 
     /* If this is an abs pathname, or there is no sourcepath var ... */
 
-    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))/* D:\... or  D:/... etc */
-            || (name[0] == DIR_TERM)
-            || (name[0] == DIR_TERM_LINUX)
-            || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
         return NULL;
 
 #else
@@ -1048,7 +1059,7 @@ inp_pathresolve(char *name)
 
     /* If this is an abs pathname, or there is no sourcepath var ... */
 
-    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
         return NULL;
 
 #endif
@@ -1090,10 +1101,9 @@ inp_pathresolve_at(char *name, char *dir)
      */
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
-    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))
-        || (name[0] == DIR_TERM) || (name[0] == DIR_TERM_LINUX) || !dir || !dir[0])
+    if (is_absolute_pathname(name) || !dir || !dir[0])
 #else
-    if (*name == DIR_TERM || !dir || !dir[0])
+    if (is_absolute_pathname(name) || !dir || !dir[0])
 #endif
         return inp_pathresolve(name);
 
