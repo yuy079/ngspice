@@ -1093,25 +1093,15 @@ inp_pathresolve(char *name)
         name[1] = ':';
     }
 
-    if (0 == stat(name, &st))
-        return copy(name);
-
-    /* If this is an abs pathname, or there is no sourcepath var ... */
-
-    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
-        return NULL;
-
-#else
-
-    if (0 == stat(name, &st))
-        return copy(name);
-
-    /* If this is an abs pathname, or there is no sourcepath var ... */
-
-    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
-        return NULL;
-
 #endif
+
+    if (0 == stat(name, &st))
+        return copy(name);
+
+    /* If this is an abs pathname, or there is no sourcepath var ... */
+
+    if (is_absolute_pathname(name) || !cp_getvar("sourcepath", CP_LIST, &v))
+        return NULL;
 
     for (; v; v = v->va_next) {
 
@@ -1149,11 +1139,7 @@ inp_pathresolve_at(char *name, char *dir)
      *   or if we haven't anything to prepend anyway
      */
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
     if (is_absolute_pathname(name) || !dir || !dir[0])
-#else
-    if (is_absolute_pathname(name) || !dir || !dir[0])
-#endif
         return inp_pathresolve(name);
 
     if (name[0] == '~' && name[1] == '/') {
