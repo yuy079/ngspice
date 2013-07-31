@@ -87,7 +87,7 @@ static void inp_stripcomments_deck(struct line *deck);
 static void inp_stripcomments_line(char *s);
 static void inp_fix_for_numparam(struct names *subckt_w_params, struct line *deck);
 static void inp_remove_excess_ws(struct line *deck);
-static void expand_section_references(struct line *deck, int call_depth, char *dir_name);
+static void expand_section_references(struct line *deck, char *dir_name);
 static void inp_grab_func(struct function_env *, struct line *deck);
 static void inp_fix_inst_calls_for_numparam(struct names *subckt_w_params, struct line *deck);
 static void inp_expand_macros_in_func(struct function_env *);
@@ -210,7 +210,7 @@ find_section_definition(struct line *c, char *name)
 
 
 static struct library *
-read_a_lib(char *y, int call_depth, char *dir_name)
+read_a_lib(char *y, char *dir_name)
 {
     struct library *lib;
     char *copyy = NULL;
@@ -265,10 +265,10 @@ read_a_lib(char *y, int call_depth, char *dir_name)
 
             if (dir_name_flag == FALSE) {
                 char *y_dir_name = ngdirname(y);
-                lib->deck = inp_readall(newfp, call_depth+1, y_dir_name, FALSE, FALSE);
+                lib->deck = inp_readall(newfp, 1 /*dummy*/, y_dir_name, FALSE, FALSE);
                 tfree(y_dir_name);
             } else {
-                lib->deck = inp_readall(newfp, call_depth+1, dir_name, FALSE, FALSE);
+                lib->deck = inp_readall(newfp, 1 /*dummy*/, dir_name, FALSE, FALSE);
             }
         }
 
@@ -734,7 +734,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
             inp_compat_mode == COMPATMODE_NATIVE)
         {
             /* process all library section references */
-            expand_section_references(cc, call_depth, dir_name);
+            expand_section_references(cc, dir_name);
         }
     }
 
@@ -2371,7 +2371,7 @@ inp_remove_excess_ws(struct line *c)
  */
 
 static void
-expand_section_references(struct line *c, int call_depth, char *dir_name)
+expand_section_references(struct line *c, char *dir_name)
 {
     for (; c; c = c->li_next) {
 
@@ -2411,7 +2411,7 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
                         s = copys;
                 }
 
-                lib = read_a_lib(s, call_depth, dir_name);
+                lib = read_a_lib(s, dir_name);
 
                 if (!lib) {
                     fprintf(stderr, "ERROR, library file %s not found\n", s);
