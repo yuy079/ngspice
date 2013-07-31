@@ -20,6 +20,7 @@ Author: 1985 Wayne A. Christopher
 
 #include <limits.h>
 #include <stdlib.h>
+#include <libgen.h>
 
 #include "inpcom.h"
 #include "variable.h"
@@ -47,6 +48,7 @@ Author: 1985 Wayne A. Christopher
 static struct library {
     char *realpath;
     struct line *deck;
+    char *habitat;
 } libraries[N_LIBRARIES];
 
 static int  num_libraries;
@@ -169,6 +171,44 @@ find_lib(char *name)
 }
 
 
+static void
+expand_this(struct line *c, char *s, char *t, char *y, char *dir_name);
+
+static void
+expand_that(struct line *c, struct library *lib)
+{
+    char *dir_name = lib->habitat;
+
+    for (; c; c=c->li_next) {
+        char *line = c->li_line;
+        if(ciprefix(".endl", line))
+            break;
+        if (ciprefix(".lib", line)) {
+            char *s, *t, *y;
+
+            s = skip_non_ws(line);
+            while (isspace(*s) || isquote(*s))
+                s++;
+            for (t = s; *t && !isspace(*t) && !isquote(*t); t++)
+                ;
+            y = t;
+            while (isspace(*y) || isquote(*y))
+                y++;
+
+            if (*y) {
+                expand_this(c, s, t, y, dir_name);
+            }
+
+        }
+    }
+
+    if (!c) {
+        fprintf(stderr, "ERROR, .endl not found\n");
+        controlled_exit(EXIT_FAILURE);
+    }
+}
+
+
 static struct line *
 find_section_definition(struct line *c, char *name)
 {
@@ -262,6 +302,7 @@ read_a_lib(char *y, char *dir_name)
             lib = new_lib();
 
             lib->realpath = strdup(yy);
+            lib->habitat = strdup(dirname(y));
 
             if (dir_name_flag == FALSE) {
                 char *y_dir_name = ngdirname(y);
@@ -2400,6 +2441,8 @@ expand_this(struct line *c, char *s, char *t, char *y, char *dir_name)
         fprintf(stderr, "ERROR, library file %s, section definition %s not found\n", s, y);
         controlled_exit(EXIT_FAILURE);
     }
+
+    expand_that(section_def, lib);
 
     /* insert the library section definition into `c' */
     {
