@@ -55,6 +55,7 @@ Author: 1985 Wayne A. Christopher
 static struct library {
     char *realpath;
     struct line *deck;
+    char *habitat;
 } libraries[N_LIBRARIES];
 
 static int  num_libraries;
@@ -2636,7 +2637,7 @@ expand_section_ref(struct line *c, char *dir_name)
                 if (ciprefix(".endl", t->li_line))
                     break;
                 if (ciprefix(".lib", t->li_line))
-                    t = expand_section_ref(t, dir_name);
+                    t = expand_section_ref(t, lib->habitat);
             }
             if (!t) {
                 fprintf(stderr, "ERROR, .endl not found\n");
