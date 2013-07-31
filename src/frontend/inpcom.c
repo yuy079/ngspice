@@ -2362,6 +2362,71 @@ inp_remove_excess_ws(struct line *c)
 }
 
 
+static void
+expand_this(struct line *c, char *s, char *t, char *y, char *dir_name)
+{
+    char *line = c->li_line;
+
+    /* library section reference: `.lib <library-file> <section-name>' */
+
+    struct line *section_def;
+    char keep_char1, keep_char2;
+    char *z, *copys = NULL;
+    struct library *lib;
+
+    for (z = y; *z && !isspace(*z) && !isquote(*z); z++)
+        ;
+    keep_char1 = *t;
+    keep_char2 = *z;
+    *t = '\0';
+    *z = '\0';
+
+    if (*s == '~') {
+        copys = cp_tildexpand(s);
+        if (copys)
+            s = copys;
+    }
+
+    lib = read_a_lib(s, dir_name);
+
+    if (!lib) {
+        fprintf(stderr, "ERROR, library file %s not found\n", s);
+        controlled_exit(EXIT_FAILURE);
+    }
+
+    section_def = find_section_definition(lib->deck, y);
+
+    if (!section_def) {
+        fprintf(stderr, "ERROR, library file %s, section definition %s not found\n", s, y);
+        controlled_exit(EXIT_FAILURE);
+    }
+
+    /* insert the library section definition into `c' */
+    {
+        struct line *t = inp_deckcopy(section_def);
+        struct line *rest = c->li_next;
+        c->li_next = t;
+        t->li_line[0] = '*';
+        t->li_line[1] = '<';
+        for (; t; t=t->li_next)
+            if(ciprefix(".endl", t->li_line))
+                break;
+        if (!t) {
+            fprintf(stderr, "ERROR, .endl not found\n");
+            controlled_exit(EXIT_FAILURE);
+        }
+        t->li_line[0] = '*';
+        t->li_line[1] = '>';
+        t->li_next = rest;
+    }
+
+    *line = '*';  /* comment out .lib line */
+    *t = keep_char1;
+    *z = keep_char2;
+    /* FIXME, copys not freed ?! */
+}
+
+
 /*
  * recursively expand library section references,
  * either
@@ -2391,63 +2456,7 @@ expand_section_references(struct line *c, char *dir_name)
                 y++;
 
             if (*y) {
-                /* library section reference: `.lib <library-file> <section-name>' */
-
-                struct line *section_def;
-                char keep_char1, keep_char2;
-                char *z, *copys = NULL;
-                struct library *lib;
-
-                for (z = y; *z && !isspace(*z) && !isquote(*z); z++)
-                    ;
-                keep_char1 = *t;
-                keep_char2 = *z;
-                *t = '\0';
-                *z = '\0';
-
-                if (*s == '~') {
-                    copys = cp_tildexpand(s);
-                    if (copys)
-                        s = copys;
-                }
-
-                lib = read_a_lib(s, dir_name);
-
-                if (!lib) {
-                    fprintf(stderr, "ERROR, library file %s not found\n", s);
-                    controlled_exit(EXIT_FAILURE);
-                }
-
-                section_def = find_section_definition(lib->deck, y);
-
-                if (!section_def) {
-                    fprintf(stderr, "ERROR, library file %s, section definition %s not found\n", s, y);
-                    controlled_exit(EXIT_FAILURE);
-                }
-
-                /* insert the library section definition into `c' */
-                {
-                    struct line *t = inp_deckcopy(section_def);
-                    struct line *rest = c->li_next;
-                    c->li_next = t;
-                    t->li_line[0] = '*';
-                    t->li_line[1] = '<';
-                    for (; t; t=t->li_next)
-                        if(ciprefix(".endl", t->li_line))
-                            break;
-                    if (!t) {
-                        fprintf(stderr, "ERROR, .endl not found\n");
-                        controlled_exit(EXIT_FAILURE);
-                    }
-                    t->li_line[0] = '*';
-                    t->li_line[1] = '>';
-                    t->li_next = rest;
-                }
-
-                *line = '*';  /* comment out .lib line */
-                *t = keep_char1;
-                *z = keep_char2;
-                /* FIXME, copys not freed ?! */
+                expand_this(c, s, t, y, dir_name);
             }
         }
 
