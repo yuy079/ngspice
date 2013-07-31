@@ -959,6 +959,20 @@ is_absolute_pathname(const char *p)
 }
 
 
+static bool
+is_plain_filename(const char *p)
+{
+#if defined(__MINGW32__) || defined(_MSC_VER)
+    return
+        !strchr(p, DIR_TERM) &&
+        !strchr(p, DIR_TERM_LINUX);
+#else
+    return
+        !strchr(p, DIR_TERM);
+#endif
+}
+
+
 /*-------------------------------------------------------------------------*
   Look up the variable sourcepath and try everything in the list in order
   if the file isn't in . and it isn't an abs path name.
@@ -977,7 +991,7 @@ inp_pathopen(char *name, char *mode)
 
     /* search in the path where the source (input) file has been found,
        but only if "name" is just a file name */
-    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX)) {
+    if (is_plain_filename(name)) {
         /* If pathname is found, get path.
            (char *dirname(const char *name) might have been used here) */
         if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
@@ -1013,7 +1027,7 @@ inp_pathopen(char *name, char *mode)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (!is_plain_filename(name) || !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
 
 #endif
@@ -1067,7 +1081,7 @@ inp_pathresolve(char *name)
 
     /* search in the path where the source (input) file has been found,
        but only if "name" is just a file name */
-    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX)) {
+    if (is_plain_filename(name)) {
         /* If pathname is found, get path.
            (char *dirname(const char *name) might have been used here) */
         if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
