@@ -56,6 +56,7 @@ Author: 1985 Wayne A. Christopher
 static struct library {
     char *realpath;
     struct line *deck;
+    char *habitat;
 } libraries[N_LIBRARIES];
 
 static int  num_libraries;
@@ -295,10 +296,9 @@ read_a_lib(char *y, char *dir_name)
     lib = new_lib();
 
     lib->realpath = strdup(yy);
+    lib->habitat = ngdirname(y); /* !! lieber yy ? */
 
-    char *y_dir_name = ngdirname(y);
-    lib->deck = inp_read(newfp, 1 /*dummy*/, y_dir_name, FALSE, FALSE) . cc;
-    tfree(y_dir_name);
+    lib->deck = inp_read(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE) . cc;
 
     fclose(newfp);
   }
@@ -2476,7 +2476,7 @@ expand_section_ref(struct line *c, char *dir_name)
                 if (ciprefix(".endl", t->li_line))
                     break;
                 if (ciprefix(".lib", t->li_line))
-                    t = expand_section_ref(t, dir_name);
+                    t = expand_section_ref(t, lib->habitat);
             }
             if (!t) {
                 fprintf(stderr, "ERROR, .endl not found\n");
