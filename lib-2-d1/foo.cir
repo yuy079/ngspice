@@ -1,0 +1,27 @@
+* -*- spice -*-
+
+.LIB SUB2K
+
+.subckt  sub_foo_2k  n1
+* this is incorrect and works
+*.lib 'lib-2-d1/foo.cir' RES2K
+* this is correct and doesnt work
+.lib 'foo.cir' RES2K
+.lib 'bar.cir' RES2K
+.ends
+
+.ENDL SUB2K
+
+
+.LIB SUB3K
+
+.subckt  sub_foo_3k  n1
+R1   n1 0   3k
+.ends
+
+.ENDL SUB3K
+
+
+.lib RES2K
+R1 n1 0 2k
+.endl res2k
