@@ -266,7 +266,7 @@ read_a_lib(char *y, char *dir_name)
         char *yy;
 
         bool dir_name_flag = FALSE;
-        FILE *newfp = inp_pathopen(y, "r");
+        FILE *newfp = NULL; /* ok on windows  ?, iff y is absolute .... */
 
         if (!newfp) {
 
@@ -635,6 +635,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
             {
                 bool dir_name_flag = FALSE;
                 FILE *newfp = inp_pathopen(y, "r");
+                /* fixme here too !? */
 
                 if (!newfp) {
                     char big_buff2[5000];
