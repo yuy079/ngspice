@@ -259,7 +259,7 @@ read_a_lib(char *y, char *dir_name)
     char big_buff2[5000];
     char *yy;
 
-    newfp = inp_pathopen(y, "r");
+    newfp = NULL; /* ok on windows  ?, iff y is absolute .... */
     if (!newfp) {
 
         if (dir_name)
@@ -765,6 +765,7 @@ inp_read(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile)
             {
                 bool dir_name_flag = FALSE;
                 FILE *newfp = inp_pathopen(y, "r");
+                /* fixme here too (.include processing) !? */
 
                 if (!newfp) {
                     char big_buff2[5000];
