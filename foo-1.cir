@@ -1,0 +1,23 @@
+* -*- spice -*-
+
+.LIB SUB2K
+
+.subckt  sub_foo_2k  n1
+.lib 'foo-1.cir' RES2K
+.ends
+
+.ENDL SUB2K
+
+
+.LIB SUB3K
+
+.subckt  sub_foo_3k  n1
+R1   n1 0   3k
+.ends
+
+.ENDL SUB3K
+
+
+.lib RES2K
+R1 n1 0 2k
+.endl res2k

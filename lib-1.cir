@@ -1,0 +1,16 @@
+ex2a lib problem
+*  (compile (concat "SPICE_SCRIPTS=. " "../w32/src/ngspice -b " buffer-file-name))
+
+.lib 'foo-1.cir' SUB2K
+
+I1     9 0  -1mA
+X1     9    sub_foo_2k
+
+.control
+op
+let v9_gold = 2.0
+print all
+.endc
+
+.end
+
