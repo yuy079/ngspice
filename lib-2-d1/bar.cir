@@ -1,0 +1,5 @@
+* -*- spice -*-
+
+.lib RES2K
+R2 n1 0 2k
+.endl res2k

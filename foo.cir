@@ -1,0 +1,5 @@
+* top 1k
+
+.lib SUBR
+R1  1 2  1k
+.endl
