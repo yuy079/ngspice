@@ -7,25 +7,25 @@ I1     9 0  -1mA
 X1     9    sub_foo_2k
 
 
-.subckt top_foo_1k_a 1 2
+.subckt top_foo_4k_a 1 2
 .lib 'foo.cir' SUBR
 .ends
 
-.subckt top_foo_1k_b 1 2
+.subckt top_foo_4k_b 1 2
 .lib 'foo.cir' SUBR
 .ends
 
 I2 2 0 -1mA
-X2 2 0 top_foo_1k_a
+X2 2 0 top_foo_4k_a
 
 I3 3 0 -1mA
-X3 3 0 top_foo_1k_b
+X3 3 0 top_foo_4k_b
 
 .control
 op
 let v9_gold = 1.0
-let v2_gold = 1.0
-let v3_gold = 1.0
+let v2_gold = 4.0
+let v3_gold = 4.0
 print all
 .endc
 
