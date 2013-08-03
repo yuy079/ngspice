@@ -2360,7 +2360,15 @@ expand_section_references(struct line *c, char *dir_name)
         char *line = c->li_line;
 
         if (ciprefix(".lib", line)) {
+            c = expand_section_ref(c, line, dir_name);
+        }
+    }
+}
 
+
+static struct line *
+expand_section_ref(struct line *c, char *line, char *dir_name)
+{
             char *s, *t, *y;
 
             s = skip_non_ws(line);
@@ -2443,8 +2451,8 @@ expand_section_references(struct line *c, char *dir_name)
                 *t = keep_char1;
                 *z = keep_char2;
             }
-        }
-    }
+
+    return c;
 }
 
 
