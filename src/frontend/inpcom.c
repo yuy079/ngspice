@@ -260,36 +260,20 @@ find_section_definition(struct line *c, char *name)
 static struct library *
 read_a_lib(char *y, char *dir_name)
 {
-    bool dir_name_flag = FALSE;
-    FILE *newfp;
-
     struct library *lib;
 
-    char big_buff2[5000];
     char *yy;
 
-    newfp = NULL; /* ok on windows  ?, iff y is absolute .... */
-    if (!newfp) {
+    char *y_resolved = inp_pathresolve_at(y, dir_name);
 
-        if (dir_name)
-            sprintf(big_buff2, "%s/%s", dir_name, y);
-        else
-            sprintf(big_buff2, "./%s", y);
-
-        newfp = inp_pathopen(big_buff2, "r");
-        if (!newfp) {
-            fprintf(cp_err, "Error: Could not find library file %s\n", y);
-            return NULL;
-        }
-
-        dir_name_flag = TRUE;
-        y = big_buff2;
+    if (!y_resolved) {
+        fprintf(cp_err, "Error: Could not find library file %s\n", y);
+        return NULL;
     }
-
 
     // a variant of realpath(, NULL)
     //   fixme on windows we need something like _fullpath
-    yy = canonicalize_file_name(y);
+    yy = canonicalize_file_name(y_resolved);
 
     if (!yy) {
         fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
@@ -300,21 +284,24 @@ read_a_lib(char *y, char *dir_name)
 
   if (!lib) {
 
+    FILE *newfp = fopen(y_resolved, "r");
+
+    if (!newfp) {
+        fprintf(cp_err, "Error: Could not open library file %s\n", y);
+        return NULL;
+    }
+
     /* lib points to a new entry in global lib array libraries[N_LIBRARIES] */
     lib = new_lib();
 
     lib->realpath = strdup(yy);
 
-    if (dir_name_flag == FALSE) {
-        char *y_dir_name = ngdirname(y);
-        lib->deck = inp_read(newfp, 1 /*dummy*/, y_dir_name, FALSE, FALSE) . cc;
-        tfree(y_dir_name);
-    } else {
-        lib->deck = inp_read(newfp, 1 /*dummy*/, dir_name, FALSE, FALSE) . cc;
-    }
-  }
+    char *y_dir_name = ngdirname(y);
+    lib->deck = inp_read(newfp, 1 /*dummy*/, y_dir_name, FALSE, FALSE) . cc;
+    tfree(y_dir_name);
 
     fclose(newfp);
+  }
 
     return lib;
 }
