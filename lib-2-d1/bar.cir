@@ -1,5 +1,5 @@
 * -*- spice -*-
 
-.lib RES2K
+.lib SUBR
 R2 n1 0 2k
-.endl res2k
+.endl
