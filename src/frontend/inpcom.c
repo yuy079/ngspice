@@ -1127,6 +1127,15 @@ inp_pathresolve_at(char *name, char *dir)
     if (*name == DIR_TERM || !dir || !dir[0])
         return inp_pathresolve(name);
 
+    if (name[0] == '~' && name[1] == '/') {
+        char *y = cp_tildexpand(name);
+        if (y) {
+            char *r = inp_pathresolve(y);
+            tfree(y);
+            return r;
+        }
+    }
+
     /* concatenate them */
 
     strcpy(buf, dir);
@@ -2432,7 +2441,7 @@ expand_section_ref(struct line *c, char *dir_name)
 
         struct line *section_def;
         char keep_char1, keep_char2;
-        char *z, *copys = NULL;
+        char *z;
         struct library *lib;
 
         for (z = y; *z && !isspace(*z) && !isquote(*z); z++)
@@ -2441,12 +2450,6 @@ expand_section_ref(struct line *c, char *dir_name)
         keep_char2 = *z;
         *t = '\0';
         *z = '\0';
-
-        if (*s == '~') {
-            copys = cp_tildexpand(s);
-            if (copys)
-                s = copys;
-        }
 
         lib = read_a_lib(s, dir_name);
 
@@ -2460,11 +2463,6 @@ expand_section_ref(struct line *c, char *dir_name)
         if (!section_def) {
             fprintf(stderr, "ERROR, library file %s, section definition %s not found\n", s, y);
             controlled_exit(EXIT_FAILURE);
-        }
-
-        if (copys) {
-            tfree(copys);   /* allocated by the cp_tildexpand() above */
-            s = NULL;
         }
 
         /* recursively expand the refered section itself */
