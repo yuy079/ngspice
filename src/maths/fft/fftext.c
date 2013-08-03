@@ -18,6 +18,7 @@
 #include "ngspice/memory.h"
 
 #define eq(a,b)  (!strcmp((a), (b))) 
+#define M_PI		3.141592653589793238462643383279502884197	// pi 
 
 // pointers to storage of Utbl's and  BRLow's
 static double *UtblArray[8*sizeof(int)] =

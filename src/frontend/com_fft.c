@@ -36,6 +36,8 @@ com_fft(wordlist *wl)
     int     fpts, i, j, tlen, ngood;
     struct dvec  *f, *vlist, *lv = NULL, *vec;
     struct pnode *pn, *names = NULL;
+    char   window[BSIZE_SP];
+    double maxt;
 
 #ifdef GREEN
     int mm;
@@ -77,8 +79,7 @@ com_fft(wordlist *wl)
     fpts = size/2;
 
     win = TMALLOC(double, tlen);
-    char   window[BSIZE_SP];
-    double maxt = time[tlen-1];
+    maxt = time[tlen-1];
     if (!cp_getvar("specwindow", CP_STRING, window))
         strcpy(window, "blackman");
     if (!cp_getvar("specwindoworder", CP_NUM, &order))
