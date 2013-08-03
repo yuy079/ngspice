@@ -957,15 +957,17 @@ inp_pathopen(char *name, char *mode)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || strchr(name, DIR_TERM_LINUX) ||
+    if (name[0] == DIR_TERM || name[0] == DIR_TERM_LINUX ||
+        isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM || name[2] == DIR_TERM_LINUX) ||  /* D:\ or D:/ */
         !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
+
 #else
 
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
 
 #endif
