@@ -142,6 +142,7 @@ static char *skip_ws(char *d)          { while (isspace(*d))        d++; return 
 static char *skip_back_non_ws_(char *d, char *start) { while (d > start && !isspace(d[-1])) d--; return d; }
 static char *skip_back_ws_(char *d, char *start)     { while (d > start && isspace(d[-1])) d--; return d; }
 
+static char *inp_pathresolve(char *name);
 void tprint(struct line *deck);
 
 #ifndef XSPICE
@@ -1009,6 +1010,91 @@ inp_pathopen(char *name, char *mode)
 
         if ((fp = fopen(buf, mode)) != NULL)
             return (fp);
+    }
+
+    return (NULL);
+}
+
+
+/*-------------------------------------------------------------------------*
+  Look up the variable sourcepath and try everything in the list in order
+  if the file isn't in . and it isn't an abs path name.
+  For MS Windows: First try the path of the source file.
+but:
+  this one returns the first 'stat' wise successfull path
+     (not necessairily meaning that you will be able to open that)
+  instead of skipping unsuccessfull matches until something works
+  *-------------------------------------------------------------------------*/
+
+static char *
+inp_pathresolve(char *name)
+{
+    char buf[BSIZE_SP];
+    struct variable *v;
+    struct stat st;
+
+#if defined(HAS_WINGUI)
+    char buf2[BSIZE_SP];
+
+    /* search in the path where the source (input) file has been found,
+       but only if "name" is just a file name */
+    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX) && cp_getvar("sourcefile", CP_STRING, buf2)) {
+        /* If pathname is found, get path.
+           (char *dirname(const char *name) might have been used here) */
+        if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
+            int i, j = 0;
+            for (i = 0; i < BSIZE_SP-1; i++) {
+                if (buf2[i] == '\0')
+                    break;
+                if ((buf2[i] == DIR_TERM) || (buf2[i] == DIR_TERM_LINUX))
+                    j = i;
+            }
+            buf2[j+1] = '\0'; /* include path separator */
+        }
+        /* add file name */
+        strcat(buf2, name);
+        /* try to open file */
+        if (0 == stat(buf2, &st))
+            return copy(buf2);
+    }
+
+    /* If this is an abs pathname, or there is no sourcepath var, just
+     * do an fopen.
+     */
+    if (strchr(name, DIR_TERM) || strchr(name, DIR_TERM_LINUX) ||
+        !cp_getvar("sourcepath", CP_LIST, &v))
+            return stat(name, &st) ? NULL : copy(name);
+#else
+
+    /* If this is an abs pathname, or there is no sourcepath var, just
+     * do an fopen.
+     */
+    if (strchr(name, DIR_TERM) || !cp_getvar("sourcepath", CP_LIST, &v))
+        return stat(name, &st) ? NULL : copy(name);
+
+#endif
+
+    for (; v; v = v->va_next) {
+
+        switch (v->va_type) {
+        case CP_STRING:
+            cp_wstrip(v->va_string);
+            (void) sprintf(buf, "%s%s%s", v->va_string, DIR_PATHSEP, name);
+            break;
+        case CP_NUM:
+            (void) sprintf(buf, "%d%s%s", v->va_num, DIR_PATHSEP, name);
+            break;
+        case CP_REAL:           /* This is foolish */
+            (void) sprintf(buf, "%g%s%s", v->va_real, DIR_PATHSEP, name);
+            break;
+        default:
+            fprintf(stderr, "ERROR: enumeration value `CP_BOOL' or `CP_LIST' not handled in inp_pathopen\nAborting...\n");
+            controlled_exit(EXIT_FAILURE);
+            break;
+        }
+
+        if (0 == stat(buf, &st))
+            return copy(buf);
     }
 
     return (NULL);
