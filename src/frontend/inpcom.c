@@ -1062,7 +1062,8 @@ inp_pathresolve(char *name)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || strchr(name, DIR_TERM_LINUX) ||
+    /* fixme, not that easy on windows, consider drive prefix and other things */
+    if (*name == DIR_TERM || *name == DIR_TERM_LINUX ||
         !cp_getvar("sourcepath", CP_LIST, &v))
             return stat(name, &st) ? NULL : copy(name);
 #else
@@ -1070,7 +1071,7 @@ inp_pathresolve(char *name)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || !cp_getvar("sourcepath", CP_LIST, &v))
+    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v))
         return stat(name, &st) ? NULL : copy(name);
 
 #endif
