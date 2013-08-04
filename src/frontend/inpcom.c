@@ -255,48 +255,46 @@ static struct library *
 read_a_lib(char *y, char *dir_name)
 {
     struct library *lib;
+    char *y_resolved, *yy;
 
-    {
-        char *yy;
-        char *y_resolved = inp_pathresolve_at(y, dir_name);
+    y_resolved = inp_pathresolve_at(y, dir_name);
 
-        if (!y_resolved) {
-            fprintf(cp_err, "Error: Could not find library file %s\n", y);
+    if (!y_resolved) {
+        fprintf(cp_err, "Error: Could not find library file %s\n", y);
+        return NULL;
+    }
+
+    // a variant of realpath(, NULL)
+    //   fixme on windows we need _fullpath or some other crap
+    yy = canonicalize_file_name(y_resolved);
+
+    if (!yy) {
+        fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
+        controlled_exit(EXIT_FAILURE);
+    }
+
+    lib = find_lib(yy);
+
+    if (!lib) {
+
+        FILE *newfp = fopen(y_resolved, "r");
+
+        if (!newfp) {
+            fprintf(cp_err, "Error: Could not open library file %s\n", y);
             return NULL;
         }
 
-        // a variant of realpath(, NULL)
-        //   fixme on windows we need _fullpath or some other crap
-        yy = canonicalize_file_name(y_resolved);
+        lib = new_lib();
 
-        if (!yy) {
-            fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
-            controlled_exit(EXIT_FAILURE);
-        }
+        lib->realpath = strdup(yy);
+        lib->habitat = ngdirname(y);
 
-        lib = find_lib(yy);
+        lib->deck = inp_readall(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE);
 
-        if (!lib) {
-
-            FILE *newfp = fopen(y_resolved, "r");
-
-            if (!newfp) {
-                fprintf(cp_err, "Error: Could not open library file %s\n", y);
-                return NULL;
-            }
-
-            lib = new_lib();
-
-            lib->realpath = strdup(yy);
-            lib->habitat = ngdirname(y);
-
-            lib->deck = inp_readall(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE);
-
-            fclose(newfp);
-        }
-
-        free(yy);
+        fclose(newfp);
     }
+
+    free(yy);
 
     return lib;
 }
