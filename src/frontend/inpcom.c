@@ -2516,7 +2516,7 @@ expand_this(struct line *c, char *s, char *t, char *y, char *dir_name)
 
     struct line *section_def;
     char keep_char1, keep_char2;
-    char *z, *copys = NULL;
+    char *z;
     struct library *lib;
 
     for (z = y; *z && !isspace(*z) && !isquote(*z); z++)
@@ -2525,12 +2525,6 @@ expand_this(struct line *c, char *s, char *t, char *y, char *dir_name)
     keep_char2 = *z;
     *t = '\0';
     *z = '\0';
-
-    if (*s == '~') {
-        copys = cp_tildexpand(s);
-        if (copys)
-            s = copys;
-    }
 
     lib = read_a_lib(s, dir_name);
 
@@ -2570,7 +2564,6 @@ expand_this(struct line *c, char *s, char *t, char *y, char *dir_name)
     *line = '*';  /* comment out .lib line */
     *t = keep_char1;
     *z = keep_char2;
-    /* FIXME, copys not freed ?! */
 }
 
 
