@@ -1,7 +1,9 @@
 ex2a lib problem
 *  (compile (concat "SPICE_SCRIPTS=. " "../w32/src/ngspice -b " buffer-file-name))
+* copy bla-here.cir ~/bla.cir
 
 .lib 'lib-2-d1/foo.cir' SUB2K
+.lib '~/bla.cir' bla
 
 I1     9 0  -1mA
 X1     9    sub_foo_2k
