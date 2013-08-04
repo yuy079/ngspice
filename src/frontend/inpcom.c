@@ -282,11 +282,9 @@ read_a_lib(char *y, char *dir_name)
     lib = new_lib();
 
     lib->realpath = strdup(yy);
-    lib->habitat = strdup(dirname(y)); /* !! lieber yy ? */
+    lib->habitat = ngdirname(y); /* !! lieber yy ? */
 
-    char *y_dir_name = ngdirname(y); /* !! lieber yy ? */
-    lib->deck = inp_readall(newfp, 1 /*dummy*/, y_dir_name, FALSE, FALSE);
-    tfree(y_dir_name);
+    lib->deck = inp_readall(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE);
 
     fclose(newfp);
   }
