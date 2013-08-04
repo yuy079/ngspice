@@ -263,10 +263,9 @@ read_a_lib(char *y, char *dir_name)
 {
     struct library *lib;
 
-    char *yy;
+    char *y_resolved, *yy;
 
-    char *y_resolved = inp_pathresolve_at(y, dir_name);
-
+    y_resolved = inp_pathresolve_at(y, dir_name);
     if (!y_resolved) {
         fprintf(cp_err, "Error: Could not find library file %s\n", y);
         return NULL;
@@ -275,7 +274,6 @@ read_a_lib(char *y, char *dir_name)
     // a variant of realpath(, NULL)
     //   fixme on windows we need something like _fullpath
     yy = canonicalize_file_name(y_resolved);
-
     if (!yy) {
         fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
         controlled_exit(EXIT_FAILURE);
@@ -283,25 +281,25 @@ read_a_lib(char *y, char *dir_name)
 
     lib = find_lib(yy);
 
-  if (!lib) {
+    if (!lib) {
 
-    FILE *newfp = fopen(y_resolved, "r");
+        FILE *newfp = fopen(y_resolved, "r");
 
-    if (!newfp) {
-        fprintf(cp_err, "Error: Could not open library file %s\n", y);
-        return NULL;
+        if (!newfp) {
+            fprintf(cp_err, "Error: Could not open library file %s\n", y);
+            return NULL;
+        }
+
+        /* lib points to a new entry in global lib array libraries[N_LIBRARIES] */
+        lib = new_lib();
+
+        lib->realpath = strdup(yy);
+        lib->habitat = ngdirname(y); /* !! lieber yy ? */
+
+        lib->deck = inp_read(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE) . cc;
+
+        fclose(newfp);
     }
-
-    /* lib points to a new entry in global lib array libraries[N_LIBRARIES] */
-    lib = new_lib();
-
-    lib->realpath = strdup(yy);
-    lib->habitat = ngdirname(y); /* !! lieber yy ? */
-
-    lib->deck = inp_read(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE) . cc;
-
-    fclose(newfp);
-  }
 
     return lib;
 }
