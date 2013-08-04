@@ -255,13 +255,6 @@ static struct library *
 read_a_lib(char *y, char *dir_name)
 {
     struct library *lib;
-    char *copyy = NULL;
-
-    if (*y == '~') {
-        copyy = cp_tildexpand(y); /* allocates memory, but can also return NULL */
-        if (copyy)
-            y = copyy; /* reuse y, but remember, buffer still points to allocated memory */
-    }
 
     {
         char *yy;
@@ -269,7 +262,6 @@ read_a_lib(char *y, char *dir_name)
 
         if (!y_resolved) {
             fprintf(cp_err, "Error: Could not find library file %s\n", y);
-            tfree(copyy); /* allocated by the cp_tildexpand() above */
             return NULL;
         }
 
@@ -290,7 +282,6 @@ read_a_lib(char *y, char *dir_name)
 
             if (!newfp) {
                 fprintf(cp_err, "Error: Could not open library file %s\n", y);
-                tfree(copyy); /* allocated by the cp_tildexpand() above */
                 return NULL;
             }
 
@@ -308,8 +299,6 @@ read_a_lib(char *y, char *dir_name)
 
         free(yy);
     }
-
-    tfree(copyy);   /* allocated by the cp_tildexpand() above */
 
     return lib;
 }
@@ -1082,6 +1071,15 @@ inp_pathresolve_at(char *name, char *dir)
 
     if (*name == DIR_TERM || !dir || !dir[0])
         return inp_pathresolve(name);
+
+    if (name[0] == '~' && name[1] == '/') {
+        char *y = cp_tildexpand(name);
+        if (y) {
+            char *r = inp_pathresolve(y);
+            tfree(y);
+            return r;
+        }
+    }
 
     /* concatenate them */
 
