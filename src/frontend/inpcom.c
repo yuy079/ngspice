@@ -270,7 +270,7 @@ read_a_lib(char *y, char *dir_name)
         if (!y_resolved) {
             fprintf(cp_err, "Error: Could not find library file %s\n", y);
             tfree(copyy); /* allocated by the cp_tildexpand() above */
-            return FALSE;
+            return NULL;
         }
 
         // a variant of realpath(, NULL)
@@ -291,7 +291,7 @@ read_a_lib(char *y, char *dir_name)
             if (!newfp) {
                 fprintf(cp_err, "Error: Could not open library file %s\n", y);
                 tfree(copyy); /* allocated by the cp_tildexpand() above */
-                return FALSE;
+                return NULL;
             }
 
             lib = new_lib();
