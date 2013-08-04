@@ -21,6 +21,12 @@ Author: 1985 Wayne A. Christopher
 #include <limits.h>
 #include <stdlib.h>
 
+#if !defined(HAS_WINGUI)
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
+
 #include "inpcom.h"
 #include "variable.h"
 #include "subckt.h"
