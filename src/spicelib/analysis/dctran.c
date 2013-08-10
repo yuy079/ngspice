@@ -916,7 +916,7 @@ resume:
             EVTbackup(ckt, ckt->CKTtime + ckt->CKTdelta);
 
 /* gtri - end - wbk - Do event backup */
-#endif
+#else
 #ifdef CLUSTER
         chkStep:
         if(CLUsync(ckt->CKTtime,&ckt->CKTdelta,redostep)){
@@ -926,6 +926,8 @@ resume:
             ckt->CKTstat->STATrejected ++;
         }
 #endif
+#endif
+
     }
     /* NOTREACHED */
 }
