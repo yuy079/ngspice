@@ -61,7 +61,7 @@ settrace(wordlist *wl, int what, char *name)
             case VF_PRINT:
                 d->db_type = DB_TRACEALL;
                 break;
- /*         case VF_PLOT:
+/*          case VF_PLOT:
                 d->db_type = DB_IPLOTALL;
                 break; */
             case VF_ACCUM:
@@ -144,12 +144,12 @@ static char* copynode(char *s)
 
     if (strstr(s, "("))
         s = stripWhiteSpacesInsideParens(s);
-	else
-		s = copy(s);
+    else
+        s = copy(s);
 
     l = strrchr(s, '('/*)*/);
     if (!l)
-		return s;
+        return s;
 
     r = strchr(s, /*(*/')');
     *r = '\0';
@@ -159,7 +159,7 @@ static char* copynode(char *s)
         ret = copy(buf);
     } else
         ret = copy(l + 1);
-	
-	tfree(s);
+
+    tfree(s);
     return ret;
 }
