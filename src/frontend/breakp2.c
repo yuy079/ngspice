@@ -144,12 +144,12 @@ static char* copynode(char *s)
 
     if (strstr(s, "("))
         s = stripWhiteSpacesInsideParens(s);
+    else
+        s = copy(s);
 
     l = strrchr(s, '('/*)*/);
-    if (!l) {
-        ret = copy(s);
-        return ret;
-    }
+    if (!l)
+        return s;
 
     r = strchr(s, /*(*/')');
     *r = '\0';
@@ -160,5 +160,6 @@ static char* copynode(char *s)
     } else
         ret = copy(l + 1);
 
+    tfree(s);
     return ret;
 }
