@@ -438,6 +438,18 @@ attrib(tdico *dico_p, NGHASHPTR htable_p, char *t, char op)
     return entry_p;
 }
 
+/* User defined delete function: 
+   Delete the dictionary entries malloc'ed above
+   (called by nghash_free() in function nupa_del_dicoS(void), file spicenum.c) */
+void
+del_attrib(entry *entry_p)
+{
+    if(entry_p) {
+        tfree(entry_p->symbol);
+        tfree(entry_p);
+    }
+}
+
 
 static bool
 define(tdico *dico,
