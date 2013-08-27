@@ -119,7 +119,7 @@ static char *skip_ws(char *d)          { while (isspace(*d))        d++; return 
 static char *skip_back_non_ws_(char *d, char *start) { while (d > start && !isspace(d[-1])) d--; return d; }
 static char *skip_back_ws_(char *d, char *start)     { while (d > start && isspace(d[-1])) d--; return d; }
 
-static void tprint(struct line *deck);
+void tprint(struct line *deck);
 
 #ifndef XSPICE
 static void inp_poly_err(struct line *deck);
@@ -5723,7 +5723,7 @@ inp_poly_err(struct line *card)
 #endif
 
 
-static void
+void
 tprint(struct line *t)
 {
     /*debug: print into file*/

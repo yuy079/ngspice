@@ -730,7 +730,7 @@ cx_sortorder(void *data, short int type, int length, int *newlength, short int *
     int i;
 
     t_amplitude_index *array_amplitudes;
-    array_amplitudes = (t_amplitude_index *) malloc(sizeof(t_amplitude_index) * length);
+    array_amplitudes = (t_amplitude_index *) malloc(sizeof(t_amplitude_index) * (size_t) length);
 
     *newlength = length;
     *newtype = VF_REAL;
@@ -741,7 +741,7 @@ cx_sortorder(void *data, short int type, int length, int *newlength, short int *
             array_amplitudes[i].index = i;
         }
 
-        qsort(array_amplitudes, length, sizeof(array_amplitudes[0]), compare_structs);
+        qsort(array_amplitudes, (size_t) length, sizeof(array_amplitudes[0]), compare_structs);
 
         for(i = 0; i < length; i++){
             d[i] = array_amplitudes[i].index;
