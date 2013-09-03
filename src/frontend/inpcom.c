@@ -788,7 +788,6 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
 
         inp_fix_for_numparam(subckt_w_params, working);
 
-// tprint(cc); /* test printout to file tprint-out.txt */
         inp_remove_excess_ws(working);
 
         comment_out_unused_subckt_models(working, line_number);
@@ -799,6 +798,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
 
         inp_fix_macro_param_func_paren_io(working);
         inp_fix_ternary_operator(working);
+//tprint(cc); /* test printout to file tprint-out.txt */
         inp_fix_temper_in_param(working);
 
         inp_expand_macros_in_deck(NULL, working);
