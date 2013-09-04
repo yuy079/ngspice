@@ -66,7 +66,7 @@ struct function_env
     } *functions;
 };
 
-static struct func_temper {
+struct func_temper {
     char* funcname;
     int subckt_depth;
     int subckt_count;
@@ -6048,8 +6048,8 @@ inp_dot_if(struct line *card)
 /* Convert .param lines containing keyword 'temper' into .func lines:
    .param xxx1 = 'temper + 25'  --->  .func xxx1() 'temper + 25'
    Add info about the functions (name, subcircuit depth, number of
-   subckt to linked list new_func.
-   Then scan new_info, for each xxx1 scan all lines of deck,
+   subckt) to linked list new_func.
+   Then scan new_func, for each xxx1 scan all lines of deck,
    find all xxx1 and convert them to a function:
    xxx1   --->  xxx1()
    If this happens to be in another .param line, convert it to .func, 
@@ -6143,7 +6143,7 @@ inp_fix_temper_in_param(struct line *deck)
 
                 funcbody = copy_substring(beg_tstr + 1, end_tstr);
                 inp_new_func(funcname, funcbody, card, &new_func, sub_count, subckt_depth);
-
+                tfree(funcbody);
                 beg_tstr = end_tstr;
             }
         }
@@ -6242,6 +6242,8 @@ inp_fix_temper_in_param(struct line *deck)
                 funcname = gettok_char(&new_tmp_str, '=', FALSE, FALSE);
                 funcbody = copy(new_tmp_str + 1);
                 inp_new_func(funcname, funcbody, card, &new_func, sub_count, subckt_depth);
+                tfree(new_str);
+                tfree(funcbody);
             } else {
                 /* Or just enter new line into deck */
                 card->li_next = xx_new_line(card->li_next, new_str, 0, card->li_linenum);
@@ -6299,9 +6301,10 @@ inp_new_func(char *funcname, char *funcbody, struct line *card, struct func_temp
 
 static void inp_rem_func(struct func_temper **beg_func)
 {
-    struct func_temper *beg_func_tmp = *beg_func;
-
-    for(; beg_func_tmp; beg_func_tmp = beg_func_tmp->next)
-        tfree(beg_func_tmp->funcname);
-    tfree(*beg_func);
+    struct func_temper *beg_func_tmp;
+    for(; *beg_func; *beg_func = beg_func_tmp) {
+        beg_func_tmp = (*beg_func)->next;
+        tfree((*beg_func)->funcname);
+        tfree((*beg_func));
+    }
 }
