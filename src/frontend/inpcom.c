@@ -5945,7 +5945,7 @@ subckt_params_to_param(struct line *card)
     for (; card; card = card->li_next) {
         char *curr_line = card->li_line;
         if (ciprefix(".subckt", curr_line)) {
-            char *cut_line, *new_line;
+            char *cut_line, *new_line, *new_li_line;
             cut_line = strstr(curr_line, "params:");
             if (!cut_line)
                 continue;
@@ -5954,7 +5954,9 @@ subckt_params_to_param(struct line *card)
             /* replace "params:" by ".param " */
             memcpy(new_line, ".param ", 7);
             /* card->li_line ends with subcircuit name */
-            cut_line[-1] = '\0';
+            new_li_line = copy_substring(curr_line, --cut_line);
+            tfree(card->li_line);
+            card->li_line = new_li_line;
             /* insert new_line after card->li_line */
             card->li_next = xx_new_line(card->li_next, new_line,
                                         card->li_linenum + 1, 0);
