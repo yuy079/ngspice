@@ -61,7 +61,7 @@ settrace(wordlist *wl, int what, char *name)
             case VF_PRINT:
                 d->db_type = DB_TRACEALL;
                 break;
- /*         case VF_PLOT:
+/*          case VF_PLOT:
                 d->db_type = DB_IPLOTALL;
                 break; */
             case VF_ACCUM:

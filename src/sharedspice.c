@@ -1398,7 +1398,7 @@ void SetAnalyse(
    int result;                     /* return value from callback function */
 
    CKTcircuit *ckt = NULL;
-
+   
    if (ft_curckt)
        ckt = ft_curckt->ci_ckt;
 
@@ -1414,15 +1414,14 @@ void SetAnalyse(
    timediff(&timenow, &timebefore, &diffsec, &diffmillisec);
    s = TMALLOC(char, 128);
 
-   if (!strcmp(Analyse, "tran")) {
+   if (!strcmp(Analyse, "tran")){
        if (ckt && (ckt->CKTtime > ckt->CKTfinalTime - ckt->CKTmaxStep)) {
-          sprintf(s, "--ready--");
+          sprintf( s, "--ready--");
           result = statfcn(s, ng_ident, userptr);
           tfree(s);
           return;
        }
    }
-
    if (DecaPercent >= 1000){
        /* Because CKTmaxStep may be smaller than 0.1%, we print only when CKTtime is large enough. */
        if (!strcmp(Analyse, "tran") && ckt && (ckt->CKTtime < ckt->CKTfinalTime - ckt->CKTmaxStep))
@@ -1779,8 +1778,8 @@ double getisrcval(double time, char* iname)
                     For time synchronization, if the actual, converged ckt-CKTtime is
                     beyond the optimum common time, we subtract olddelta and then choose
                     our own ckt->CKTdelta, being smaller than olddelta.
-    Whereas redostep is set by ngspice, the user may decide via the callback function,
-    to redo the most recent step because of other reasons. This is accomplished by
+    Whereas redostep is set by ngspice, the user may decide via the callback function, 
+    to redo the most recent step because of other reasons. This is accomplished by 
     returning a 1 with the callback function.
 
 */
@@ -1813,13 +1812,13 @@ int sharedsync(double* pckttime, double* pcktdelta, double olddelta, double fina
         if (redostep) {
             *pckttime -= olddelta;
             (*rejected)++;
-            /* use cktdelta as suggested by ngspice or acquire new cktdelta
+            /* use cktdelta as suggested by ngspice or acquire new cktdelta 
             via pointer pcktdelta in user supplied callback */
             getsync(*pckttime, pcktdelta, olddelta, redostep, ng_ident, loc, userptr);
             return 1;
         }
         else {
-            /* Use cktdelta as suggested by ngspice or acquire new cktdelta
+            /* Use cktdelta as suggested by ngspice or acquire new cktdelta 
                via pointer pcktdelta in user supplied callback. Redo the previous
                step if return value from getsync is 1. */
             int retval = getsync(*pckttime, pcktdelta, olddelta, redostep, ng_ident, loc, userptr);
@@ -1827,7 +1826,7 @@ int sharedsync(double* pckttime, double* pcktdelta, double olddelta, double fina
             if (*pckttime + *pcktdelta > finalt)
                 *pcktdelta = finalt - *pckttime;
 
-            /* user has decided to redo the step, ignoring redostep being set to 0
+            /* user has decided to redo the step, ignoring redostep being set to 0 
             by ngspice. */
             if (retval) {
                 *pckttime -= olddelta;

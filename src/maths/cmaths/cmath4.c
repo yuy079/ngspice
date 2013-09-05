@@ -74,7 +74,6 @@ cx_and(void *data1, void *data2, short int datatype1, short int datatype2, int l
     return ((void *) d);
 }
 
-
 void *
 cx_or(void *data1, void *data2, short int datatype1, short int datatype2, int length)
 {
@@ -113,7 +112,6 @@ cx_or(void *data1, void *data2, short int datatype1, short int datatype2, int le
     return ((void *) d);
 }
 
-
 void *
 cx_not(void *data, short int type, int length, int *newlength, short int *newtype)
 {
@@ -137,6 +135,7 @@ cx_not(void *data, short int type, int length, int *newlength, short int *newtyp
     }
     return ((void *) d);
 }
+
 
 
 /* This is a strange function. What we do is fit a polynomial to the
@@ -227,7 +226,6 @@ cx_interpolate(void *data, short int type, int length, int *newlength, short int
 
     return ((void *) d);
 }
-
 
 void *
 cx_deriv(void *data, short int type, int length, int *newlength, short int *newtype, struct plot *pl, struct plot *newpl, int grouping)
@@ -581,7 +579,6 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
         }
         for (i = 0; i<length; i++)
             time[i] = i*1.0/span;
-
         span = time[length-1] - time[0];
 
     }
@@ -624,7 +621,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
     printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span*(2*length)/size, fpts);
 
     for (i = 0; i < 2*length; i++) {
-        reald[i] = reald[i] * win[i];
+        reald[i] = reald[i]*win[i];
     }
     for (i = 2*length; i < size; i++) {
         reald[i] = 0.0;
@@ -643,13 +640,14 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 
 done:
     tfree(reald);
+
     tfree(xtime);
     tfree(time);
     tfree(win);
 
     return ((void *) outdata);
-}
 
+}
 
 void *
 cx_ifft(void *data, short int type, int length, int *newlength, short int *newtype, struct plot *pl, struct plot *newpl, int grouping)
@@ -772,16 +770,17 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 
     scale = length;
     for (i = 0; i < tpts; i++) {
-        outdata[i] = reald[i] * scale/MAX(1e-03,win[i]); /* makes dewindowing sense? */
+        outdata[i] = reald[i]*scale/MAX(1e-03,win[i]); /* makes dewindowing sense? */
     }
 
 done:
     tfree(reald);
+
     tfree(win);
 
     return ((void *) outdata);
-}
 
+}
 
 bool
 doubledouble(double *indata, int len, double *outdata)
@@ -807,3 +806,4 @@ doubledouble(double *indata, int len, double *outdata)
 
     return (TRUE);
 }
+

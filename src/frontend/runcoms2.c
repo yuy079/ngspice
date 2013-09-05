@@ -201,9 +201,9 @@ com_remcirc(wordlist *wl)
     struct circ *p, *prev = NULL;
 
 #ifdef SHARED_MODULE
-    /* This may happen only with shared ngspice during transient analysis,
-       if simulation is stopped with 'bg_halt'
-       and then circuit shall be removed prematurely. */
+    /* This may happen only with shared ngspice during transient analysis, 
+       if simulation is stopped with 'bg_halt' 
+       and then circuit shall be removed prematurely. */ 
     TRANan *job = (TRANan *) ft_curckt->ci_ckt->CKTcurJob;
     if ((job->JOBtype == 4) && (job->TRANplot))
         SPfrontEnd->OUTendPlot (job->TRANplot);

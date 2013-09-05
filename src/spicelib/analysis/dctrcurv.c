@@ -301,7 +301,7 @@ resume:
          
             } else if (job->TRCVvType[i] == TEMP_CODE) {
                 ckt->CKTtemp = job->TRCVvStart[i] + CONSTCtoK;
-                CKTtemp(ckt); 
+                CKTtemp(ckt);
                 if (expr_w_temper)
                     inp_evaluate_temper();
        
@@ -513,7 +513,7 @@ nextstep:;
         else if (job->TRCVvType[i] == TEMP_CODE)
         {
             ckt->CKTtemp += job->TRCVvStep[i];
-            CKTtemp(ckt);	    
+            CKTtemp(ckt);
             if (expr_w_temper)
                 inp_evaluate_temper();
         } /* else not possible */

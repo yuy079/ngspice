@@ -4,8 +4,8 @@ Author: 1985 Thomas L. Quarles
 **********/
 /*
   Concatenate two strings, which have to be defined on the heap.
-  If either is NULL, the other is returned. If both are defined,
-  a new string is malloced, they are combined, both input strings
+  If either is NULL, the other is returned. If both are defined, 
+  a new string is malloced, they are combined, both input strings 
   are freed, and the new string is returned.
  */
 
@@ -18,9 +18,9 @@ Author: 1985 Thomas L. Quarles
 char *INPerrCat(char *a, char *b)
 {
     if (a != NULL) {
-        if (b == NULL) {        /* a valid, b null, return a */
+        if (b == NULL) {	/* a valid, b null, return a */
             return (a);
-        } else {                /* both valid  - hard work... */
+        } else {		/* both valid  - hard work... */
             register char *errtmp;
             errtmp =
                 TMALLOC(char, strlen(a) + strlen(b) + 2);
@@ -31,17 +31,16 @@ char *INPerrCat(char *a, char *b)
             FREE(b);
             return (errtmp);
         }
-    } else                      /* a null, so return b */
+    } else			/* a null, so return b */
         return (b);
 }
-
 
 char *INPstrCat(char *a, char *b, char *c)
 {
     if (a != NULL) {
-        if (b == NULL) {        /* a valid, b null, return a */
+        if (b == NULL) {	/* a valid, b null, return a */
             return (a);
-        } else {                /* both valid  - hard work... */
+        } else {		/* both valid  - hard work... */
             register char *strtmp;
             strtmp =
                 TMALLOC(char, strlen(a) + strlen(b) + 2);
@@ -52,6 +51,6 @@ char *INPstrCat(char *a, char *b, char *c)
             FREE(b);
             return (strtmp);
         }
-    } else                      /* a null, so return b */
+    } else			/* a null, so return b */
         return (b);
 }

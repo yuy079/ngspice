@@ -63,7 +63,7 @@ com_quit(wordlist *wl)
         wordlist all = { "all", NULL, NULL };
         wordlist star = { "*", NULL, NULL };
 
-//      com_remcirc(NULL);
+//        com_remcirc(NULL);
         com_destroy(&all);
         com_unalias(&star);
         com_undefine(&star);
@@ -90,7 +90,7 @@ com_quit(wordlist *wl)
 #ifdef SHARED_MODULE
     /* Destroy CKT when quit. */
     if (!ft_nutmeg) {
-        while(ft_curckt)
+        while(ft_curckt) 
             com_remcirc(NULL);
     }
 #endif

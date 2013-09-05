@@ -707,7 +707,6 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
             tfree(buffer);
             buffer = new_buffer;
         }
-
         /* If \\ at end of line is found, next line in loop will get + (see code above) */
         shell_eol_continuation = chk_for_line_continuation(buffer);
 
@@ -796,11 +795,13 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
         line_number = inp_split_multi_param_lines(working, line_number);
 
         inp_fix_macro_param_func_paren_io(working);
+
         inp_fix_ternary_operator(working);
 //tprint(cc); /* test printout to file tprint-out.txt */
         inp_fix_temper_in_param(working);
 
         inp_expand_macros_in_deck(NULL, working);
+
         inp_fix_param_values(working);
 
         /* get end card as last card in list; end card pntr does not appear to always
@@ -833,6 +834,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
             /* B source numparam compatibility transformation */
             inp_bsource_compat(working);
             inp_dot_if(working);
+
             inp_temper_compat(working);
         }
 
@@ -1745,8 +1747,6 @@ comment_out_unused_subckt_models(struct line *start_card, int no_of_lines)
 }
 
 
-
-
 /* replace ternary operator 'conditional ? if : else' by function 
   'ternary_fcn(conditional, if, else)' 
    in .param, .func, and .meas lines, if all is FALSE, 
@@ -2471,16 +2471,16 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
 
                 /* insert the library section definition into `c' */
                 {
-//                  struct line *corig = c;
+//                    struct line *corig = c;
                     struct line *cend = NULL, *newl;
                     struct line *rest = c->li_next;
                     struct line *t = section_def;
-//                  cend = c->li_next = xx_new_line(NULL, copy(t->li_line), t->li_linenum, t->li_linenum_orig);
-//                  cend->li_line[0] = '*';
-//                  cend->li_line[1] = '<';
-//                  t = t->li_next;
+//                    cend = c->li_next = xx_new_line(NULL, copy(t->li_line), t->li_linenum, t->li_linenum_orig);
+//                    cend->li_line[0] = '*';
+//                    cend->li_line[1] = '<';
+//                    t = t->li_next;
                     for (; t; t=t->li_next) {
-//                      cend->li_next = xx_new_line(NULL, copy(t->li_line), t->li_linenum, t->li_linenum_orig);
+//                        cend->li_next = xx_new_line(NULL, copy(t->li_line), t->li_linenum, t->li_linenum_orig);  
                         newl = xx_new_line(NULL, copy(t->li_line), t->li_linenum, t->li_linenum_orig);
                         if (cend)
                             cend->li_next = newl;
@@ -2490,7 +2490,7 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
                             newl->li_line[1] = '<';
                         }
                         cend = newl;
-//                      cend = cend->li_next;
+//                        cend = cend->li_next;
                         if(ciprefix(".endl", t->li_line))
                             break;
                     }
@@ -2500,7 +2500,7 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
                     }
                     cend->li_line[0] = '*';
                     cend->li_line[1] = '>';
-//                  c = corig;
+//                    c = corig;
                     cend->li_next = rest;
                 }
 
@@ -2510,7 +2510,6 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
                 /* FIXME, copys not freed ?! */
             }
         }
-
     }
 }
 
@@ -3153,7 +3152,7 @@ inp_expand_macro_in_str(struct function_env *env, char *str)
             sprintf(curr_str + curr_str_len, "%s(%s)", str, macro_str);
         }
         *fcn_name = keep;
-        tfree(macro_str);
+	tfree(macro_str);
 
         search_ptr = str = close_paren_ptr + 1;
     }
@@ -3835,7 +3834,6 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
                 str_ptr = skip_non_ws(str_ptr);
                 str_ptr = skip_ws(str_ptr);
             }
-
 /* FIXME: useless and potentially buggy code: we check parameters like
    l={length}, but the following will not work for such a parameter string.
    We just live from the fact that str_ptr = "". */ 
@@ -4154,9 +4152,7 @@ inp_split_multi_param_lines(struct line *card, int line_num)
 
                 param_end = x;
             }
-
             tfree(array);
-
             // comment out current multi-param line
             *(card->li_line)   = '*';
             // insert new param lines immediately after current line
@@ -5573,7 +5569,6 @@ inp_bsource_compat(struct line *card)
     } /* end of for loop */
 }
 
-
 /* Find all expression containing the keyword 'temper',
    except for B lines and some other exclusions. Prepare 
    these expressions by calling inp_modify_exp() and return
@@ -5602,7 +5597,7 @@ inp_temper_compat(struct line *card)
             continue;
         }
         /* exclude some elements */
-        if ((*curr_line == '*') || (*curr_line == 'v') || (*curr_line == 'b') || (*curr_line == 'i') ||
+        if ((*curr_line == '*') || (*curr_line == 'v') || (*curr_line == 'b') || (*curr_line == 'i') || 
             (*curr_line == 'e') || (*curr_line == 'g') || (*curr_line == 'f') || (*curr_line == 'h'))
             continue;
         /* exclude all dot commands except .model */
@@ -5617,20 +5612,20 @@ inp_temper_compat(struct line *card)
         curr_line = card->li_line;
         /* now check if 'temper' is a token or just a substring of another string, e.g. mytempers */
         /* we may have multiple temper and mytempers in multiple expressions in a line */
-        beg_str = beg_tstr = curr_line;
+        beg_str = beg_tstr = curr_line; 
         while ((beg_tstr = strstr(beg_tstr, "temper")) != NULL) {
             actchar = *(beg_tstr - 1);
             if (!isspace(actchar) && !is_arith_char(actchar) && !(actchar == ',')) {
                 beg_tstr++;
                 continue;
             }
-            actchar = *(beg_tstr + 6);
+            actchar = *(beg_tstr+6);
             if (!isspace(actchar) && !is_arith_char(actchar) && !(actchar == ','))
                 continue;
             /* we have found a true 'temper' */
             /* set the global variable */
             expr_w_temper = TRUE;
-            /* find the expression: first go back to the opening '{',
+            /* find the expression: first go back to the opening '{', 
                then find the closing '}' */
             while ((*beg_tstr) != '{')
                 beg_tstr--;
@@ -5649,11 +5644,9 @@ inp_temper_compat(struct line *card)
         if (*beg_str)
             new_str = INPstrCat(new_str, copy(beg_str), " ");
         tfree(card->li_line);
-        card->li_line = inp_remove_ws(new_str);
+        card->li_line =  inp_remove_ws(new_str);
     }
 }
-
-
 
 
 /* lines containing expressions with keyword 'temper': 
@@ -5829,7 +5822,6 @@ inp_modify_exp(char* expr)
     tfree(expr);
     return(new_str);
 }
-
 
 /*
  * destructively fetch a token from the input string
@@ -6068,10 +6060,10 @@ void
 tprint(struct line *t)
 {
     struct line *tmp;
-
+    
     /*debug: print into file*/
     FILE *fd = fopen("tprint-out.txt", "w");
-    for (tmp = t; tmp; tmp = tmp->li_next)
+    for (tmp = t; tmp; tmp = tmp->li_next) 
         if (*(tmp->li_line) != '*')
             fprintf(fd, "%6d  %6d  %s\n", tmp->li_linenum_orig, tmp->li_linenum, tmp->li_line);
     fprintf(fd, "\n*********************************************************************************\n");
@@ -6116,7 +6108,6 @@ inp_dot_if(struct line *card)
     }
 }
 
-
 /* Convert .param lines containing keyword 'temper' into .func lines:
    .param xxx1 = 'temper + 25'  --->  .func xxx1() 'temper + 25'
    Add info about the functions (name, subcircuit depth, number of
@@ -6136,11 +6127,12 @@ inp_fix_temper_in_param(struct line *deck)
     struct func_temper *new_func = NULL, *beg_func;
     struct line *card;
 
+
     sub_count = TMALLOC(int, 16);
-    for(j = 0; j < 16; j++)
+    for(j = 0; j< 16; j++)
         sub_count[j] = 0;
 
-    /* first pass: determine all .param with temper inside and replace by .func
+    /* first pass: determine all .param with temper inside and replace by .func 
        .param xxx1 = 'temper + 25'
        will become
        .func xxx1() 'temper + 25'
@@ -6183,20 +6175,20 @@ inp_fix_temper_in_param(struct line *deck)
                     beg_tstr++;
                     continue;
                 }
-                actchar = *(beg_tstr + 6);
+                actchar = *(beg_tstr+6);
                 if (actchar == '=') {
                     fprintf(stderr, "Error: you cannot assign a value to TEMPER\n");
                     fprintf(stderr, "  Line no. %d, %s\n", card->li_linenum, curr_line);
                     controlled_exit(EXIT_BAD);
                 }
 
-                if (!(actchar == '}') && !isspace(actchar) && !is_arith_char(actchar) && !(actchar == ',')) {
+                if (!(actchar == '}') && !isspace(actchar) && !is_arith_char(actchar) && !(actchar == ',')){
                     beg_tstr++;
                     continue;
                 }
                 /* we have found a true 'temper', so start conversion */
                 /* find function name and function body: We may have multiple
-                   params in a linie!
+                   params in a linie! 
                 */
                 while ((*beg_tstr) != '=')
                     beg_tstr--;
@@ -6223,7 +6215,6 @@ inp_fix_temper_in_param(struct line *deck)
                 funcbody = copy_substring(beg_tstr + 1, end_tstr);
                 inp_new_func(funcname, funcbody, card, &new_func, sub_count, subckt_depth);
                 tfree(funcbody);
-
                 beg_tstr = end_tstr;
             }
         }
@@ -6231,9 +6222,9 @@ inp_fix_temper_in_param(struct line *deck)
 
     /* second pass */
     /* for each .func entry in new_func start the insertion operation:
-       search each line from the deck, which has the suitable subcircuit nesting data,
+       search each line from the deck, which has the suitable subcircuit nesting data,  
        for tokens xxx equalling the funcname, replace xxx by xxx(). After insertion,
-       remove the respective entry in new_fuc. If the replacement is done in a
+       remove the respective entry in new_fuc. If the replacement is done in a 
        .param line, convert it to a .func line and add an entry to new_func.
        Continue until new_func is empty.
      */
@@ -6241,12 +6232,12 @@ inp_fix_temper_in_param(struct line *deck)
     beg_func = new_func;
     for (; new_func; new_func = new_func->next) {
 
-        for(j = 0; j < 16; j++)
+        for(j = 0; j< 16; j++)
             sub_count[j] = 0;
 
         card = deck;
         for (; card; card = card->li_next) {
-
+             
             char *new_str = NULL; /* string we assemble here */
             char *curr_str;/* where we are in curr_line */
             char *add_str;/* what we add */
@@ -6294,7 +6285,7 @@ inp_fix_temper_in_param(struct line *deck)
                 if (!(actchar == '{') && !(actchar == ',') && !isspace(actchar) && !is_arith_char(actchar)) {
                     curr_str = end_tstr;
                     continue;
-                }
+                } 
                 actchar = *(end_tstr);
                 if (!(actchar == '}') && !(actchar == ',')  && !isspace(actchar) && !is_arith_char(actchar)) {
                     curr_str = end_tstr;
@@ -6329,7 +6320,7 @@ inp_fix_temper_in_param(struct line *deck)
                 /* Or just enter new line into deck */
                 card->li_next = xx_new_line(card->li_next, new_str, 0, card->li_linenum);
                 *card->li_line = '*';
-            }
+            }            
         }
     }
 
@@ -6338,8 +6329,6 @@ inp_fix_temper_in_param(struct line *deck)
     /* remove new_func */
     inp_rem_func(&beg_func);
 }
-
-
 
 
     /* enter function name, nested .subckt depths, and

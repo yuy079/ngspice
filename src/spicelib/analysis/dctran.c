@@ -958,11 +958,11 @@ resume:
            Redo the last time step by subtracting olddelta, and modify ckt->CKTdelta
            depending on synchronization requirements. sharedsync() returns 1.
            User-supplied redo request:
-           sharedsync() may return 1 if the user has decided to do so in the callback
+           sharedsync() may return 1 if the user has decided to do so in the callback 
            function.
         */
 chkStep:
-        if(sharedsync(&ckt->CKTtime, &ckt->CKTdelta, olddelta, ckt->CKTfinalTime, redostep,
+        if(sharedsync(&ckt->CKTtime, &ckt->CKTdelta, olddelta, ckt->CKTfinalTime, redostep, 
             &ckt->CKTstat->STATrejected, 1) == 0)
             goto nextTime;
 #endif

@@ -164,7 +164,6 @@ fft_windows(char *window, double *win, double *time, int length, double maxt, do
         printf( "Warning: unknown window type %s\n", window);
         return 0;
     }
-
     return 1;
 }
 

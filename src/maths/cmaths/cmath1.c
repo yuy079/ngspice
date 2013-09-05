@@ -735,7 +735,7 @@ cx_sortorder(void *data, short int type, int length, int *newlength, short int *
     *newlength = length;
     *newtype = VF_REAL;
     if (type == VF_REAL) {
-
+    
         for(i = 0; i < length; i++){
             array_amplitudes[i].amplitude = dd[i];
             array_amplitudes[i].index = i;

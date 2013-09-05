@@ -40,7 +40,6 @@ Author: 1985 Wayne A. Christopher
 
 #include "numparam/numpaif.h"
 
-
 #define line_free(line, flag)                   \
     do {                                        \
         line_free_x(line, flag);                \
@@ -595,11 +594,9 @@ inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
                 }
                 tmp_options->li_next = options;
             }
-
             /* prepare parse trees from 'temper' expressions */
             if (expr_w_temper)
                 inp_parse_temper(deck);
-
             /* now load deck into ft_curckt -- the current circuit. */
             inp_dodeck(deck, tt, wl_first, FALSE, options, filename);
             /* inp_dodeck did take ownership */
@@ -862,7 +859,7 @@ inp_dodeck(
      Now run through the deck and look to see if there are
      errors on any line (message contained in li_error).
 
-     Error messages have been generated either by writing
+     Error messages have been generated either by writing 
      directly to ->li_error from a struct line or to
      ->error from a struct card , or by using one of the
      macros as defined in inpmacs.h. Functions INPerror(),
@@ -1328,10 +1325,8 @@ dotifeval(struct line *deck)
     }
 }
 
-
 /* List of all expressions found in .model lines */
 static struct pt_temper *modtlist = NULL;
-
 /* List of all expressions found in device instance lines */
 static struct pt_temper *devtlist = NULL;
 
@@ -1350,19 +1345,19 @@ static struct pt_temper *devtlist = NULL;
        evaluation result ready to be used by com_alter(mod) functions,
        in linked lists modtlist (model) or devtlist (device instance).
        (done function inp_parse_temper()).
-    3) After the circuit structure has been established, generate
+    3) After the circuit structure has been established, generate 
        the parse trees. We can do it only then because pointers to
        ckt->CKTtemp and others are stored in the trees.
        (done in function inp_parse_temper_trees()).
     4) Evaluation  of the parse trees is requested by calling function
        inp_evaluate_temper(). The B Source parser is invoked here.
        ckt->CKTtemp is used to replace the 'temper' token by the actual
-       circuit temperature. The evaluation results are added to the
+       circuit temperature. The evaluation results are added to the 
        wordlist, com_alter(mod) is called to set the new parameters
        to the model parameters or device instance parameters.
 */
 
-static int
+static int 
 inp_parse_temper(struct line *card)
 {
     int error = 0;
@@ -1375,7 +1370,7 @@ inp_parse_temper(struct line *card)
         char *curr_line = card->li_line;
 
         /* exclude some elements */
-        if ((*curr_line == '*') || (*curr_line == 'v') || (*curr_line == 'b') || (*curr_line == 'i') ||
+        if ((*curr_line == '*') || (*curr_line == 'v') || (*curr_line == 'b') || (*curr_line == 'i') || 
             (*curr_line == 'e') || (*curr_line == 'g') || (*curr_line == 'f') || (*curr_line == 'h'))
             continue;
         /* exclude all dot commands except .model */
@@ -1390,8 +1385,8 @@ inp_parse_temper(struct line *card)
             /* remove '.model' */
             str_ptr = gettok(&curr_line);
             tfree(str_ptr);
-            devmodname = gettok(&curr_line);
-            beg_tstr = curr_line;
+            devmodname = gettok(&curr_line); 
+            beg_tstr = curr_line; 
             while ((end_tstr = beg_tstr = strstr(beg_tstr, "temper")) != NULL) {
                 wordlist *wl = NULL, *wlend = NULL;
                 modtlistnew = TMALLOC(struct pt_temper, 1);
@@ -1417,8 +1412,8 @@ inp_parse_temper(struct line *card)
                         end_tstr--;
                 }
                 /* copy the expression */
-                modtlistnew->expression = copy_substring(beg_tstr + 1, end_tstr);
-                /* now remove this parameter entry by overwriting with ' '
+                modtlistnew->expression = copy_substring(beg_tstr + 1, end_tstr); 
+                /* now remove this parameter entry by overwriting with ' ' 
                    ngspice then will use the default parameter to set up the circuit */
                 for (str_ptr = beg_pstr; str_ptr < end_tstr; str_ptr++)
                     *str_ptr = ' ';
@@ -1445,7 +1440,7 @@ inp_parse_temper(struct line *card)
             struct pt_temper *devtlistnew = NULL;
             /* get device name */
             devmodname = gettok(&curr_line);
-            beg_tstr = curr_line;
+            beg_tstr = curr_line; 
             while ((end_tstr = beg_tstr = strstr(beg_tstr, "temper")) != NULL) {
                 wordlist *wl = NULL, *wlend = NULL;
                 devtlistnew = TMALLOC(struct pt_temper, 1);
@@ -1472,7 +1467,7 @@ inp_parse_temper(struct line *card)
                 }
                 /* copy the expression */
                 devtlistnew->expression = copy_substring(beg_tstr + 1, end_tstr);
-                /* now remove this parameter entry by overwriting with ' '
+                /* now remove this parameter entry by overwriting with ' ' 
                    ngspice then will use the default parameter to set up the circuit */
                 for (str_ptr = beg_pstr; str_ptr < end_tstr; str_ptr++)
                     *str_ptr = ' ';
@@ -1497,7 +1492,6 @@ inp_parse_temper(struct line *card)
             }
         }
     }
-
     return error;
 }
 
@@ -1512,7 +1506,6 @@ inp_parse_temper_trees(void){
         INPgetTree(&devmodtlist->expression, &devmodtlist->pt, ft_curckt->ci_ckt, NULL);
     }
 }
-
 
 void
 inp_evaluate_temper(void)
