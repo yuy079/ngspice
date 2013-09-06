@@ -3169,9 +3169,9 @@ delete_function_env(struct function_env *env)
         struct function *here = f;
         f = f -> next;
         free_function(here);
+        tfree(here);
     }
 
-    tfree(env -> functions);
     tfree(env);
 
     return up;
@@ -3717,6 +3717,7 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         param_name = param_names[i];
         for (j = 0; j < num_params; j++) {
+//        for (j = i + 1; j < num_params; j++) {  /* FIXME: to be tested */
             if (j == i)
                 continue;
 
@@ -3775,9 +3776,11 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         if (in_control || curr_line[0] == '.' || curr_line[0] == '*')
             continue;
-/* FIXME: useless and potentially buggy code: we check parameters like
-   l={length}, but not complete lines: We just live from the fact, that there
-   are device names for all characters of the alphabet */ 
+/* FIXME: useless and potentially buggy code, when called from line 2225: 
+   we check parameters like l={length}, but not complete lines: We just 
+   live from the fact, that there are device names for all characters 
+   of the alphabet 
+   */ 
         num_terminals = get_number_terminals(curr_line);
 
         if (num_terminals <= 0)
@@ -3785,7 +3788,8 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         for (i = 0; i < num_params; i++) {
             str_ptr = curr_line;
-/* FIXME: useless and potentially buggy code: we check parameters like
+/* FIXME: useless and potentially buggy code, when called from line 2225: 
+   we check parameters like
    l={length}, but not complete lines: this will always lead to str_ptr = "" */ 
             for (j = 0; j < num_terminals+1; j++) {
                 str_ptr = skip_non_ws(str_ptr);
