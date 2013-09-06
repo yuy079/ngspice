@@ -3171,9 +3171,9 @@ delete_function_env(struct function_env *env)
         struct function *here = f;
         f = f -> next;
         free_function(here);
+        tfree(here);
     }
 
-    tfree(env -> functions);
     tfree(env);
 
     return up;
@@ -3719,6 +3719,7 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         param_name = param_names[i];
         for (j = 0; j < num_params; j++) {
+//        for (j = i + 1; j < num_params; j++) {  /* FIXME: to be tested */
             if (j == i)
                 continue;
 
