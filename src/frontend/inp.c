@@ -651,7 +651,7 @@ inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
 
         /* If we don't have .meas lines, we free the dicoS structure now.
            If we have .meas lines, dicoS is freed in do_measure() */
-        if (!ft_curckt->ci_meas)
+        if (ft_curckt && !ft_curckt->ci_meas)
             nupa_del_dicoS();
 
         /* set temperature, if defined, to new value.
