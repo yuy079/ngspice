@@ -3536,7 +3536,7 @@ get_number_terminals(char *c)
 {
     int i, j, k;
     char *name[12];
-    char nam_buf[33];
+    char nam_buf[128];
     bool area_found = FALSE;
 
     switch (*c) {
@@ -3571,7 +3571,7 @@ get_number_terminals(char *c)
         /* find the first token with "off" or "=" in the line*/
         while ((i < 20) && (*c != '\0')) {
             char *inst = gettok_instance(&c);
-            strncpy(nam_buf, inst, 32);
+            strncpy(nam_buf, inst, 127);
             txfree(inst);
             if (strstr(nam_buf, "off") || strchr(nam_buf, '='))
                 break;
