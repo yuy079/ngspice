@@ -793,11 +793,11 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
         subckt_params_to_param(working);
 
         line_number = inp_split_multi_param_lines(working, line_number);
-
+//tprint(cc); /* test printout to file tprint-out.txt */
         inp_fix_macro_param_func_paren_io(working);
         inp_fix_ternary_operator(working);
         inp_fix_temper_in_param(working);
- // tprint(cc); /* test printout to file tprint-out.txt */
+
         inp_expand_macros_in_deck(NULL, working);
         inp_fix_param_values(working);
 
@@ -4064,13 +4064,16 @@ inp_split_multi_param_lines(struct line *card, int line_num)
         if (ciprefix(".param", curr_line)) {
 
             struct line *param_end, *param_beg;
-            char *equal_ptr, *array[5000];
-            int i, counter = 0;
+            char *equal_ptr, **array;
+            int i, counter = 0, startval = 2000;
 
             while ((equal_ptr = find_assignment(curr_line)) != NULL) {
                 counter++;
                 curr_line = equal_ptr + 1;
             }
+            if (startval < counter)
+                startval = counter + 1;
+            array = TMALLOC(char*, startval);
 
             if (counter <= 1)
                 continue;
@@ -4120,7 +4123,7 @@ inp_split_multi_param_lines(struct line *card, int line_num)
 
                 param_end = x;
             }
-
+            tfree(array);
             // comment out current multi-param line
             *(card->li_line)   = '*';
             // insert new param lines immediately after current line
