@@ -4097,15 +4097,14 @@ inp_split_multi_param_lines(struct line *card, int line_num)
 
             struct line *param_end, *param_beg;
             char *equal_ptr, **array;
-            int i, counter = 0, startval = 2000;
+            int i, counter = 0;
 
             while ((equal_ptr = find_assignment(curr_line)) != NULL) {
                 counter++;
                 curr_line = equal_ptr + 1;
             }
-            if (startval < counter)
-                startval = counter + 1;
-            array = TMALLOC(char*, startval);
+
+            array = TMALLOC(char*, counter);
 
             if (counter <= 1)
                 continue;
