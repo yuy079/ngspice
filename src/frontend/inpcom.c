@@ -3182,10 +3182,6 @@ inp_expand_macros_in_func(struct function_env *env)
 
     for (f = env->functions; f ; f = f->next)
         f->macro = inp_expand_macro_in_str(env, f->macro);
-
-    for (f = env->functions; f ; f = f->next)
-        f->macro = inp_expand_macro_in_str(env, f->macro);
-
 }
 
 
