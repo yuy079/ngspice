@@ -4104,10 +4104,10 @@ inp_split_multi_param_lines(struct line *card, int line_num)
                 curr_line = equal_ptr + 1;
             }
 
-            array = TMALLOC(char*, counter);
-
             if (counter <= 1)
                 continue;
+
+            array = TMALLOC(char *, counter);
 
             // need to split multi param line
             curr_line = card->li_line;
