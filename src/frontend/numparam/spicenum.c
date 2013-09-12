@@ -30,6 +30,7 @@ Todo:
 
 
 void dump_symbols(tdico *dico_p);
+void nupa_deldicoS(void);
 
 char *nupa_inst_name;
 
@@ -482,9 +483,9 @@ nupa_del_dicoS(void)
     if(!dicoS)
         return;
 
-    for (i = dynmaxline; i >= 0; i--)
+    for (i = dynmaxline; i >= 0; i--) {
         dispose(dicoS->dynrefptr[i]);
-
+    }
     dispose(dicoS->dynrefptr);
     dispose(dicoS->dyncategory);
     dispose(dicoS->inst_name);

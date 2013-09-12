@@ -66,8 +66,7 @@ struct function_env
     } *functions;
 };
 
-struct func_temper
-{
+struct func_temper {
     char* funcname;
     int subckt_depth;
     int subckt_count;
@@ -1746,11 +1745,12 @@ comment_out_unused_subckt_models(struct line *start_card, int no_of_lines)
 }
 
 
-/* replace ternary operator 'conditional ? if : else' by function
- * 'ternary_fcn(conditional, if, else)'
- * in .param, .func, and .meas lines, if all is FALSE,
- * for all lines if all is TRUE
- */
+
+
+/* replace ternary operator 'conditional ? if : else' by function 
+  'ternary_fcn(conditional, if, else)' 
+   in .param, .func, and .meas lines, if all is FALSE, 
+   for all lines if all is TRUE */
 
 static char*
 inp_fix_ternary_operator_str(char *line, bool all)
@@ -3601,7 +3601,7 @@ get_number_terminals(char *c)
         /* find the first token with "off" or "=" in the line*/
         while ((i < 20) && (*c != '\0')) {
             char *inst = gettok_instance(&c);
-            strncpy(nam_buf, inst, sizeof(nam_buf) - 1);
+            strncpy(nam_buf, inst, 127);
             txfree(inst);
             if (strstr(nam_buf, "off") || strchr(nam_buf, '='))
                 break;
@@ -3816,11 +3816,11 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         if (in_control || curr_line[0] == '.' || curr_line[0] == '*')
             continue;
-
-/* FIXME: useless and potentially buggy code, when called from line 2225:
-   we check parameters like l={length}, but not complete lines: We just
-   live from the fact, that there are device names for all characters
-   of the alphabet */
+/* FIXME: useless and potentially buggy code, when called from line 2225: 
+   we check parameters like l={length}, but not complete lines: We just 
+   live from the fact, that there are device names for all characters 
+   of the alphabet 
+   */ 
         num_terminals = get_number_terminals(curr_line);
 
         if (num_terminals <= 0)
@@ -3828,10 +3828,9 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
         for (i = 0; i < num_params; i++) {
             str_ptr = curr_line;
-
-/* FIXME: useless and potentially buggy code, when called from line 2225:
+/* FIXME: useless and potentially buggy code, when called from line 2225: 
    we check parameters like
-   l={length}, but not complete lines: this will always lead to str_ptr = "" */
+   l={length}, but not complete lines: this will always lead to str_ptr = "" */ 
             for (j = 0; j < num_terminals+1; j++) {
                 str_ptr = skip_non_ws(str_ptr);
                 str_ptr = skip_ws(str_ptr);
@@ -3839,7 +3838,7 @@ inp_sort_params(struct line *start_card, struct line *end_card, struct line *car
 
 /* FIXME: useless and potentially buggy code: we check parameters like
    l={length}, but the following will not work for such a parameter string.
-   We just live from the fact that str_ptr = "". */
+   We just live from the fact that str_ptr = "". */ 
             while ((str_ptr = strstr(str_ptr, param_names[i])) != NULL) {
                 /* make sure actually have the parameter name */
                 char before = *(str_ptr-1);
@@ -5576,10 +5575,9 @@ inp_bsource_compat(struct line *card)
 
 
 /* Find all expression containing the keyword 'temper',
- * except for B lines and some other exclusions. Prepare
- * these expressions by calling inp_modify_exp() and return
- * a modified card->li_line
- */
+   except for B lines and some other exclusions. Prepare 
+   these expressions by calling inp_modify_exp() and return
+   a modified card->li_line */
 
 static void
 inp_temper_compat(struct line *card)
@@ -5589,12 +5587,10 @@ inp_temper_compat(struct line *card)
     char actchar;
 
     for (; card; card = card->li_next) {
-
-        char *new_str = NULL;
+        char *new_str = NULL; 
         char *curr_line = card->li_line;
-
-        if (curr_line == NULL)
-            continue;
+		if (curr_line == NULL)
+			continue;
         /* exclude any command inside .control ... .endc */
         if (ciprefix(".control", curr_line)) {
             skip_control ++;
@@ -5658,19 +5654,20 @@ inp_temper_compat(struct line *card)
 }
 
 
-/* lines containing expressions with keyword 'temper':
- * no parsing in numparam code, just replacement of parameters.
- * Parsing done with B source parser in function inp_parse_temper
- * in inp.c. Evaluation is the done with fcn inp_evaluate_temper
- * from inp.c, taking the actual temperature into account.
- * To achive this, do the following here:
- * Remove all '{' and '}' --> no parsing of equations in numparam
- * Place '{' and '}' directly around all potential parameters,
- * but skip function names like exp (search for 'exp(' to detect fcn name),
- * functions containing nodes like v(node), v(node1, node2), i(branch)
- * and other keywords like TEMPER. --> Only parameter replacement in numparam
- */
 
+
+/* lines containing expressions with keyword 'temper': 
+   no parsing in numparam code, just replacement of parameters.
+   Parsing done with B source parser in function inp_parse_temper 
+   in inp.c. Evaluation is the done with fcn inp_evaluate_temper
+   from inp.c, taking the actual temperature into account.
+   To achive this, do the following here:
+   Remove all '{' and '}' --> no parsing of equations in numparam
+   Place '{' and '}' directly around all potential parameters,
+   but skip function names like exp (search for 'exp(' to detect fcn name),
+   functions containing nodes like v(node), v(node1, node2), i(branch)
+   and other keywords like TEMPER. --> Only parameter replacement in numparam
+*/
 static char *
 inp_modify_exp(char* expr)
 {
@@ -6121,17 +6118,16 @@ inp_dot_if(struct line *card)
 
 
 /* Convert .param lines containing keyword 'temper' into .func lines:
- * .param xxx1 = 'temper + 25'  --->  .func xxx1() 'temper + 25'
- * Add info about the functions (name, subcircuit depth, number of
- * subckt) to linked list new_func.
- * Then scan new_func, for each xxx1 scan all lines of deck,
- * find all xxx1 and convert them to a function:
- * xxx1   --->  xxx1()
- * If this happens to be in another .param line, convert it to .func,
- * add info to end of new_func and continue scanning.
+   .param xxx1 = 'temper + 25'  --->  .func xxx1() 'temper + 25'
+   Add info about the functions (name, subcircuit depth, number of
+   subckt) to linked list new_func.
+   Then scan new_func, for each xxx1 scan all lines of deck,
+   find all xxx1 and convert them to a function:
+   xxx1   --->  xxx1()
+   If this happens to be in another .param line, convert it to .func, 
+   add info to end of new_func and continue scanning.
  */
-
-static void
+static void 
 inp_fix_temper_in_param(struct line *deck)
 {
     int skip_control = 0, subckt_depth = 0, j, *sub_count;
@@ -6344,13 +6340,13 @@ inp_fix_temper_in_param(struct line *deck)
 }
 
 
-/* enter function name, nested .subckt depths, and
- * number of .subckt at given level into struct new_func
- * and add line to deck
- */
 
+
+    /* enter function name, nested .subckt depths, and
+       number of .subckt at given level into struct new_func
+       and add line to deck */
 static void
-inp_new_func(char *funcname, char *funcbody, struct line *card, struct func_temper **new_func,
+inp_new_func(char *funcname, char *funcbody, struct line *card, struct func_temper **new_func, 
              int *sub_count, int subckt_depth)
 {
     struct func_temper *new_func_tmp;
@@ -6364,9 +6360,9 @@ inp_new_func(char *funcname, char *funcbody, struct line *card, struct func_temp
     new_func_tmp->subckt_count = sub_count[subckt_depth];
 
     /* Insert at the back */
-    if (*new_func == NULL) {
+    if (*new_func == NULL)
         *new_func = new_func_end = new_func_tmp;
-    } else {
+    else {
         new_func_end->next = new_func_tmp;
         new_func_end = new_func_tmp;
     }
@@ -6378,14 +6374,11 @@ inp_new_func(char *funcname, char *funcbody, struct line *card, struct func_temp
     *card->li_line = '*';
 }
 
-
-static void
-inp_rem_func(struct func_temper **beg_func)
+static void inp_rem_func(struct func_temper **beg_func)
 {
-    struct func_temper *next_func;
-
-    for(; *beg_func; *beg_func = next_func) {
-        next_func = (*beg_func)->next;
+    struct func_temper *beg_func_tmp;
+    for(; *beg_func; *beg_func = beg_func_tmp) {
+        beg_func_tmp = (*beg_func)->next;
         tfree((*beg_func)->funcname);
         tfree((*beg_func));
     }

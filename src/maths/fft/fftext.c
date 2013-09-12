@@ -17,11 +17,10 @@
 #include "ngspice/fftext.h"
 #include "ngspice/memory.h"
 
+#define eq(a,b)  (!strcmp((a), (b))) 
 #ifndef M_PI
-#define M_PI		3.141592653589793238462643383279502884197	// pi
+#define M_PI		3.141592653589793238462643383279502884197	// pi 
 #endif
-
-#define eq(a,b)  (!strcmp((a), (b)))
 
 // pointers to storage of Utbl's and  BRLow's
 static double *UtblArray[8*sizeof(int)] =

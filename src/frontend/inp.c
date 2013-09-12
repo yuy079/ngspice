@@ -61,9 +61,7 @@ void create_circbyline(char *line);
 void inp_evaluate_temper(void);
 
 /* structure used to save expression parse trees for .model and
- * device instance lines
- */
-
+   device instance lines */
 struct pt_temper {
     char *expression;
     wordlist *wl;
@@ -1440,9 +1438,8 @@ inp_parse_temper(struct line *card)
                     struct pt_temper *modtlisttmp = modtlist;
                     modtlist = modtlistnew;
                     modtlist->next = modtlisttmp;
-                } else {
+                } else
                     modtlist = modtlistnew;
-                }
             }
         } else { /* instance expression with 'temper' */
             struct pt_temper *devtlistnew = NULL;
@@ -1495,9 +1492,8 @@ inp_parse_temper(struct line *card)
                     struct pt_temper *devtlisttmp = devtlist;
                     devtlist = devtlistnew;
                     devtlist->next = devtlisttmp;
-                } else {
+                } else
                     devtlist = devtlistnew;
-                }
             }
         }
     }
@@ -1505,38 +1501,37 @@ inp_parse_temper(struct line *card)
     return error;
 }
 
+static void 
+inp_parse_temper_trees(void){
+    struct pt_temper *devmodtlist;
 
-static void
-inp_parse_temper_trees(void)
-{
-    struct pt_temper *d;
-
-    for(d = devtlist; d; d = d->next)
-        INPgetTree(&d->expression, &d->pt, ft_curckt->ci_ckt, NULL);
-
-    for(d = modtlist; d; d = d->next)
-        INPgetTree(&d->expression, &d->pt, ft_curckt->ci_ckt, NULL);
+    for(devmodtlist = devtlist; devmodtlist; devmodtlist = devmodtlist->next) {
+        INPgetTree(&devmodtlist->expression, &devmodtlist->pt, ft_curckt->ci_ckt, NULL);
+    }
+    for(devmodtlist = modtlist; devmodtlist; devmodtlist = devmodtlist->next) {
+        INPgetTree(&devmodtlist->expression, &devmodtlist->pt, ft_curckt->ci_ckt, NULL);
+    }
 }
 
 
 void
 inp_evaluate_temper(void)
 {
-    struct pt_temper *d;
-    double result;
+    struct pt_temper *devmodtlist;
+    double *result = TMALLOC(double, 1);
     char fts[128];
 
-    for(d = devtlist; d; d = d->next) {
-        IFeval((IFparseTree *) d->pt, 1e-12, &result, NULL, NULL);
-        sprintf(fts, "%g", result);
-        d->wlend->wl_word = copy(fts);
-        com_alter(d->wl);
+    for(devmodtlist = devtlist; devmodtlist; devmodtlist = devmodtlist->next) {
+        IFeval((IFparseTree *) devmodtlist->pt, 1e-12, result, NULL, NULL);
+        sprintf(fts,"%g", *result);
+        devmodtlist->wlend->wl_word = copy(fts);
+        com_alter(devmodtlist->wl);
     }
-
-    for(d = modtlist; d; d = d->next) {
-        IFeval((IFparseTree *) d->pt, 1e-12, &result, NULL, NULL);
-        sprintf(fts, "%g", result);
-        d->wlend->wl_word = copy(fts);
-        com_altermod(d->wl);
+    for(devmodtlist = modtlist; devmodtlist; devmodtlist = devmodtlist->next) {
+        IFeval((IFparseTree *) devmodtlist->pt, 1e-12, result, NULL, NULL);
+        sprintf(fts,"%g", *result);
+        devmodtlist->wlend->wl_word = copy(fts);
+        com_altermod(devmodtlist->wl);
     }
+    tfree(result);
 }

@@ -33,9 +33,8 @@ Author: 1985 Wayne A. Christopher, U. C. Berkeley CAD Group
 
 extern bool cx_degrees;
 extern void vec_new(struct dvec *d);
-
-bool doubledouble(double *, int, double *);
-
+bool
+doubledouble(double *, int, double *);
 
 void *
 cx_and(void *data1, void *data2, short int datatype1, short int datatype2, int length)
@@ -148,9 +147,7 @@ cx_not(void *data, short int type, int length, int *newlength, short int *newtyp
  * one). At the ends we just use what we have...  We have to detect
  * badness here too...
  *
- * Note that we pass arguments differently for this one cx_ function...
- */
-
+ * Note that we pass arguments differently for this one cx_ function...  */
 void *
 cx_interpolate(void *data, short int type, int length, int *newlength, short int *newtype, struct plot *pl, struct plot *newpl, int grouping)
 {
@@ -500,9 +497,9 @@ cx_group_delay(void *data, short int type, int length, int *newlength, short int
      */
     pl->pl_dvecs->v_type= SV_TIME;
 
-    return ((char *) group_delay);
-}
+   return ((char *) group_delay);
 
+}
 
 void *
 cx_fft(void *data, short int type, int length, int *newlength, short int *newtype, struct plot *pl, struct plot *newpl, int grouping)
@@ -552,9 +549,9 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 
         span = pl->pl_scale->v_realdata[length-1] - pl->pl_scale->v_realdata[0];
 
-        for (i = 0; i<fpts; i++)
+        for (i = 0; i<fpts; i++) {
             xscale[i] = i*1.0/span*(2*length)/size;
-
+        }
         for (i = 0; i<length; i++)
             time[i] = pl->pl_scale->v_realdata[i];
 
@@ -570,20 +567,19 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
             for (i = 0; i<fpts; i++)
                 xscale[i] = pl->pl_scale->v_realdata[i];
         }
-
-        for (i = 0; i < length; i++)
+        for (i = 0; i<length; i++) {
             time[i] = i*1.0/span*(2*length)/size;
-
+        }
         span = time[length-1] - time[0];
 
     } else {
 
         span = length;
 
-        for (i = 0; i < fpts; i++)
+        for (i = 0; i<fpts; i++) {
             xscale[i] = i;
-
-        for (i = 0; i < length; i++)
+        }
+        for (i = 0; i<length; i++)
             time[i] = i*1.0/span;
 
         span = time[length-1] - time[0];
@@ -627,10 +623,12 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
     printf("FFT: Time span: %g s, input length: %d, zero padding: %d\n", span, length, size/2-length);
     printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span*(2*length)/size, fpts);
 
-    for (i = 0; i < 2*length; i++)
+    for (i = 0; i < 2*length; i++) {
         reald[i] = reald[i] * win[i];
-    for (i = 2*length; i < size; i++)
+    }
+    for (i = 2*length; i < size; i++) {
         reald[i] = 0.0;
+    }
 
     fftInit(mm);
     rffts(reald, mm, 1);
@@ -719,8 +717,9 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 
         xscale = TMALLOC(double, tpts);
 
-        for (i = 0; i < tpts; i++)
+        for (i = 0; i<tpts; i++) {
             xscale[i] = i;
+        }
 
     }
 
@@ -772,8 +771,9 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     fftFree();
 
     scale = length;
-    for (i = 0; i < tpts; i++)
-        outdata[i] = reald[i] * scale/MAX(1e-03, win[i]); /* makes dewindowing sense? */
+    for (i = 0; i < tpts; i++) {
+        outdata[i] = reald[i] * scale/MAX(1e-03,win[i]); /* makes dewindowing sense? */
+    }
 
 done:
     tfree(reald);
@@ -795,13 +795,14 @@ doubledouble(double *indata, int len, double *outdata)
 
     outdata[0] = indata[0];
     j = 1;
-    for (i = 1; i < 2*len-1; i++)
-        if (i == 2*j) {
-            outdata[i] = indata[j];
-            j = j + 1;
-        } else {
-            outdata[i] = indata[j-1] + (indata[j]-indata[j-1])/2.0;
-        }
+    for (i = 1; i < 2*len-1; i++) {
+      if (i == 2*j) {
+        outdata[i] = indata[j];
+        j = j + 1;
+      } else {
+        outdata[i] = indata[j-1] + (indata[j]-indata[j-1])/2.0;
+      }
+    }
     outdata[2*len-1] = indata[len-1] + (indata[len-1]-outdata[2*len-2]);
 
     return (TRUE);

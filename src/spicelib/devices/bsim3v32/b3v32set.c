@@ -67,6 +67,7 @@ IFuid tmpName;
 
         /* If the user does not provide the model revision,
          * we always choose the most recent.
+         * Version is declared on the heap to allow freeing it.
          */
         if (!model->BSIM3v32versionGiven)
                 model->BSIM3v32version = copy("3.2.4");
