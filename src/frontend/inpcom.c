@@ -260,6 +260,7 @@ read_a_lib(char *y, int call_depth, char *dir_name)
             dir_name_flag = TRUE;
         }
 
+        /* lib points to a new entry in global lib array libraries[N_LIBRARIES] */
         lib = new_lib();
 
         lib->name = strdup(y);
@@ -280,6 +281,24 @@ read_a_lib(char *y, int call_depth, char *dir_name)
     return TRUE;
 }
 
+/* remove all library entries from global libraries[] */
+static void
+delete_libs(void)
+{
+    int i;
+    struct line *tmpdeck, *tmpdeck2;
+    for (i = 0; i < N_LIBRARIES; i++) {
+        if (libraries[i].name == NULL)
+            continue;
+        tfree(libraries[i].name);
+        tmpdeck = libraries[i].deck;
+        while (tmpdeck) { /* cannot use line_free_x(tmpdeck, TRUE); due to stack overflow */
+            tmpdeck2 = tmpdeck;
+            tmpdeck = tmpdeck->li_next;
+            line_free_x(tmpdeck2, FALSE);
+        }
+    }
+}
 
 static struct names *
 new_names(void)
@@ -550,7 +569,9 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
             *buffer = '*';      /* change .TITLE line to comment line */
         }
 
-        /* now handle .lib statements */
+        /* now handle .lib statements, 
+           but handle only old style .lib entries,
+           "real" library handling is done below in fcn expand_section_references() */
         if (ciprefix(".lib", buffer)) {
             if (inp_compat_mode == COMPATMODE_PS) {
                 /* compatibility mode,
@@ -563,7 +584,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
                 memcpy(buffer, ".inc", 4);
             }
 
-        }   /*  end of .lib handling  */
+        }   /*  end of old style .lib handling  */
 
         /* now handle .include statements */
         if (ciprefix(".include", buffer) || ciprefix(".inc", buffer)) {
@@ -676,10 +697,11 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
                  !ciprefix("load", buffer)
                 )
             {
+                /* lower case for all lines (exceptions see above!) */
                 for (s = buffer; *s && (*s != '\n'); s++)
                     *s = (char) tolower(*s);
             } else {
-                // exclude some commands to preserve filename case
+                /* exclude some commands to preserve filename case */
                 for (s = buffer; *s && (*s != '\n'); s++)
                     ;
             }
@@ -2511,6 +2533,7 @@ expand_section_references(struct line *c, int call_depth, char *dir_name)
             }
         }
     }
+    delete_libs();
 }
 
 
