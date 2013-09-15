@@ -38,8 +38,10 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
             case LTRA_MOD_RG:
                 dummy1 = model->LTRAlength * sqrt(model->LTRAresist *
                                                   model->LTRAconduct);
+
                 dummy2 = exp(-dummy1);
                 dummy1 = exp(dummy1);   /* LTRA warning: may overflow! */
+
                 model->LTRAcoshlrootGR = 0.5 * (dummy1 + dummy2);
 
                 if (model->LTRAconduct <= 1.0e-10) {    /* hack! */
@@ -59,6 +61,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                    dummy2) * sqrt(model->LTRAconduct /
                                                                   model->LTRAresist);
                 }
+
                 break;
 
             case LTRA_MOD_RC:
@@ -72,6 +75,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
             default:
                 return (E_BADPARM);
             }                           /* switch */
+
         } else {
 
             if ((ckt->CKTmode & MODEINITTRAN) ||
@@ -96,7 +100,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                      * set up lists of values of the functions at the necessary
                      * timepoints.
                      */
-
 
                     /*
                      * set up coefficient lists LTRAh1dashCoeffs, LTRAh2Coeffs,
@@ -170,6 +173,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                            t1, t2, t3, &qf1, &qf2, &qf3);
 
                         }
+
                         if ((i == 0) || (model->LTRAhowToInterp ==
                                          LTRA_MOD_MIXEDINTERP) || (model->LTRAhowToInterp
                                                                    == LTRA_MOD_LININTERP)) {    /* linear interpolation */
@@ -189,7 +193,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                      * timepoints.
                      */
 
-
                     /*
                      * set up coefficient lists LTRAh1dashCoeffs, LTRAh2Coeffs,
                      * LTRAh3dashCoeffs for current timepoint
@@ -199,7 +202,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                      * Note: many function evaluations are saved by doing the following
                      * all together in one procedure
                      */
-
 
                     (void)
                         LTRArcCoeffsSetup(&(model->LTRAh1dashFirstCoeff),
@@ -214,11 +216,13 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                 case LTRA_MOD_RG:
                     break;
+
                 default:
                     return (E_BADPARM);
                 }
             }
         }
+
         /* loop through all the instances of the model */
         for (here = model->LTRAinstances; here != NULL;
              here = here->LTRAnextInstance) {
@@ -270,11 +274,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                     *(here->LTRAibr1Ibr2Ptr) += 1.0;
                     *(here->LTRAibr2Pos1Ptr) += 1.0;
                     *(here->LTRAibr2Pos2Ptr) -= 1.0;
+
                     *(here->LTRAibr2Ibr1Ptr) -= model->LTRAresist * model->LTRAlength;
 
                     here->LTRAinput1 = here->LTRAinput2 = 0.0;
                     break;
-
 
                 default:
                     return (E_BADPARM);
@@ -293,10 +297,12 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         here->LTRAinitVolt2 =
                             (*(ckt->CKTrhsOld + here->LTRAposNode2)
                              - *(ckt->CKTrhsOld + here->LTRAnegNode2));
+
                         here->LTRAinitCur1 = *(ckt->CKTrhsOld + here->LTRAbrEq1);
                         here->LTRAinitCur2 = *(ckt->CKTrhsOld + here->LTRAbrEq2);
                     }
                 }
+
                 /* matrix loading - done every time LTRAload is called */
                 switch (model->LTRAspecialCase) {
 
@@ -367,8 +373,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                     /* end loading for convolution parts' first terms */
 
-
                     break;
+
                 default:
                     return (E_BADPARM);
                 }
@@ -402,11 +408,12 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 max = MAX(*(here->LTRAv1 + isaved - 1),
                                           *(here->LTRAv1 + isaved));
                                 max = MAX(max, *(here->LTRAv1 + isaved + 1));
+
                                 min = MIN(*(here->LTRAv1 + isaved - 1),
                                           *(here->LTRAv1 + isaved));
                                 min = MIN(min, *(here->LTRAv1 + isaved + 1));
-
                             }
+
                             if ((model->LTRAhowToInterp ==
                                  LTRA_MOD_LININTERP) || (isaved == 0) ||
                                 ((isaved != 0) &&
@@ -415,7 +422,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                   (model->LTRAhowToInterp ==
                                    LTRA_MOD_MIXEDINTERP)) &&
                                  ((v1d > max) || (v1d < min)))) {
-
 
                                 if ((isaved != 0) &&
                                     (model->LTRAhowToInterp ==
@@ -437,6 +443,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 }
 
                             }
+
                             if ((isaved != 0) &&
                                 ((model->LTRAhowToInterp ==
                                   LTRA_MOD_QUADINTERP) ||
@@ -450,11 +457,12 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 max = MAX(*(here->LTRAi1 + isaved - 1),
                                           *(here->LTRAi1 + isaved));
                                 max = MAX(max, *(here->LTRAi1 + isaved + 1));
+
                                 min = MIN(*(here->LTRAi1 + isaved - 1),
                                           *(here->LTRAi1 + isaved));
                                 min = MIN(min, *(here->LTRAi1 + isaved + 1));
-
                             }
+
                             if ((model->LTRAhowToInterp ==
                                  LTRA_MOD_LININTERP) || (isaved == 0) ||
                                 ((isaved != 0) &&
@@ -463,7 +471,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                   (model->LTRAhowToInterp ==
                                    LTRA_MOD_MIXEDINTERP)) &&
                                  ((i1d > max) || (i1d < min)))) {
-
 
                                 if ((isaved != 0) &&
                                     (model->LTRAhowToInterp ==
@@ -485,6 +492,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 }
 
                             }
+
                             if ((isaved != 0) &&
                                 ((model->LTRAhowToInterp ==
                                   LTRA_MOD_QUADINTERP) ||
@@ -498,11 +506,12 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 max = MAX(*(here->LTRAv2 + isaved - 1),
                                           *(here->LTRAv2 + isaved));
                                 max = MAX(max, *(here->LTRAv2 + isaved + 1));
+
                                 min = MIN(*(here->LTRAv2 + isaved - 1),
                                           *(here->LTRAv2 + isaved));
                                 min = MIN(min, *(here->LTRAv2 + isaved + 1));
-
                             }
+
                             if ((model->LTRAhowToInterp ==
                                  LTRA_MOD_LININTERP) || (isaved == 0) ||
                                 ((isaved != 0) &&
@@ -511,7 +520,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                   (model->LTRAhowToInterp ==
                                    LTRA_MOD_MIXEDINTERP)) &&
                                  ((v2d > max) || (v2d < min)))) {
-
 
                                 if ((isaved != 0) &&
                                     (model->LTRAhowToInterp ==
@@ -533,6 +541,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 }
 
                             }
+
                             if ((isaved != 0) &&
                                 ((model->LTRAhowToInterp ==
                                   LTRA_MOD_QUADINTERP) ||
@@ -546,11 +555,12 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 max = MAX(*(here->LTRAi2 + isaved - 1),
                                           *(here->LTRAi2 + isaved));
                                 max = MAX(max, *(here->LTRAi2 + isaved + 1));
+
                                 min = MIN(*(here->LTRAi2 + isaved - 1),
                                           *(here->LTRAi2 + isaved));
                                 min = MIN(min, *(here->LTRAi2 + isaved + 1));
-
                             }
+
                             if ((model->LTRAhowToInterp ==
                                  LTRA_MOD_LININTERP) || (isaved == 0) ||
                                 ((isaved != 0) &&
@@ -559,7 +569,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                   (model->LTRAhowToInterp ==
                                    LTRA_MOD_MIXEDINTERP)) &&
                                  ((i2d > max) || (i2d < min)))) {
-
 
                                 if ((isaved != 0) &&
                                     (model->LTRAhowToInterp ==
@@ -601,6 +610,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         /* the matrix has already been loaded above */
 
                         dummy1 = dummy2 = 0.0;
+
                         for (i = /* model->LTRAh1dashIndex */ ckt->CKTtimeIndex; i > 0; i--) {
                             if (*(model->LTRAh1dashCoeffs + i) != 0.0) {
                                 dummy1 += *(model->LTRAh1dashCoeffs
@@ -630,6 +640,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         /* convolution of h2 with i2 and i1 */
 
                         dummy1 = dummy2 = 0.0;
+
                         if (tdover) {
 
                             /* the term for ckt->CKTtime - model->LTRAtd */
@@ -642,7 +653,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                             /* the rest of the convolution */
 
                             for (i = /* model->LTRAh2Index */ model->LTRAauxIndex; i > 0; i--) {
-
                                 if (*(model->LTRAh2Coeffs + i) != 0.0) {
                                     dummy1 += *(model->LTRAh2Coeffs
                                                 + i) * (*(here->LTRAi2 + i) -
@@ -652,7 +662,9 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                         here->LTRAinitCur1);
                                 }
                             }
+
                         }
+
                         /* the initial-condition terms */
 
                         dummy1 += here->LTRAinitCur2 *
@@ -670,6 +682,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         /* the term for ckt->CKTtime - model->LTRAtd */
 
                         dummy1 = dummy2 = 0.0;
+
                         if (tdover) {
 
                             dummy1 = (v2d - here->LTRAinitVolt2) *
@@ -689,7 +702,9 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                         here->LTRAinitVolt1);
                                 }
                             }
+
                         }
+
                         /* the initial-condition terms */
 
                         dummy1 += here->LTRAinitVolt2 *
@@ -728,7 +743,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                     case LTRA_MOD_RC:
 
-
                         /* begin convolution parts */
 
                         /* convolution of h1dash with v1 and v2 */
@@ -736,6 +750,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         dummy1 = 0.0;
                         dummy2 = 0.0;
+
                         for (i = ckt->CKTtimeIndex; i > 0; i--) {
                             if (*(model->LTRAh1dashCoeffs + i) != 0.0) {
                                 dummy1 += *(model->LTRAh1dashCoeffs
@@ -768,7 +783,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         here->LTRAinput2 -= dummy2;
 
                         /* end convolution of h1dash with v1 and v2 */
-
 
                         /* convolution of h2 with i2 and i1 */
 
@@ -804,9 +818,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         /* convolution of h3dash with v2 and v1 */
 
-
                         dummy1 = dummy2 = 0.0;
-
 
                         for (i = ckt->CKTtimeIndex; i > 0; i--) {
                             if (*(model->LTRAh3dashCoeffs + i) != 0.0) {
@@ -850,5 +862,6 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
             }
         }
     }
+
     return (OK);
 }
