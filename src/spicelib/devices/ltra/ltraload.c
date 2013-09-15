@@ -136,15 +136,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         if (i == ckt->CKTtimeIndex)
                             i--;
 
-/*#ifdef LTRADEBUG*/
                         if (i == -1) {
 #ifdef LTRADEBUG
                             printf("LTRAload: mistake: cannot find delayed timepoint\n");
-                            return E_INTERN;
-                            /*}*/
-#else
-                            return E_INTERN;
 #endif
+                            return E_INTERN;
                         }
 
                         isaved = i;
