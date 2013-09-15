@@ -157,9 +157,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         }
 
-                        if ((isaved == 0) ||
-                            (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                            (model->LTRAhowToInterp == LTRA_MOD_LININTERP)) {    /* linear interpolation */
+                        if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                              (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {    /* linear interpolation */
 
                             LTRAlinInterp(ckt->CKTtime - model->LTRAtd, t2, t3, &lf2, &lf3);
                         }
