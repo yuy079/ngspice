@@ -503,7 +503,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 if (lininterp_ok) {
 
-                                    i2d = LIN(here->LTRAi2, isaved, lf2, lf3);
+                                    i2d = LIN(here->LTRAi2, isaved, lf2, lf3); /* possible not init ! */
 
                                 } else {
 #ifdef LTRADEBUG
