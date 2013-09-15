@@ -394,7 +394,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv1 [isaved + 1]);
                             }
 
-                            if (!((model->LTRAhowToInterp != LTRA_MOD_LININTERP) && (isaved != 0)) ||
+                            if (!((isaved != 0) && (model->LTRAhowToInterp != LTRA_MOD_LININTERP)) ||
                                 ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v1d > max) || (v1d < min)))) {
@@ -433,7 +433,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi1 [isaved + 1]);
                             }
 
-                            if (!((model->LTRAhowToInterp != LTRA_MOD_LININTERP) && (isaved != 0)) ||
+                            if (!((isaved != 0) && (model->LTRAhowToInterp != LTRA_MOD_LININTERP)) ||
                                 ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i1d > max) || (i1d < min)))) {
@@ -472,7 +472,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv2 [isaved + 1]);
                             }
 
-                            if (!((model->LTRAhowToInterp != LTRA_MOD_LININTERP) && (isaved != 0)) ||
+                            if (!((isaved != 0) && (model->LTRAhowToInterp != LTRA_MOD_LININTERP)) ||
                                 ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v2d > max) || (v2d < min)))) {
@@ -511,7 +511,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi2 [isaved + 1]);
                             }
 
-                            if (!((model->LTRAhowToInterp != LTRA_MOD_LININTERP) && (isaved != 0)) ||
+                            if (!((isaved != 0) && (model->LTRAhowToInterp != LTRA_MOD_LININTERP)) ||
                                 ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i2d > max) || (i2d < min)))) {
