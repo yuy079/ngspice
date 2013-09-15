@@ -11,6 +11,10 @@ Author: 1990 Jaijeet S. Roychowdhury
 #include "ngspice/suffix.h"
 
 
+#define LIN(v,idx,f1,f2)  ((v) [(idx)] * (f1) + (v) [(idx)+1] * (f2))
+#define QUAD(v,idx,f1,f2,f3) ((v) [(idx)-1] * (f1) + (v) [(idx)] * (f2) + (v) [(idx)+1] * (f3))
+
+
 static inline double
 sinhc(double x)
 {
@@ -400,9 +404,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             if (quadinterp_ok) {
 
-                                v1d = here->LTRAv1 [isaved - 1] * qf1
-                                    + here->LTRAv1 [isaved]     * qf2
-                                    + here->LTRAv1 [isaved + 1] * qf3;
+                                v1d = QUAD(here->LTRAv1, isaved, qf1, qf2, qf3);
 
                                 max = MAX(here->LTRAv1 [isaved - 1],
                                           here->LTRAv1 [isaved]);
@@ -417,8 +419,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 if (lininterp_ok) {
 
-                                    v1d = here->LTRAv1 [isaved]     * lf2
-                                        + here->LTRAv1 [isaved + 1] * lf3;
+                                    v1d = LIN(here->LTRAv1, isaved, lf2, lf3);
 
                                 } else {
 #ifdef LTRADEBUG
@@ -436,9 +437,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             if (quadinterp_ok) {
 
-                                i1d = here->LTRAi1 [isaved - 1] * qf1
-                                    + here->LTRAi1 [isaved]     * qf2
-                                    + here->LTRAi1 [isaved + 1] * qf3;
+                                i1d = QUAD(here->LTRAi1, isaved, qf1, qf2, qf3);
 
                                 max = MAX(here->LTRAi1 [isaved - 1],
                                           here->LTRAi1 [isaved]);
@@ -453,8 +452,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 if (lininterp_ok) {
 
-                                    i1d = here->LTRAi1 [isaved]     * lf2
-                                        + here->LTRAi1 [isaved + 1] * lf3;
+                                    i1d = LIN(here->LTRAi1, isaved, lf2, lf3);
 
                                 } else {
 #ifdef LTRADEBUG
@@ -472,9 +470,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             if (quadinterp_ok) {
 
-                                v2d = here->LTRAv2 [isaved - 1] * qf1
-                                    + here->LTRAv2 [isaved]     * qf2
-                                    + here->LTRAv2 [isaved + 1] * qf3;
+                                v2d = QUAD(here->LTRAv2, isaved, qf1, qf2, qf3);
 
                                 max = MAX(here->LTRAv2 [isaved - 1],
                                           here->LTRAv2 [isaved]);
@@ -489,8 +485,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 if (lininterp_ok) {
 
-                                    v2d = here->LTRAv2 [isaved]     * lf2
-                                        + here->LTRAv2 [isaved + 1] * lf3;
+                                    v2d = LIN(here->LTRAv2, isaved, lf2, lf3);
 
                                 } else {
 #ifdef LTRADEBUG
@@ -508,9 +503,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             if (quadinterp_ok) {
 
-                                i2d = here->LTRAi2 [isaved - 1] * qf1
-                                    + here->LTRAi2 [isaved]     * qf2
-                                    + here->LTRAi2 [isaved + 1] * qf3;
+                                i2d = QUAD(here->LTRAi2, isaved, qf1, qf2, qf3);
 
                                 max = MAX(here->LTRAi2 [isaved - 1],
                                           here->LTRAi2 [isaved]);
@@ -525,8 +518,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 if (lininterp_ok) {
 
-                                    i2d = here->LTRAi2 [isaved]     * lf2
-                                        + here->LTRAi2 [isaved + 1] * lf3;
+                                    i2d = LIN(here->LTRAi2, isaved, lf2, lf3);
 
                                 } else {
 #ifdef LTRADEBUG
