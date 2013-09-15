@@ -377,7 +377,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                 if (ckt->CKTmode & (MODEINITPRED | MODEINITTRAN)) {
 
-                    double v1d, v2d, i1d, i2d;
+                    double v1d = 0.0, v2d = 0.0, i1d = 0.0, i2d = 0.0;
                     double max, min;
 
                     here->LTRAinput1 = 0.0;
