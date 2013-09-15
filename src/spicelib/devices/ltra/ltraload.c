@@ -577,7 +577,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
 		  i2d = *(here->LTRAi2 + isaved) * lf2
 		      + *(here->LTRAi2 + isaved + 1) *
-		      lf3;
+		      lf3;      /* possible not init */
 		}
 
 	      }
