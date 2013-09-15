@@ -30,37 +30,31 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
     double max = 0.0, min = 0.0;
 
     /* loop through all the transmission line models */
-    for (; model != NULL; model = model->LTRAnextModel) {
+    for (; model; model = model->LTRAnextModel) {
 
         if (ckt->CKTmode & MODEDC) {
             switch (model->LTRAspecialCase) {
 
             case LTRA_MOD_RG:
-                dummy1 = model->LTRAlength * sqrt(model->LTRAresist *
-                                                  model->LTRAconduct);
+                dummy1 = model->LTRAlength *
+                    sqrt(model->LTRAresist * model->LTRAconduct);
 
                 dummy2 = exp(-dummy1);
-                dummy1 = exp(dummy1);   /* LTRA warning: may overflow! */
+                dummy1 = exp( dummy1);   /* LTRA warning: may overflow! */
 
                 model->LTRAcoshlrootGR = 0.5 * (dummy1 + dummy2);
 
-                if (model->LTRAconduct <= 1.0e-10) {    /* hack! */
-                    model->LTRArRsLrGRorG = model->LTRAlength *
-                        model->LTRAresist;
-                } else {
-                    model->LTRArRsLrGRorG = 0.5 * (dummy1 -
-                                                   dummy2) * sqrt(model->LTRAresist /
-                                                                  model->LTRAconduct);
-                }
+                if (model->LTRAconduct <= 1.0e-10)      /* hack! */
+                    model->LTRArRsLrGRorG = model->LTRAlength * model->LTRAresist;
+                else
+                    model->LTRArRsLrGRorG = 0.5 * (dummy1 - dummy2) *
+                        sqrt(model->LTRAresist / model->LTRAconduct);
 
-                if (model->LTRAresist <= 1.0e-10) {     /* hack! */
-                    model->LTRArGsLrGRorR = model->LTRAlength *
-                        model->LTRAconduct;
-                } else {
-                    model->LTRArGsLrGRorR = 0.5 * (dummy1 -
-                                                   dummy2) * sqrt(model->LTRAconduct /
-                                                                  model->LTRAresist);
-                }
+                if (model->LTRAresist <= 1.0e-10)       /* hack! */
+                    model->LTRArGsLrGRorR = model->LTRAlength * model->LTRAconduct;
+                else
+                    model->LTRArGsLrGRorR = 0.5 * (dummy1 - dummy2) *
+                        sqrt(model->LTRAconduct / model->LTRAresist);
 
                 break;
 
@@ -85,11 +79,10 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                 case LTRA_MOD_RLC:
                 case LTRA_MOD_LC:
 
-                    if (ckt->CKTtime > model->LTRAtd) {
+                    if (ckt->CKTtime > model->LTRAtd)
                         tdover = 1;
-                    } else {
+                    else
                         tdover = 0;
-                    }
                 default:
                     break;
                 }
@@ -131,12 +124,9 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                     /* setting up the coefficients for interpolation */
                     if (tdover) {               /* serious hack -fix! */
-                        for (i = ckt->CKTtimeIndex; i >= 0; i--) {
-                            if (*(ckt->CKTtimePoints + i) <
-                                ckt->CKTtime - model->LTRAtd) {
+                        for (i = ckt->CKTtimeIndex; i >= 0; i--)
+                            if (ckt->CKTtimePoints [i] < ckt->CKTtime - model->LTRAtd)
                                 break;
-                            }
-                        }
 #ifdef LTRADEBUG
                         if (i == ckt->CKTtimeIndex) {
                             fprintf(stdout, "LTRAload: Warning: timestep larger than delay of line\n");
@@ -148,7 +138,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                             i--;
 
 /*#ifdef LTRADEBUG*/
-                        if ((i == -1)) {
+                        if (i == -1) {
 #ifdef LTRADEBUG
                             printf("LTRAload: mistake: cannot find delayed timepoint\n");
                             return E_INTERN;
@@ -160,26 +150,23 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         isaved = i;
 
-                        t2 = *(ckt->CKTtimePoints + i);
-                        t3 = *(ckt->CKTtimePoints + i + 1);
+                        t2 = ckt->CKTtimePoints [i];
+                        t3 = ckt->CKTtimePoints [i + 1];
 
-                        if ((i != 0) && ((model->LTRAhowToInterp ==
-                                          LTRA_MOD_QUADINTERP) || (model->LTRAhowToInterp ==
-                                                                   LTRA_MOD_MIXEDINTERP))) {
+                        if ((i != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                         (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
                             /* quadratic interpolation */
-                            t1 = *(ckt->CKTtimePoints + i - 1);
+                            t1 = ckt->CKTtimePoints [i - 1];
 
-                            LTRAquadInterp(ckt->CKTtime - model->LTRAtd,
-                                           t1, t2, t3, &qf1, &qf2, &qf3);
+                            LTRAquadInterp(ckt->CKTtime - model->LTRAtd, t1, t2, t3, &qf1, &qf2, &qf3);
 
                         }
 
-                        if ((i == 0) || (model->LTRAhowToInterp ==
-                                         LTRA_MOD_MIXEDINTERP) || (model->LTRAhowToInterp
-                                                                   == LTRA_MOD_LININTERP)) {    /* linear interpolation */
+                        if ((i == 0) ||
+                            (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                            (model->LTRAhowToInterp == LTRA_MOD_LININTERP)) {    /* linear interpolation */
 
-                            LTRAlinInterp(ckt->CKTtime - model->LTRAtd,
-                                          t2, t3, &lf2, &lf3);
+                            LTRAlinInterp(ckt->CKTtime - model->LTRAtd, t2, t3, &lf2, &lf3);
                         }
                     }
                     /* interpolation coefficients set-up */
@@ -224,8 +211,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
         }
 
         /* loop through all the instances of the model */
-        for (here = model->LTRAinstances; here != NULL;
-             here = here->LTRAnextInstance) {
+        for (here = model->LTRAinstances; here; here = here->LTRAnextInstance) {
 
             if ((ckt->CKTmode & MODEDC) ||
                 (model->LTRAspecialCase == LTRA_MOD_RG)) {
@@ -288,20 +274,19 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                 /* all cases other than DC or the RG case */
 
                 /* first timepoint after zero */
-                if (ckt->CKTmode & MODEINITTRAN) {
+                if (ckt->CKTmode & MODEINITTRAN)
                     if (!(ckt->CKTmode & MODEUIC)) {
 
                         here->LTRAinitVolt1 =
-                            (*(ckt->CKTrhsOld + here->LTRAposNode1)
-                             - *(ckt->CKTrhsOld + here->LTRAnegNode1));
+                            ckt->CKTrhsOld [here->LTRAposNode1] -
+                            ckt->CKTrhsOld [here->LTRAnegNode1];
                         here->LTRAinitVolt2 =
-                            (*(ckt->CKTrhsOld + here->LTRAposNode2)
-                             - *(ckt->CKTrhsOld + here->LTRAnegNode2));
+                            ckt->CKTrhsOld [here->LTRAposNode2] -
+                            ckt->CKTrhsOld [here->LTRAnegNode2];
 
-                        here->LTRAinitCur1 = *(ckt->CKTrhsOld + here->LTRAbrEq1);
-                        here->LTRAinitCur2 = *(ckt->CKTrhsOld + here->LTRAbrEq2);
+                        here->LTRAinitCur1 = ckt->CKTrhsOld [here->LTRAbrEq1];
+                        here->LTRAinitCur2 = ckt->CKTrhsOld [here->LTRAbrEq2];
                     }
-                }
 
                 /* matrix loading - done every time LTRAload is called */
                 switch (model->LTRAspecialCase) {
@@ -395,198 +380,158 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         if (tdover) {
                             /* have to interpolate values */
 
-                            if ((isaved != 0) &&
-                                ((model->LTRAhowToInterp ==
-                                  LTRA_MOD_QUADINTERP) ||
-                                 (model->LTRAhowToInterp ==
-                                  LTRA_MOD_MIXEDINTERP))) {
+                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
 
-                                v1d = *(here->LTRAv1 + isaved - 1) * qf1
-                                    + *(here->LTRAv1 + isaved) * qf2
-                                    + *(here->LTRAv1 + isaved + 1) * qf3;
+                                v1d = here->LTRAv1 [isaved - 1] * qf1
+                                    + here->LTRAv1 [isaved]     * qf2
+                                    + here->LTRAv1 [isaved + 1] * qf3;
 
-                                max = MAX(*(here->LTRAv1 + isaved - 1),
-                                          *(here->LTRAv1 + isaved));
-                                max = MAX(max, *(here->LTRAv1 + isaved + 1));
+                                max = MAX(here->LTRAv1 [isaved - 1],
+                                          here->LTRAv1 [isaved]);
+                                max = MAX(max, here->LTRAv1 [isaved + 1]);
 
-                                min = MIN(*(here->LTRAv1 + isaved - 1),
-                                          *(here->LTRAv1 + isaved));
-                                min = MIN(min, *(here->LTRAv1 + isaved + 1));
+                                min = MIN(here->LTRAv1 [isaved - 1],
+                                          here->LTRAv1 [isaved]);
+                                min = MIN(min, here->LTRAv1 [isaved + 1]);
                             }
 
-                            if ((model->LTRAhowToInterp ==
-                                 LTRA_MOD_LININTERP) || (isaved == 0) ||
-                                ((isaved != 0) &&
-                                 ((model->LTRAhowToInterp ==
-                                   LTRA_MOD_QUADINTERP) ||
-                                  (model->LTRAhowToInterp ==
-                                   LTRA_MOD_MIXEDINTERP)) &&
+                            if ((model->LTRAhowToInterp == LTRA_MOD_LININTERP) || (isaved == 0) ||
+                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v1d > max) || (v1d < min)))) {
 
-                                if ((isaved != 0) &&
-                                    (model->LTRAhowToInterp ==
-                                     LTRA_MOD_QUADINTERP)) {
+                                if ((isaved != 0) && (model->LTRAhowToInterp == LTRA_MOD_QUADINTERP)) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated v1 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
-                                            *(here->LTRAv1 + isaved - 1),
-                                            *(here->LTRAv1 + isaved),
-                                            *(here->LTRAv1 + isaved + 1),
+                                            here->LTRAv1 [isaved - 1],
+                                            here->LTRAv1 [isaved],
+                                            here->LTRAv1 [isaved + 1],
                                             v1d);
                                     fprintf(stdout, "   timepoints are: %1.8g %1.8g %1.8g %1.8g\n", t1, t2, t3, ckt->CKTtime - model->LTRAtd);
 #endif
                                 } else {
 
-                                    v1d = *(here->LTRAv1 + isaved) * lf2
-                                        + *(here->LTRAv1 + isaved + 1) *
-                                        lf3;
+                                    v1d = here->LTRAv1 [isaved]     * lf2
+                                        + here->LTRAv1 [isaved + 1] * lf3;
                                 }
 
                             }
 
-                            if ((isaved != 0) &&
-                                ((model->LTRAhowToInterp ==
-                                  LTRA_MOD_QUADINTERP) ||
-                                 (model->LTRAhowToInterp ==
-                                  LTRA_MOD_MIXEDINTERP))) {
+                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
 
-                                i1d = *(here->LTRAi1 + isaved - 1) * qf1
-                                    + *(here->LTRAi1 + isaved) * qf2
-                                    + *(here->LTRAi1 + isaved + 1) * qf3;
+                                i1d = here->LTRAi1 [isaved - 1] * qf1
+                                    + here->LTRAi1 [isaved]     * qf2
+                                    + here->LTRAi1 [isaved + 1] * qf3;
 
-                                max = MAX(*(here->LTRAi1 + isaved - 1),
-                                          *(here->LTRAi1 + isaved));
-                                max = MAX(max, *(here->LTRAi1 + isaved + 1));
+                                max = MAX(here->LTRAi1 [isaved - 1],
+                                          here->LTRAi1 [isaved]);
+                                max = MAX(max, here->LTRAi1 [isaved + 1]);
 
-                                min = MIN(*(here->LTRAi1 + isaved - 1),
-                                          *(here->LTRAi1 + isaved));
-                                min = MIN(min, *(here->LTRAi1 + isaved + 1));
+                                min = MIN(here->LTRAi1 [isaved - 1],
+                                          here->LTRAi1 [isaved]);
+                                min = MIN(min, here->LTRAi1 [isaved + 1]);
                             }
 
-                            if ((model->LTRAhowToInterp ==
-                                 LTRA_MOD_LININTERP) || (isaved == 0) ||
-                                ((isaved != 0) &&
-                                 ((model->LTRAhowToInterp ==
-                                   LTRA_MOD_QUADINTERP) ||
-                                  (model->LTRAhowToInterp ==
-                                   LTRA_MOD_MIXEDINTERP)) &&
+                            if ((model->LTRAhowToInterp == LTRA_MOD_LININTERP) || (isaved == 0) ||
+                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i1d > max) || (i1d < min)))) {
 
-                                if ((isaved != 0) &&
-                                    (model->LTRAhowToInterp ==
-                                     LTRA_MOD_QUADINTERP)) {
+                                if ((isaved != 0) && (model->LTRAhowToInterp == LTRA_MOD_QUADINTERP)) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated i1 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
-                                            *(here->LTRAi1 + isaved - 1),
-                                            *(here->LTRAi1 + isaved),
-                                            *(here->LTRAi1 + isaved + 1),
+                                            here->LTRAi1 [isaved - 1],
+                                            here->LTRAi1 [isaved],
+                                            here->LTRAi1 [isaved + 1],
                                             i1d);
                                     fprintf(stdout, "   timepoints are: %1.8g %1.8g %1.8g %1.8g\n", t1, t2, t3, ckt->CKTtime - model->LTRAtd);
 #endif
                                 } else {
 
-                                    i1d = *(here->LTRAi1 + isaved) * lf2
-                                        + *(here->LTRAi1 + isaved + 1) *
-                                        lf3;
+                                    i1d = here->LTRAi1 [isaved]     * lf2
+                                        + here->LTRAi1 [isaved + 1] * lf3;
                                 }
 
                             }
 
-                            if ((isaved != 0) &&
-                                ((model->LTRAhowToInterp ==
-                                  LTRA_MOD_QUADINTERP) ||
-                                 (model->LTRAhowToInterp ==
-                                  LTRA_MOD_MIXEDINTERP))) {
+                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
 
-                                v2d = *(here->LTRAv2 + isaved - 1) * qf1
-                                    + *(here->LTRAv2 + isaved) * qf2
-                                    + *(here->LTRAv2 + isaved + 1) * qf3;
+                                v2d = here->LTRAv2 [isaved - 1] * qf1
+                                    + here->LTRAv2 [isaved]     * qf2
+                                    + here->LTRAv2 [isaved + 1] * qf3;
 
-                                max = MAX(*(here->LTRAv2 + isaved - 1),
-                                          *(here->LTRAv2 + isaved));
-                                max = MAX(max, *(here->LTRAv2 + isaved + 1));
+                                max = MAX(here->LTRAv2 [isaved - 1],
+                                          here->LTRAv2 [isaved]);
+                                max = MAX(max, here->LTRAv2 [isaved + 1]);
 
-                                min = MIN(*(here->LTRAv2 + isaved - 1),
-                                          *(here->LTRAv2 + isaved));
-                                min = MIN(min, *(here->LTRAv2 + isaved + 1));
+                                min = MIN(here->LTRAv2 [isaved - 1],
+                                          here->LTRAv2 [isaved]);
+                                min = MIN(min, here->LTRAv2 [isaved + 1]);
                             }
 
-                            if ((model->LTRAhowToInterp ==
-                                 LTRA_MOD_LININTERP) || (isaved == 0) ||
-                                ((isaved != 0) &&
-                                 ((model->LTRAhowToInterp ==
-                                   LTRA_MOD_QUADINTERP) ||
-                                  (model->LTRAhowToInterp ==
-                                   LTRA_MOD_MIXEDINTERP)) &&
+                            if ((model->LTRAhowToInterp == LTRA_MOD_LININTERP) || (isaved == 0) ||
+                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v2d > max) || (v2d < min)))) {
 
-                                if ((isaved != 0) &&
-                                    (model->LTRAhowToInterp ==
-                                     LTRA_MOD_QUADINTERP)) {
+                                if ((isaved != 0) && (model->LTRAhowToInterp == LTRA_MOD_QUADINTERP)) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated v2 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
-                                            *(here->LTRAv2 + isaved - 1),
-                                            *(here->LTRAv2 + isaved),
-                                            *(here->LTRAv2 + isaved + 1),
+                                            here->LTRAv2 [isaved - 1],
+                                            here->LTRAv2 [isaved],
+                                            here->LTRAv2 [isaved + 1],
                                             v2d);
                                     fprintf(stdout, "   timepoints are: %1.8g %1.8g %1.8g %1.8g\n", t1, t2, t3, ckt->CKTtime - model->LTRAtd);
 #endif
                                 } else {
 
-                                    v2d = *(here->LTRAv2 + isaved) * lf2
-                                        + *(here->LTRAv2 + isaved + 1) *
-                                        lf3;
+                                    v2d = here->LTRAv2 [isaved]     * lf2
+                                        + here->LTRAv2 [isaved + 1] * lf3;
                                 }
 
                             }
 
-                            if ((isaved != 0) &&
-                                ((model->LTRAhowToInterp ==
-                                  LTRA_MOD_QUADINTERP) ||
-                                 (model->LTRAhowToInterp ==
-                                  LTRA_MOD_MIXEDINTERP))) {
+                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
 
-                                i2d = *(here->LTRAi2 + isaved - 1) * qf1
-                                    + *(here->LTRAi2 + isaved) * qf2
-                                    + *(here->LTRAi2 + isaved + 1) * qf3;
+                                i2d = here->LTRAi2 [isaved - 1] * qf1
+                                    + here->LTRAi2 [isaved]     * qf2
+                                    + here->LTRAi2 [isaved + 1] * qf3;
 
-                                max = MAX(*(here->LTRAi2 + isaved - 1),
-                                          *(here->LTRAi2 + isaved));
-                                max = MAX(max, *(here->LTRAi2 + isaved + 1));
+                                max = MAX(here->LTRAi2 [isaved - 1],
+                                          here->LTRAi2 [isaved]);
+                                max = MAX(max, here->LTRAi2 [isaved + 1]);
 
-                                min = MIN(*(here->LTRAi2 + isaved - 1),
-                                          *(here->LTRAi2 + isaved));
-                                min = MIN(min, *(here->LTRAi2 + isaved + 1));
+                                min = MIN(here->LTRAi2 [isaved - 1],
+                                          here->LTRAi2 [isaved]);
+                                min = MIN(min, here->LTRAi2 [isaved + 1]);
                             }
 
-                            if ((model->LTRAhowToInterp ==
-                                 LTRA_MOD_LININTERP) || (isaved == 0) ||
-                                ((isaved != 0) &&
-                                 ((model->LTRAhowToInterp ==
-                                   LTRA_MOD_QUADINTERP) ||
-                                  (model->LTRAhowToInterp ==
-                                   LTRA_MOD_MIXEDINTERP)) &&
+                            if ((model->LTRAhowToInterp == LTRA_MOD_LININTERP) || (isaved == 0) ||
+                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i2d > max) || (i2d < min)))) {
 
-                                if ((isaved != 0) &&
-                                    (model->LTRAhowToInterp ==
-                                     LTRA_MOD_QUADINTERP)) {
+                                if ((isaved != 0) && (model->LTRAhowToInterp == LTRA_MOD_QUADINTERP)) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated i2 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
-                                            *(here->LTRAi2 + isaved - 1),
-                                            *(here->LTRAi2 + isaved),
-                                            *(here->LTRAi2 + isaved + 1),
+                                            here->LTRAi2 [isaved - 1],
+                                            here->LTRAi2 [isaved],
+                                            here->LTRAi2 [isaved + 1],
                                             i2d);
                                     fprintf(stdout, "   timepoints are: %1.8g %1.8g %1.8g %1.8g\n", t1, t2, t3, ckt->CKTtime - model->LTRAtd);
 #endif
                                 } else {
 
-                                    i2d = *(here->LTRAi2 + isaved) * lf2
-                                        + *(here->LTRAi2 + isaved + 1) *
-		      lf3;
+                                    i2d = here->LTRAi2 [isaved]     * lf2
+                                        + here->LTRAi2 [isaved + 1] * lf3;
                                 }
 
                             }
@@ -611,26 +556,19 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         dummy1 = dummy2 = 0.0;
 
-                        for (i = /* model->LTRAh1dashIndex */ ckt->CKTtimeIndex; i > 0; i--) {
-                            if (*(model->LTRAh1dashCoeffs + i) != 0.0) {
-                                dummy1 += *(model->LTRAh1dashCoeffs
-                                            + i) * (*(here->LTRAv1 + i) -
-                                                    here->LTRAinitVolt1);
-                                dummy2 += *(model->LTRAh1dashCoeffs
-                                            + i) * (*(here->LTRAv2 + i) -
-                                                    here->LTRAinitVolt2);
+                        for (i = /* model->LTRAh1dashIndex */ ckt->CKTtimeIndex; i > 0; i--)
+                            if (model->LTRAh1dashCoeffs [i] != 0.0) {
+                                dummy1 += model->LTRAh1dashCoeffs [i] *
+                                    (here->LTRAv1 [i] - here->LTRAinitVolt1);
+                                dummy2 += model->LTRAh1dashCoeffs [i] *
+                                    (here->LTRAv2 [i] - here->LTRAinitVolt2);
                             }
-                        }
 
-                        dummy1 += here->LTRAinitVolt1 *
-                            model->LTRAintH1dash;
-                        dummy2 += here->LTRAinitVolt2 *
-                            model->LTRAintH1dash;
+                        dummy1 += here->LTRAinitVolt1 * model->LTRAintH1dash;
+                        dummy2 += here->LTRAinitVolt2 * model->LTRAintH1dash;
 
-                        dummy1 -= here->LTRAinitVolt1 *
-                            model->LTRAh1dashFirstCoeff;
-                        dummy2 -= here->LTRAinitVolt2 *
-                            model->LTRAh1dashFirstCoeff;
+                        dummy1 -= here->LTRAinitVolt1 * model->LTRAh1dashFirstCoeff;
+                        dummy2 -= here->LTRAinitVolt2 * model->LTRAh1dashFirstCoeff;
 
                         here->LTRAinput1 -= dummy1 * model->LTRAadmit;
                         here->LTRAinput2 -= dummy2 * model->LTRAadmit;
@@ -652,25 +590,20 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             /* the rest of the convolution */
 
-                            for (i = /* model->LTRAh2Index */ model->LTRAauxIndex; i > 0; i--) {
-                                if (*(model->LTRAh2Coeffs + i) != 0.0) {
-                                    dummy1 += *(model->LTRAh2Coeffs
-                                                + i) * (*(here->LTRAi2 + i) -
-                                                        here->LTRAinitCur2);
-                                    dummy2 += *(model->LTRAh2Coeffs
-                                                + i) * (*(here->LTRAi1 + i) -
-                                                        here->LTRAinitCur1);
+                            for (i = /* model->LTRAh2Index */ model->LTRAauxIndex; i > 0; i--)
+                                if (model->LTRAh2Coeffs [i] != 0.0) {
+                                    dummy1 += model->LTRAh2Coeffs [i] *
+                                        (here->LTRAi2 [i] - here->LTRAinitCur2);
+                                    dummy2 += model->LTRAh2Coeffs [i] *
+                                        (here->LTRAi1 [i] - here->LTRAinitCur1);
                                 }
-                            }
 
                         }
 
                         /* the initial-condition terms */
 
-                        dummy1 += here->LTRAinitCur2 *
-                            model->LTRAintH2;
-                        dummy2 += here->LTRAinitCur1 *
-                            model->LTRAintH2;
+                        dummy1 += here->LTRAinitCur2 * model->LTRAintH2;
+                        dummy2 += here->LTRAinitCur1 * model->LTRAintH2;
 
                         here->LTRAinput1 += dummy1;
                         here->LTRAinput2 += dummy2;
@@ -692,25 +625,20 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             /* the rest of the convolution */
 
-                            for (i = /* model->LTRAh3dashIndex */ model->LTRAauxIndex; i > 0; i--) {
-                                if (*(model->LTRAh3dashCoeffs + i) != 0.0) {
-                                    dummy1 += *(model->LTRAh3dashCoeffs
-                                                + i) * (*(here->LTRAv2 + i) -
-                                                        here->LTRAinitVolt2);
-                                    dummy2 += *(model->LTRAh3dashCoeffs
-                                                + i) * (*(here->LTRAv1 + i) -
-                                                        here->LTRAinitVolt1);
+                            for (i = /* model->LTRAh3dashIndex */ model->LTRAauxIndex; i > 0; i--)
+                                if (model->LTRAh3dashCoeffs [i] != 0.0) {
+                                    dummy1 += model->LTRAh3dashCoeffs [i] *
+                                        (here->LTRAv2 [i] - here->LTRAinitVolt2);
+                                    dummy2 += model->LTRAh3dashCoeffs [i] *
+                                        (here->LTRAv1 [i] - here->LTRAinitVolt1);
                                 }
-                            }
 
                         }
 
                         /* the initial-condition terms */
 
-                        dummy1 += here->LTRAinitVolt2 *
-                            model->LTRAintH3dash;
-                        dummy2 += here->LTRAinitVolt1 *
-                            model->LTRAintH3dash;
+                        dummy1 += here->LTRAinitVolt2 * model->LTRAintH3dash;
+                        dummy2 += here->LTRAinitVolt1 * model->LTRAintH3dash;
 
                         here->LTRAinput1 += model->LTRAadmit * dummy1;
                         here->LTRAinput2 += model->LTRAadmit * dummy2;
@@ -723,11 +651,9 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         if (!tdover) {
 
                             here->LTRAinput1 += model->LTRAattenuation *
-                                (here->LTRAinitVolt2 * model->LTRAadmit +
-                                 here->LTRAinitCur2);
+                                (here->LTRAinitVolt2 * model->LTRAadmit + here->LTRAinitCur2);
                             here->LTRAinput2 += model->LTRAattenuation *
-                                (here->LTRAinitVolt1 * model->LTRAadmit +
-                                 here->LTRAinitCur1);
+                                (here->LTRAinitVolt1 * model->LTRAadmit + here->LTRAinitCur1);
 
                         } else {
 
@@ -751,33 +677,26 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         dummy1 = 0.0;
                         dummy2 = 0.0;
 
-                        for (i = ckt->CKTtimeIndex; i > 0; i--) {
-                            if (*(model->LTRAh1dashCoeffs + i) != 0.0) {
-                                dummy1 += *(model->LTRAh1dashCoeffs
-                                            + i) * (*(here->LTRAv1 + i) -
-                                                    here->LTRAinitVolt1);
-                                dummy2 += *(model->LTRAh1dashCoeffs
-                                            + i) * (*(here->LTRAv2 + i) -
-                                                    here->LTRAinitVolt2);
+                        for (i = ckt->CKTtimeIndex; i > 0; i--)
+                            if (model->LTRAh1dashCoeffs [i] != 0.0) {
+                                dummy1 += model->LTRAh1dashCoeffs [i] *
+                                    (here->LTRAv1 [i] - here->LTRAinitVolt1);
+                                dummy2 += model->LTRAh1dashCoeffs [i] *
+                                    (here->LTRAv2 [i] - here->LTRAinitVolt2);
                             }
-                        }
 
                         /* the initial condition terms */
 
-                        dummy1 += here->LTRAinitVolt1 *
-                            model->LTRAintH1dash;
-                        dummy2 += here->LTRAinitVolt2 *
-                            model->LTRAintH1dash;
+                        dummy1 += here->LTRAinitVolt1 * model->LTRAintH1dash;
+                        dummy2 += here->LTRAinitVolt2 * model->LTRAintH1dash;
 
                         /*
                          * the constant contributed by the init condition and the latest
                          * timepoint
                          */
 
-                        dummy1 -= here->LTRAinitVolt1 *
-                            model->LTRAh1dashFirstCoeff;
-                        dummy2 -= here->LTRAinitVolt2 *
-                            model->LTRAh1dashFirstCoeff;
+                        dummy1 -= here->LTRAinitVolt1 * model->LTRAh1dashFirstCoeff;
+                        dummy2 -= here->LTRAinitVolt2 * model->LTRAh1dashFirstCoeff;
 
                         here->LTRAinput1 -= dummy1;
                         here->LTRAinput2 -= dummy2;
@@ -788,28 +707,21 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         dummy1 = dummy2 = 0.0;
 
-                        for (i = ckt->CKTtimeIndex; i > 0; i--) {
-                            if (*(model->LTRAh2Coeffs + i) != 0.0) {
-                                dummy1 += *(model->LTRAh2Coeffs
-                                            + i) * (*(here->LTRAi2 + i) -
-                                                    here->LTRAinitCur2);
-                                dummy2 += *(model->LTRAh2Coeffs
-                                            + i) * (*(here->LTRAi1 + i) -
-                                                    here->LTRAinitCur1);
+                        for (i = ckt->CKTtimeIndex; i > 0; i--)
+                            if (model->LTRAh2Coeffs [i] != 0.0) {
+                                dummy1 += model->LTRAh2Coeffs [i] *
+                                    (here->LTRAi2 [i] - here->LTRAinitCur2);
+                                dummy2 += model->LTRAh2Coeffs [i] *
+                                    (here->LTRAi1 [i] - here->LTRAinitCur1);
                             }
-                        }
 
                         /* the initial-condition terms */
 
-                        dummy1 += here->LTRAinitCur2 *
-                            model->LTRAintH2;
-                        dummy2 += here->LTRAinitCur1 *
-                            model->LTRAintH2;
+                        dummy1 += here->LTRAinitCur2 * model->LTRAintH2;
+                        dummy2 += here->LTRAinitCur1 * model->LTRAintH2;
 
-                        dummy1 -= here->LTRAinitCur2 *
-                            model->LTRAh2FirstCoeff;
-                        dummy2 -= here->LTRAinitCur1 *
-                            model->LTRAh2FirstCoeff;
+                        dummy1 -= here->LTRAinitCur2 * model->LTRAh2FirstCoeff;
+                        dummy2 -= here->LTRAinitCur1 * model->LTRAh2FirstCoeff;
 
                         here->LTRAinput1 += dummy1;
                         here->LTRAinput2 += dummy2;
@@ -820,28 +732,21 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         dummy1 = dummy2 = 0.0;
 
-                        for (i = ckt->CKTtimeIndex; i > 0; i--) {
-                            if (*(model->LTRAh3dashCoeffs + i) != 0.0) {
-                                dummy1 += *(model->LTRAh3dashCoeffs
-                                            + i) * (*(here->LTRAv2 + i) -
-                                                    here->LTRAinitVolt2);
-                                dummy2 += *(model->LTRAh3dashCoeffs
-                                            + i) * (*(here->LTRAv1 + i) -
-                                                    here->LTRAinitVolt1);
+                        for (i = ckt->CKTtimeIndex; i > 0; i--)
+                            if (model->LTRAh3dashCoeffs [i] != 0.0) {
+                                dummy1 += model->LTRAh3dashCoeffs [i] *
+                                    (here->LTRAv2 [i] - here->LTRAinitVolt2);
+                                dummy2 += model->LTRAh3dashCoeffs [i] *
+                                    (here->LTRAv1 [i] - here->LTRAinitVolt1);
                             }
-                        }
 
                         /* the initial-condition terms */
 
-                        dummy1 += here->LTRAinitVolt2 *
-                            model->LTRAintH3dash;
-                        dummy2 += here->LTRAinitVolt1 *
-                            model->LTRAintH3dash;
+                        dummy1 += here->LTRAinitVolt2 * model->LTRAintH3dash;
+                        dummy2 += here->LTRAinitVolt1 * model->LTRAintH3dash;
 
-                        dummy1 -= here->LTRAinitVolt2 *
-                            model->LTRAh3dashFirstCoeff;
-                        dummy2 -= here->LTRAinitVolt1 *
-                            model->LTRAh3dashFirstCoeff;
+                        dummy1 -= here->LTRAinitVolt2 * model->LTRAh3dashFirstCoeff;
+                        dummy2 -= here->LTRAinitVolt1 * model->LTRAh3dashFirstCoeff;
 
                         here->LTRAinput1 += dummy1;
                         here->LTRAinput2 += dummy2;
@@ -856,8 +761,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                 }
                 /* load the RHS - done every time this routine is called */
 
-                *(ckt->CKTrhs + here->LTRAbrEq1) += here->LTRAinput1;
-                *(ckt->CKTrhs + here->LTRAbrEq2) += here->LTRAinput2;
+                ckt->CKTrhs [here->LTRAbrEq1] += here->LTRAinput1;
+                ckt->CKTrhs [here->LTRAbrEq2] += here->LTRAinput2;
 
             }
         }
