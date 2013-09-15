@@ -153,8 +153,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         t2 = ckt->CKTtimePoints [i];
                         t3 = ckt->CKTtimePoints [i + 1];
 
-                        if ((i != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                         (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                        if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                              (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
                             /* quadratic interpolation */
                             t1 = ckt->CKTtimePoints [i - 1];
 
@@ -162,7 +162,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         }
 
-                        if ((i == 0) ||
+                        if ((isaved == 0) ||
                             (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
                             (model->LTRAhowToInterp == LTRA_MOD_LININTERP)) {    /* linear interpolation */
 
