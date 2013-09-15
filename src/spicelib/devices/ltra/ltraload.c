@@ -10,6 +10,27 @@ Author: 1990 Jaijeet S. Roychowdhury
 #include "ngspice/sperror.h"
 #include "ngspice/suffix.h"
 
+
+static inline double
+sinhc(double x)
+{
+    /*
+     *  for x=0 the taylor series of sinh(x)/x is
+     *    1 + x^2/3! + ...
+     *
+     *  for |x| < 1e-10
+     *    we will be approximately around 1 +- < 2^-69
+     *
+     *  round(log2((1e-10)^2 / 6!)) = -69
+     */
+
+    if (fabs(x) > 1e-10)
+        return sinh(x) / x;
+    else
+        return 1.0;
+}
+
+
 int
 LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 /*
@@ -38,22 +59,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                 double dummy1;
 
-                dummy1 = model->LTRAlength *
-                    sqrt(model->LTRAresist * model->LTRAconduct);
+                dummy1 = model->LTRAlength * sqrt(model->LTRAresist * model->LTRAconduct);
 
                 model->LTRAcoshlrootGR = cosh(dummy1);
-
-                if (model->LTRAconduct <= 1.0e-10)      /* hack! */
-                    model->LTRArRsLrGRorG = model->LTRAlength * model->LTRAresist;
-                else
-                    model->LTRArRsLrGRorG = sinh(dummy1)/dummy1 *
-                        model->LTRAlength * model->LTRAresist;
-
-                if (model->LTRAresist <= 1.0e-10)       /* hack! */
-                    model->LTRArGsLrGRorR = model->LTRAlength * model->LTRAconduct;
-                else
-                    model->LTRArGsLrGRorR = sinh(dummy1)/dummy1 *
-                        model->LTRAlength * model->LTRAconduct;
+                model->LTRArRsLrGRorG  = sinhc(dummy1) * model->LTRAlength * model->LTRAresist;
+                model->LTRArGsLrGRorR  = sinhc(dummy1) * model->LTRAlength * model->LTRAconduct;
 
                 break;
             }
