@@ -18,26 +18,26 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
  */
 {
     LTRAmodel *model = (LTRAmodel *) inModel;
-    LTRAinstance *here;
-    double t1=0.0, t2=0.0, t3=0.0;
-    double qf1=0.0, qf2=0.0, qf3=0.0;
-    double lf2, lf3;
-    double v1d = 0.0, v2d = 0.0, i1d = 0.0, i2d = 0.0;
-    double dummy1=0.0, dummy2=0.0;
-    int isaved = 0;
-    unsigned tdover = 0;
-    int i;
-    double max = 0.0, min = 0.0;
 
     /* loop through all the transmission line models */
     for (; model; model = model->LTRAnextModel) {
 
+        LTRAinstance *here;
+        double t1, t2, t3;
+        double qf1, qf2, qf3;
+        double lf2, lf3;
         int lininterp_ok = 0, quadinterp_ok = 0;
+        int isaved = 0;
+        unsigned tdover = 0;
+        int i;
 
         if (ckt->CKTmode & MODEDC) {
             switch (model->LTRAspecialCase) {
 
-            case LTRA_MOD_RG:
+            case LTRA_MOD_RG: {
+
+                double dummy1, dummy2;
+
                 dummy1 = model->LTRAlength *
                     sqrt(model->LTRAresist * model->LTRAconduct);
 
@@ -59,6 +59,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         sqrt(model->LTRAconduct / model->LTRAresist);
 
                 break;
+            }
 
             case LTRA_MOD_RC:
             case LTRA_MOD_LC:
@@ -214,6 +215,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
         /* loop through all the instances of the model */
         for (here = model->LTRAinstances; here; here = here->LTRAnextInstance) {
+
+            double dummy1, dummy2;
 
             if ((ckt->CKTmode & MODEDC) ||
                 (model->LTRAspecialCase == LTRA_MOD_RG)) {
@@ -373,6 +376,9 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                 /* set up LTRAinputs - to go into the RHS of the circuit equations */
 
                 if (ckt->CKTmode & (MODEINITPRED | MODEINITTRAN)) {
+
+                    double v1d, v2d, i1d, i2d;
+                    double max, min;
 
                     here->LTRAinput1 = 0.0;
                     here->LTRAinput2 = 0.0;
