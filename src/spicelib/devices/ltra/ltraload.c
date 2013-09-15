@@ -400,9 +400,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv1 [isaved + 1]);
                             }
 
-                            if (!quadinterp_ok ||
-                                (quadinterp_ok &&
-                                 ((v1d > max) || (v1d < min)))) {
+                            if (!quadinterp_ok || (v1d > max) || (v1d < min)) {
 
                                 if (lininterp_ok) {
 
@@ -438,9 +436,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi1 [isaved + 1]);
                             }
 
-                            if (!quadinterp_ok ||
-                                (quadinterp_ok &&
-                                 ((i1d > max) || (i1d < min)))) {
+                            if (!quadinterp_ok || (i1d > max) || (i1d < min)) {
 
                                 if (lininterp_ok) {
 
@@ -476,9 +472,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv2 [isaved + 1]);
                             }
 
-                            if (!quadinterp_ok ||
-                                (quadinterp_ok &&
-                                 ((v2d > max) || (v2d < min)))) {
+                            if (!quadinterp_ok || (v2d > max) || (v2d < min)) {
 
                                 if (lininterp_ok) {
 
@@ -514,9 +508,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi2 [isaved + 1]);
                             }
 
-                            if (!quadinterp_ok ||
-                                (quadinterp_ok &&
-                                 ((i2d > max) || (i2d < min)))) {
+                            if (!quadinterp_ok || (i2d > max) || (i2d < min)) {
 
                                 if (lininterp_ok) {
 
