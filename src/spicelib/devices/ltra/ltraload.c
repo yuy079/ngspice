@@ -400,7 +400,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v1d > max) || (v1d < min)))) {
 
-                                if (!((isaved == 0) || (model->LTRAhowToInterp != LTRA_MOD_QUADINTERP))) {
+                                if (!((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                                        (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated v1 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
@@ -440,7 +441,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i1d > max) || (i1d < min)))) {
 
-                                if (!((isaved == 0) || (model->LTRAhowToInterp != LTRA_MOD_QUADINTERP))) {
+                                if (!((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                                        (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated i1 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
@@ -480,7 +482,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((v2d > max) || (v2d < min)))) {
 
-                                if (!((isaved == 0) || (model->LTRAhowToInterp != LTRA_MOD_QUADINTERP))) {
+                                if (!((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                                        (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated v2 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
@@ -520,7 +523,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
                                  ((i2d > max) || (i2d < min)))) {
 
-                                if (!((isaved == 0) || (model->LTRAhowToInterp != LTRA_MOD_QUADINTERP))) {
+                                if (!((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                                        (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))) {
 #ifdef LTRADEBUG
                                     fprintf(stdout, "LTRAload: warning: interpolated i2 is out of range after timepoint %d\n", ckt->CKTtimeIndex);
                                     fprintf(stdout, "   values: %1.8g %1.8g %1.8g; interpolated: %1.8g\n",
