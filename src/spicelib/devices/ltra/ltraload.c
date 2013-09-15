@@ -145,11 +145,18 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         isaved = i;
 
+#define lininterp_ok \
+                        ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) || \
+                                           (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))
+
+#define quadinterp_ok \
+                        ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) || \
+                                           (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)))
+
                         t2 = ckt->CKTtimePoints [i];
                         t3 = ckt->CKTtimePoints [i + 1];
 
-                        if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                              (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                        if (quadinterp_ok) {
                             /* quadratic interpolation */
                             t1 = ckt->CKTtimePoints [i - 1];
 
@@ -157,8 +164,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         }
 
-                        if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                                              (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {    /* linear interpolation */
+                        if (lininterp_ok) {    /* linear interpolation */
 
                             LTRAlinInterp(ckt->CKTtime - model->LTRAtd, t2, t3, &lf2, &lf3);
                         }
@@ -377,8 +383,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         if (tdover) {
                             /* have to interpolate values */
 
-                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                            if (quadinterp_ok) {
 
                                 v1d = here->LTRAv1 [isaved - 1] * qf1
                                     + here->LTRAv1 [isaved]     * qf2
@@ -393,14 +398,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv1 [isaved + 1]);
                             }
 
-                            if (!((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) ||
-                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
+                            if (!quadinterp_ok ||
+                                (quadinterp_ok &&
                                  ((v1d > max) || (v1d < min)))) {
 
-                                if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                                                      (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {
+                                if (lininterp_ok) {
 
                                     v1d = here->LTRAv1 [isaved]     * lf2
                                         + here->LTRAv1 [isaved + 1] * lf3;
@@ -419,8 +421,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             }
 
-                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                            if (quadinterp_ok) {
 
                                 i1d = here->LTRAi1 [isaved - 1] * qf1
                                     + here->LTRAi1 [isaved]     * qf2
@@ -435,14 +436,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi1 [isaved + 1]);
                             }
 
-                            if (!((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) ||
-                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
+                            if (!quadinterp_ok ||
+                                (quadinterp_ok &&
                                  ((i1d > max) || (i1d < min)))) {
 
-                                if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                                                      (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {
+                                if (lininterp_ok) {
 
                                     i1d = here->LTRAi1 [isaved]     * lf2
                                         + here->LTRAi1 [isaved + 1] * lf3;
@@ -461,8 +459,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             }
 
-                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                            if (quadinterp_ok) {
 
                                 v2d = here->LTRAv2 [isaved - 1] * qf1
                                     + here->LTRAv2 [isaved]     * qf2
@@ -477,14 +474,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAv2 [isaved + 1]);
                             }
 
-                            if (!((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) ||
-                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
+                            if (!quadinterp_ok ||
+                                (quadinterp_ok &&
                                  ((v2d > max) || (v2d < min)))) {
 
-                                if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                                                      (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {
+                                if (lininterp_ok) {
 
                                     v2d = here->LTRAv2 [isaved]     * lf2
                                         + here->LTRAv2 [isaved + 1] * lf3;
@@ -503,8 +497,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                             }
 
-                            if ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                  (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) {
+                            if (quadinterp_ok) {
 
                                 i2d = here->LTRAi2 [isaved - 1] * qf1
                                     + here->LTRAi2 [isaved]     * qf2
@@ -519,14 +512,11 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                                 min = MIN(min, here->LTRAi2 [isaved + 1]);
                             }
 
-                            if (!((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                    (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP))) ||
-                                ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
-                                                   (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)) &&
+                            if (!quadinterp_ok ||
+                                (quadinterp_ok &&
                                  ((i2d > max) || (i2d < min)))) {
 
-                                if ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
-                                                      (model->LTRAhowToInterp == LTRA_MOD_LININTERP))) {
+                                if (lininterp_ok) {
 
                                     i2d = here->LTRAi2 [isaved]     * lf2
                                         + here->LTRAi2 [isaved + 1] * lf3;
