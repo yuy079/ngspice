@@ -14,6 +14,11 @@ Author: 1990 Jaijeet S. Roychowdhury
 #define LIN(v,idx,f1,f2)  ((v) [(idx)] * (f1) + (v) [(idx)+1] * (f2))
 #define QUAD(v,idx,f1,f2,f3) ((v) [(idx)-1] * (f1) + (v) [(idx)] * (f2) + (v) [(idx)+1] * (f3))
 
+//#define MAX3(v,idx)  (MAX(MAX((v) [(idx)-1], (v) [(idx)]), (v) [(idx)+1]))
+//#define MIN3(v,idx)  (MIN(MIN((v) [(idx)-1], (v) [(idx)]), (v) [(idx)+1]))
+#define MAX3(v,idx)  (max = MAX((v) [(idx)-1], (v) [(idx)]), MAX(max, (v) [(idx)+1]))
+#define MIN3(v,idx)  (min = MIN((v) [(idx)-1], (v) [(idx)]), MIN(min, (v) [(idx)+1]))
+
 
 static inline double
 sinhc(double x)
@@ -406,13 +411,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 v1d = QUAD(here->LTRAv1, isaved, qf1, qf2, qf3);
 
-                                max = MAX(here->LTRAv1 [isaved - 1],
-                                          here->LTRAv1 [isaved]);
-                                max = MAX(max, here->LTRAv1 [isaved + 1]);
-
-                                min = MIN(here->LTRAv1 [isaved - 1],
-                                          here->LTRAv1 [isaved]);
-                                min = MIN(min, here->LTRAv1 [isaved + 1]);
+                                max = MAX3(here->LTRAv1, isaved);
+                                min = MIN3(here->LTRAv1, isaved);
                             }
 
                             if (!quadinterp_ok || (v1d > max) || (v1d < min)) {
@@ -439,13 +439,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 i1d = QUAD(here->LTRAi1, isaved, qf1, qf2, qf3);
 
-                                max = MAX(here->LTRAi1 [isaved - 1],
-                                          here->LTRAi1 [isaved]);
-                                max = MAX(max, here->LTRAi1 [isaved + 1]);
-
-                                min = MIN(here->LTRAi1 [isaved - 1],
-                                          here->LTRAi1 [isaved]);
-                                min = MIN(min, here->LTRAi1 [isaved + 1]);
+                                max = MAX3(here->LTRAi1, isaved);
+                                min = MIN3(here->LTRAi1, isaved);
                             }
 
                             if (!quadinterp_ok || (i1d > max) || (i1d < min)) {
@@ -472,13 +467,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 v2d = QUAD(here->LTRAv2, isaved, qf1, qf2, qf3);
 
-                                max = MAX(here->LTRAv2 [isaved - 1],
-                                          here->LTRAv2 [isaved]);
-                                max = MAX(max, here->LTRAv2 [isaved + 1]);
-
-                                min = MIN(here->LTRAv2 [isaved - 1],
-                                          here->LTRAv2 [isaved]);
-                                min = MIN(min, here->LTRAv2 [isaved + 1]);
+                                max = MAX3(here->LTRAv2, isaved);
+                                min = MIN3(here->LTRAv2, isaved);
                             }
 
                             if (!quadinterp_ok || (v2d > max) || (v2d < min)) {
@@ -505,13 +495,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                                 i2d = QUAD(here->LTRAi2, isaved, qf1, qf2, qf3);
 
-                                max = MAX(here->LTRAi2 [isaved - 1],
-                                          here->LTRAi2 [isaved]);
-                                max = MAX(max, here->LTRAi2 [isaved + 1]);
-
-                                min = MIN(here->LTRAi2 [isaved - 1],
-                                          here->LTRAi2 [isaved]);
-                                min = MIN(min, here->LTRAi2 [isaved + 1]);
+                                max = MAX3(here->LTRAi2, isaved);
+                                min = MIN3(here->LTRAi2, isaved);
                             }
 
                             if (!quadinterp_ok || (i2d > max) || (i2d < min)) {
