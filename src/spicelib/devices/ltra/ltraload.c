@@ -72,8 +72,7 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
         } else {
 
-            if ((ckt->CKTmode & MODEINITTRAN) ||
-                (ckt->CKTmode & MODEINITPRED)) {
+            if (ckt->CKTmode & (MODEINITPRED | MODEINITTRAN)) {
                 switch (model->LTRAspecialCase) {
 
                 case LTRA_MOD_RLC:
