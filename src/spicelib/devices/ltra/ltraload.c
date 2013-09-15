@@ -36,26 +36,23 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
             case LTRA_MOD_RG: {
 
-                double dummy1, dummy2;
+                double dummy1;
 
                 dummy1 = model->LTRAlength *
                     sqrt(model->LTRAresist * model->LTRAconduct);
 
-                dummy2 = exp(-dummy1);
-                dummy1 = exp( dummy1);   /* LTRA warning: may overflow! */
-
-                model->LTRAcoshlrootGR = 0.5 * (dummy1 + dummy2);
+                model->LTRAcoshlrootGR = cosh(dummy1);
 
                 if (model->LTRAconduct <= 1.0e-10)      /* hack! */
                     model->LTRArRsLrGRorG = model->LTRAlength * model->LTRAresist;
                 else
-                    model->LTRArRsLrGRorG = 0.5 * (dummy1 - dummy2) *
+                    model->LTRArRsLrGRorG = sinh(dummy1) *
                         sqrt(model->LTRAresist / model->LTRAconduct);
 
                 if (model->LTRAresist <= 1.0e-10)       /* hack! */
                     model->LTRArGsLrGRorR = model->LTRAlength * model->LTRAconduct;
                 else
-                    model->LTRArGsLrGRorR = 0.5 * (dummy1 - dummy2) *
+                    model->LTRArGsLrGRorR = sinh(dummy1) *
                         sqrt(model->LTRAconduct / model->LTRAresist);
 
                 break;
