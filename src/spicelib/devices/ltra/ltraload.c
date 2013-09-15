@@ -32,6 +32,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
     /* loop through all the transmission line models */
     for (; model; model = model->LTRAnextModel) {
 
+        int lininterp_ok = 0, quadinterp_ok = 0;
+
         if (ckt->CKTmode & MODEDC) {
             switch (model->LTRAspecialCase) {
 
@@ -145,13 +147,13 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         isaved = i;
 
-#define lininterp_ok \
-                        ((isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) || \
-                                           (model->LTRAhowToInterp == LTRA_MOD_LININTERP)))
+                        lininterp_ok =
+                            (isaved == 0) || ((model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP) ||
+                                              (model->LTRAhowToInterp == LTRA_MOD_LININTERP));
 
-#define quadinterp_ok \
-                        ((isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) || \
-                                           (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP)))
+                        quadinterp_ok =
+                            (isaved != 0) && ((model->LTRAhowToInterp == LTRA_MOD_QUADINTERP) ||
+                                              (model->LTRAhowToInterp == LTRA_MOD_MIXEDINTERP));
 
                         t2 = ckt->CKTtimePoints [i];
                         t3 = ckt->CKTtimePoints [i + 1];
