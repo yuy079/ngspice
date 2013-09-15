@@ -238,7 +238,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                     *(here->LTRApos2Ibr2Ptr) += 1.0;
                     *(here->LTRAneg2Ibr2Ptr) -= 1.0;
 
-                    here->LTRAinput1 = here->LTRAinput2 = 0.0;
+                    here->LTRAinput1 = 0.0;
+                    here->LTRAinput2 = 0.0;
 
                     /*
                      * Somewhere else, we have fixed the matrix with zero entries so
@@ -263,7 +264,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                     *(here->LTRAibr2Ibr1Ptr) -= model->LTRAresist * model->LTRAlength;
 
-                    here->LTRAinput1 = here->LTRAinput2 = 0.0;
+                    here->LTRAinput1 = 0.0;
+                    here->LTRAinput2 = 0.0;
                     break;
 
                 default:
@@ -370,7 +372,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                 if (ckt->CKTmode & (MODEINITPRED | MODEINITTRAN)) {
 
-                    here->LTRAinput1 = here->LTRAinput2 = 0.0;
+                    here->LTRAinput1 = 0.0;
+                    here->LTRAinput2 = 0.0;
 
                     switch (model->LTRAspecialCase) {
 
@@ -554,7 +557,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
                         /* convolution of h1dash with v1 and v2 */
                         /* the matrix has already been loaded above */
 
-                        dummy1 = dummy2 = 0.0;
+                        dummy1 = 0.0;
+                        dummy2 = 0.0;
 
                         for (i = /* model->LTRAh1dashIndex */ ckt->CKTtimeIndex; i > 0; i--)
                             if (model->LTRAh1dashCoeffs [i] != 0.0) {
@@ -577,7 +581,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         /* convolution of h2 with i2 and i1 */
 
-                        dummy1 = dummy2 = 0.0;
+                        dummy1 = 0.0;
+                        dummy2 = 0.0;
 
                         if (tdover) {
 
@@ -614,7 +619,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         /* the term for ckt->CKTtime - model->LTRAtd */
 
-                        dummy1 = dummy2 = 0.0;
+                        dummy1 = 0.0;
+                        dummy2 = 0.0;
 
                         if (tdover) {
 
@@ -705,7 +711,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         /* convolution of h2 with i2 and i1 */
 
-                        dummy1 = dummy2 = 0.0;
+                        dummy1 = 0.0;
+                        dummy2 = 0.0;
 
                         for (i = ckt->CKTtimeIndex; i > 0; i--)
                             if (model->LTRAh2Coeffs [i] != 0.0) {
@@ -730,7 +737,8 @@ LTRAload(GENmodel *inModel, CKTcircuit *ckt)
 
                         /* convolution of h3dash with v2 and v1 */
 
-                        dummy1 = dummy2 = 0.0;
+                        dummy1 = 0.0;
+                        dummy2 = 0.0;
 
                         for (i = ckt->CKTtimeIndex; i > 0; i--)
                             if (model->LTRAh3dashCoeffs [i] != 0.0) {
