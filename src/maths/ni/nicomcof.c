@@ -39,8 +39,8 @@ NIcomCof(CKTcircuit *ckt)
             break;
 
         case 2:
-            ckt->CKTag[0] = 1.0 / ckt->CKTdelta / (1.0 - xmu);
-            ckt->CKTag[1] = xmu / (1.0 - xmu);
+            ckt->CKTag[0] = 1.0 / ckt->CKTdelta/(1.0 - xmu) ;
+            ckt->CKTag[1] = xmu / (1.0 - xmu) ;
             break;
 
         default:

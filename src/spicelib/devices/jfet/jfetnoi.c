@@ -21,7 +21,7 @@ Author: 1987 Gary W. Ng
 
 
 int
-JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *data,
+JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *data, 
            double *OnDens)
 {
     NOISEAN *job = (NOISEAN *) ckt->CKTcurJob;
@@ -110,7 +110,7 @@ JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *
 
                     NevalSrc(&noizDens[JFETRSNOIZ],&lnNdens[JFETRSNOIZ],
                                  ckt,THERMNOISE,inst->JFETsourcePrimeNode,
-                                 inst->JFETsourceNode,model->JFETsourceConduct
+                                 inst->JFETsourceNode,model->JFETsourceConduct 
                                  * inst->JFETarea * inst->JFETm);
 
                     if (model->JFETnlev < 3) {
@@ -137,23 +137,23 @@ JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *
                     NevalSrc(&noizDens[JFETFLNOIZ], NULL, ckt,
                                  N_GAIN,inst->JFETdrainPrimeNode,
                                  inst->JFETsourcePrimeNode, (double)0.0);
-                    noizDens[JFETFLNOIZ] *= inst->JFETm * model->JFETfNcoef *
+                    noizDens[JFETFLNOIZ] *= inst->JFETm * model->JFETfNcoef * 
                                  exp(model->JFETfNexp *
                                  log(MAX(fabs(*(ckt->CKTstate0 + inst->JFETcd)),N_MINLOG))) /
                                  data->freq;
-                    lnNdens[JFETFLNOIZ] =
+                    lnNdens[JFETFLNOIZ] = 
                                  log(MAX(noizDens[JFETFLNOIZ],N_MINLOG));
 
                     noizDens[JFETTOTNOIZ] = noizDens[JFETRDNOIZ] +
                                                      noizDens[JFETRSNOIZ] +
                                                      noizDens[JFETIDNOIZ] +
                                                      noizDens[JFETFLNOIZ];
-                    lnNdens[JFETTOTNOIZ] =
+                    lnNdens[JFETTOTNOIZ] = 
                                  log(MAX(noizDens[JFETTOTNOIZ], N_MINLOG));
 
                     *OnDens += noizDens[JFETTOTNOIZ];
 
-                    if (data->delFreq == 0.0) {
+                    if (data->delFreq == 0.0) { 
 
                         /* if we haven't done any previous integration, we need to */
                         /* initialize our "history" variables                      */
@@ -216,7 +216,7 @@ JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *
         }    /* for inst */
     }    /* for model */
 
-    return(OK);
+return(OK);
 }
             
 

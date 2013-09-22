@@ -81,14 +81,14 @@ CKTsenComp(CKTcircuit *ckt)
 
         for (row = 1; row <= size; row++) {
             rowe = CKTnodName(ckt, row);
-//          if (strcmp("4", rowe) == 0) {
+//            if (strcmp("4", rowe) == 0) {
                 for (col = 1; col <= info->SENparms; col++) {
                     printf("\t");
                     printf("Sap(%s,%d) = %.5e\t", rowe, col,
                            info->SEN_Sap[row][col]);
                 }
                 printf("\n\n");
-//          }
+//            }
         }
 
         printf("  RHS matrix   :\n");

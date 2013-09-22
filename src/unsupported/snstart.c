@@ -48,8 +48,8 @@ SENstartup(CKTcircuit *ckt, int restart)
         type = fast->GENmodPtr->GENmodType;
 
 #ifdef SENSDEBUG
-        printf("SENstartup Instance: %s Design parameter: %s\n", ckt->CKTsenInfo->SENdevices[i],
-                                                                 ckt->CKTsenInfo->SENparmNames[i]);
+        printf("SENstartup Instance: %s Design parameter: %s\n", ckt->CKTsenInfo->SENdevices[i], 
+		                                                         ckt->CKTsenInfo->SENparmNames[i]);
 #endif
         err = CKTpName(
             ckt->CKTsenInfo->SENparmNames[i],

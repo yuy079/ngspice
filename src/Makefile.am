@@ -33,7 +33,7 @@ endif !TCL_MODULE
 EXTRA_DIST = ngspice.txt setplot spectrum \
 	     devload devaxis ciderinit winmain.c winmain.h \
 	     tclspice.c tclspice.map pkgIndex.tcl.in spinit.in tclspinit.in \
-	     main.c sharedspice.c
+		 main.c sharedspice.c
 
 
 initdatadir = $(pkgdatadir)/scripts

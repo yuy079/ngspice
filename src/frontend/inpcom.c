@@ -2657,7 +2657,7 @@ inp_fix_inst_line(char *inst_line,
 
 /* If multiplier parameter 'm' is found on a X line, flag is set
    to TRUE.
-   Function is called from inp_fix_inst_calls_for_numparam() */
+   Function is called from inp_fix_inst_calls_for_numparam()*/
 
 static bool
 found_mult_param(int num_params, char *param_names[])
@@ -2678,7 +2678,7 @@ found_mult_param(int num_params, char *param_names[])
    (FIXME: It may be necessary to exclude more of them, at least
    for all devices that are not supporting the 'm' parameter).
 
-   Function is called from inp_fix_inst_calls_for_numparam() */
+   Function is called from inp_fix_inst_calls_for_numparam()*/
 
 static int
 inp_fix_subckt_multiplier(struct names *subckt_w_params, struct line *subckt_card,
@@ -4498,7 +4498,7 @@ inp_compat(struct line *card)
                 /* find multiplier m at end of line */
                 m_ptr = strstr(cut_line, "m=");
                 if (m_ptr) {
-                    m_token = copy(m_ptr + 2);  // get only the expression
+                    m_token = copy(m_ptr+2);  //get only the expression
                     *m_ptr = '\0';
                 }
                 else
@@ -6127,8 +6127,8 @@ inp_dot_if(struct line *card)
             continue;
 
         if (ciprefix(".if", curr_line) || ciprefix(".elseif", curr_line)) {
-            char *firstbr = strchr(curr_line, '(');
-            char *lastbr = strrchr(curr_line, ')');
+            char* firstbr = strchr(curr_line, '(');
+            char* lastbr = strrchr(curr_line, ')');
             if ((!firstbr) || (!lastbr)) {
                 fprintf(cp_err, "Error in netlist line %d\n", card->li_linenum_orig);
                 fprintf(cp_err, "   Bad syntax: %s\n\n", curr_line);

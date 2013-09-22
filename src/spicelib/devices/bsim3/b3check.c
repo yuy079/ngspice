@@ -177,7 +177,7 @@ FILE *fplog;
 
         /* ACM model */
         if (model->BSIM3acmMod == 0) {
-            if (model->BSIM3unitLengthSidewallJctCap > 0.0 ||
+            if (model->BSIM3unitLengthSidewallJctCap > 0.0 || 
                   model->BSIM3unitLengthGateSidewallJctCap > 0.0)
             {
               if (here->BSIM3drainPerimeter < pParam->BSIM3weff)
