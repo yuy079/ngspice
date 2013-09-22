@@ -7,10 +7,8 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cktdefs.h"
 #include "ngspice/sperror.h"
 
-/* xmu=0:    Backward Euler
- * xmu=0.5:  trapezoidal (standard)
- * xmu=0.48: good damping of current ringing, e.g. in R.O.s.
- */
+/* xmu=0: Backward Euler, xmu=0.5: trapezoidal (standard),
+   xmu=0.48: good damping of current ringing, e.g. in R.O.s. */
 #define xmu 0.5
 
 

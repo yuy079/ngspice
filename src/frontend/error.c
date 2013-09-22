@@ -15,7 +15,7 @@ Author: 1985 Wayne A. Christopher, U. C. Berkeley CAD Group
 
 #ifdef HAS_WINGUI
 void winmessage(char *new_msg);
-#elif defined SHARED_MODULE
+#elif defined (SHARED_MODULE)
 extern void shared_exit(int status);
 #endif
 
@@ -30,7 +30,7 @@ controlled_exit(int status)
     if (status)
         winmessage("Fatal error in NGSPICE");
     exit(status);
-#elif defined SHARED_MODULE
+#elif defined (SHARED_MODULE)
     /* do not exit, if shared ngspice, but call back */
     shared_exit(status);
 #else
@@ -67,7 +67,7 @@ fatal(void)
     (void) kill(getpid(), SIGQUIT);
 #endif
 
-#if defined SHARED_MODULE
+#if defined (SHARED_MODULE)
     /* do not exit, if shared ngspice, but call back */
     shared_exit(EXIT_BAD);
 #else

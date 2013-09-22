@@ -384,7 +384,7 @@ runc(char* command)
     bool fl_bg = FALSE;
     command_id = threadid_self();
     /* run task in background if command is preceeded by "bg_" */
-    if (!cieq("bg_halt", command) && !cieq("bg_pstop", command) && ciprefix("bg_", command)) {
+    if (!cieq("bg_halt", command) && !cieq("bg_pstop", command) &&(ciprefix("bg_", command))) {
         strncpy(buf, command+3, 1024);
         fl_bg = TRUE;
     }
@@ -394,7 +394,7 @@ runc(char* command)
         while (!ps_exited && timeout < 100) {
             printstopp = TRUE;
 
-#if defined __MINGW32__ || defined _MSC_VER
+#if defined(__MINGW32__) || defined(_MSC_VER)
             Sleep(100); // va: windows native
 #else
             usleep(10000);
@@ -688,7 +688,7 @@ bot:
         printtid = (HANDLE)_beginthreadex(NULL, 0, (unsigned int (__stdcall *)(void *))printsend,
             (void*) NULL, 0, NULL);
 #else
-        printtid = CreateThread(NULL, 0, (PTHREAD_START_ROUTINE) printsend, NULL,
+        printtid = CreateThread(NULL, 0, (PTHREAD_START_ROUTINE)printsend, (void*)NULL,
                          0, NULL);
 #endif
 
@@ -1079,7 +1079,7 @@ sh_fputc(int inp, FILE* f)
 static char* outstringerr = NULL;
 static char* outstringout = NULL;
 
-#if defined low_latency || !defined THREADS
+#if defined (low_latency) || !defined(THREADS)
 
 /* The strings issued by printf etc. are sent directly to the caller.
    The callback has to be fast enough (low latency). */
@@ -1490,7 +1490,7 @@ void shared_exit(int status)
     // set flag to stop the printsend thread
     printstopp = TRUE;
     // leave this thread for 100ms to stop the printsend thread
-#if defined __MINGW32__ || defined _MSC_VER
+#if defined(__MINGW32__) || defined(_MSC_VER)
     Sleep(100);
 #else
     usleep(100000);
@@ -1714,8 +1714,7 @@ int sh_vecinit(runDesc *run)
 
 
 /* issue callback to request external voltage data for source vname */
-double
-getvsrcval(double time, char *vname)
+double getvsrcval(double time, char* vname)
 {
     double vval;
     if (!wantvdat) {
@@ -1732,8 +1731,7 @@ getvsrcval(double time, char *vname)
 
 
 /* issue callback to request external current data for source iname*/
-double
-getisrcval(double time, char *iname)
+double getisrcval(double time, char* iname)
 {
     double ival;
     if (!wantidat) {
@@ -1770,6 +1768,8 @@ getisrcval(double time, char *iname)
 
 */
 
+int sharedsync(double* pckttime, double* pcktdelta, double olddelta, double finalt,
+               double delmin, int redostep, int* rejected, int loc){
 /*
     ckttime   pointer to ckt->CKTtime, which already has been used trying to achieve
               convergence, after olddelta had been added in the previous step.
@@ -1784,12 +1784,8 @@ getisrcval(double time, char *iname)
     loc       location of function call in dctran.c: 0: after breakpoint handling, 1: at end of for loop
 */
 
-int
-sharedsync(double *pckttime, double *pcktdelta, double olddelta, double finalt,
-           double delmin, int redostep, int *rejected, int loc)
-{
     /* standard procedure, cktdelta has been provided by ngspice */
-    if (!wantsync) {
+    if (!wantsync)
         if (redostep) {
             *pckttime -= olddelta;
             (*rejected)++;
@@ -1798,7 +1794,7 @@ sharedsync(double *pckttime, double *pcktdelta, double olddelta, double finalt,
         else
             return 0;
     /* synchronization required, to be done by changing cktdelta */
-    } else {
+    else {
         if (redostep) {
             *pckttime -= olddelta;
             (*rejected)++;
