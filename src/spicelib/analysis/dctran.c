@@ -105,7 +105,7 @@ DCtran(CKTcircuit *ckt,
     double         ipc_last_delta = 0.0;
 /* gtri - end - wbk - 12/19/90 - Add IPC stuff */
 #endif
-#if defined CLUSTER || defined SHARED_MODULE
+#if defined(CLUSTER) || defined (SHARED_MODULE)
     int redostep;
 #endif
     if(restart || ckt->CKTtime == 0) {
@@ -704,7 +704,7 @@ resume:
 
 /* 600 */
     for (;;) {
-#if defined CLUSTER || defined SHARED_MODULE
+#if defined(CLUSTER) || defined (SHARED_MODULE)
         redostep = 1;
 #endif
 #ifdef XSPICE
@@ -782,13 +782,11 @@ resume:
         }
 
         if(converged != 0) {
-#ifndef CLUSTER
-#ifndef SHARED_MODULE
+#if !defined(CLUSTER) && !defined (SHARED_MODULE)
             ckt->CKTtime = ckt->CKTtime -ckt->CKTdelta;
             ckt->CKTstat->STATrejected ++;
-#else
+#elif !defined(CLUSTER) && defined (SHARED_MODULE)
             redostep = 1;
-#endif
 #endif
             ckt->CKTdelta = ckt->CKTdelta/8;
 #ifdef STEPDEBUG
@@ -835,7 +833,7 @@ resume:
                 }
 #endif
                 firsttime = 0;
-#if !defined CLUSTER && !defined SHARED_MODULE
+#if !defined(CLUSTER) && !defined (SHARED_MODULE)
                 goto nextTime;  /* no check on
                                  * first time point
                                  */
@@ -898,21 +896,19 @@ resume:
                 }
 #endif
 
-#if !defined CLUSTER && !defined SHARED_MODULE
+#if !defined(CLUSTER) && !defined (SHARED_MODULE)
                 /* go to 650 - trapezoidal */
                 goto nextTime;
 #else
                 redostep = 0;
-                goto chkStep;
+                goto chkStep; // 920, 928
 #endif
             } else {
-#ifndef CLUSTER
-#ifndef SHARED_MODULE
+#if !defined(CLUSTER) && !defined (SHARED_MODULE)
                 ckt->CKTtime = ckt->CKTtime -ckt->CKTdelta;
                 ckt->CKTstat->STATrejected ++;
-#else
+#elif !defined(CLUSTER) && defined (SHARED_MODULE)
                 redostep = 1;
-#endif
 #endif
                 ckt->CKTdelta = newdelta;
 #ifdef STEPDEBUG
@@ -953,7 +949,7 @@ resume:
 #endif
 #endif
 
-#ifdef SHARED_MODULE
+#if defined SHARED_MODULE
         /* redostep == 0:
            Either directly go to next time step, or modify ckt->CKTdelta depending on
            synchronization requirements. sharedsync() returns 0.

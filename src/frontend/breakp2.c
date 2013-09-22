@@ -137,11 +137,10 @@ ft_getSaves(struct save_info **savesp)
 
 
 /* v(2) --> 2, i(vds) --> vds#branch, 3 --> 3, @mn1[vth0] --> @mn1[vth0]
- *   derived from wordlist *gettoks(char *s)
+( derived from wordlist *gettoks(char *s) )
  */
 
-static char*
-copynode(char *s)
+static char* copynode(char *s)
 {
     char *l, *r;
     char *ret = NULL;

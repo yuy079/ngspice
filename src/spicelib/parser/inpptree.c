@@ -29,8 +29,8 @@ static INPparseNode *mksnode(const char *string, void *ckt);
 static INPparseNode *PTdifferentiate(INPparseNode * p, int varnum);
 
 static void free_tree(INPparseNode *);
-static void printTree(INPparseNode *);
 
+static void printTree(INPparseNode *);
 
 /*
  * LAW for INPparseNode* generator and consumer functions:
