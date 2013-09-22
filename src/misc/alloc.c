@@ -3,7 +3,7 @@ Copyright 1990 Regents of the University of California.  All rights reserved.
 **********/
 
 /* for thread handling */
-#if defined __MINGW32__ || defined _MSC_VER
+#if defined(__MINGW32__) || defined(_MSC_VER)
 #include <windows.h>
 #endif
 
@@ -14,7 +14,7 @@ Copyright 1990 Regents of the University of California.  All rights reserved.
 
 /* We need this because some tests in cmaths and some executables other
    than ngspice and ngnutmeg under LINUX don't know about controlled_exit */
-#if defined HAS_WINGUI || defined SHARED_MODULE
+#if defined(HAS_WINGUI) || defined(SHARED_MODULE)
 extern void controlled_exit(int status);
 #endif
 
@@ -79,7 +79,7 @@ tmalloc(size_t num)
 #endif
     if (!s){
       fprintf(stderr,"malloc: Internal Error: can't allocate %ld bytes. \n",(long)num);
-#if defined HAS_WINGUI || defined SHARED_MODULE
+#if defined(HAS_WINGUI) || defined(SHARED_MODULE)
       controlled_exit(EXIT_FAILURE);
 #else
       exit(EXIT_FAILURE);
@@ -123,7 +123,7 @@ trealloc(void *ptr, size_t num)
   }
   if (!s) {
     fprintf(stderr,"realloc: Internal Error: can't allocate %ld bytes.\n", (long)num);
-#if defined HAS_WINGUI || defined SHARED_MODULE
+#if defined(HAS_WINGUI) || defined(SHARED_MODULE)
       controlled_exit(EXIT_FAILURE);
 #else
       exit(EXIT_FAILURE);

@@ -41,7 +41,13 @@ struct coreInfo_t *coreitf;
 // Functions that return pointers to structures.
 //////////////////////////////////////////////////////////////////////////////
 
-#if defined (__MINGW32__) || defined (__CYGWIN__) || defined (_MSC_VER)
+//#if defined (__MINGW32__) || defined (__CYGWIN__) || defined (_MSC_VER)
+//#define CM_EXPORT __declspec(dllexport)
+//#else
+//#define CM_EXPORT
+//#endif
+
+#if defined(__MINGW32__) || defined(_MSC_VER) || defined(__CYGWIN__)
 #define CM_EXPORT __declspec(dllexport)
 #else
   /* use with gcc flag -fvisibility=hidden */
