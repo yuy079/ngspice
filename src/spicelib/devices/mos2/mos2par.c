@@ -43,27 +43,27 @@ MOS2param(int param, IFvalue *value, GENinstance *inst,
             here->MOS2mGiven = TRUE;
             break;   
         case MOS2_W:
-            here->MOS2w = value->rValue * scale;
+            here->MOS2w = value->rValue*scale;
             here->MOS2wGiven = TRUE;
             break;
         case MOS2_L:
-            here->MOS2l = value->rValue * scale;
+            here->MOS2l = value->rValue*scale;
             here->MOS2lGiven = TRUE;
             break;
         case MOS2_AS:
-            here->MOS2sourceArea = value->rValue * scale * scale;
+            here->MOS2sourceArea = value->rValue*scale*scale;
             here->MOS2sourceAreaGiven = TRUE;
             break;
         case MOS2_AD:
-            here->MOS2drainArea = value->rValue * scale * scale;
+            here->MOS2drainArea = value->rValue*scale*scale;
             here->MOS2drainAreaGiven = TRUE;
             break;
         case MOS2_PS:
-            here->MOS2sourcePerimiter = value->rValue * scale;
+            here->MOS2sourcePerimiter = value->rValue*scale;
             here->MOS2sourcePerimiterGiven = TRUE;
             break;
         case MOS2_PD:
-            here->MOS2drainPerimiter = value->rValue * scale;
+            here->MOS2drainPerimiter = value->rValue*scale;
             here->MOS2drainPerimiterGiven = TRUE;
             break;
         case MOS2_NRS:

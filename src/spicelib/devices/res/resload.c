@@ -56,7 +56,7 @@ RESacload(GENmodel *inModel, CKTcircuit *ckt)
 
         /* loop through all the instances of the model */
         for (here = model->RESinstances; here != NULL ;
-             here = here->RESnextInstance) {
+                here = here->RESnextInstance) {
 
             m = (here->RESm);
             if(here->RESacresGiven) {

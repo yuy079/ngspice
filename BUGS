@@ -33,7 +33,7 @@ OPEN BUGS:
 
 * voltage (and current) controlled switches need better timing
 
-  The controlled switches (SW, CSW), which still stem from the original
-  spice3f5 implementation, sometimes lead to wrong results when on and off
+  The controlled switches (SW, CSW), which still stem from the original 
+  spice3f5 implementation, sometimes lead to wrong results when on and off 
   ramp times differ considerably.
   

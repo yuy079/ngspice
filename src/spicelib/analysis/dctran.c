@@ -554,8 +554,8 @@ resume:
 
         if(firsttime) {
             /* set a breakpoint to reduce ringing of current in devices */
-            if (ckt->CKTmode & MODEUIC)
-                CKTsetBreak(ckt, ckt->CKTstep);
+            if (ckt->CKTmode&MODEUIC)
+                CKTsetBreak(ckt,ckt->CKTstep);
 
             ckt->CKTdelta /= 10;
 #ifdef STEPDEBUG

@@ -503,7 +503,7 @@ dot_sens2(char *line, CKTcircuit *ckt, INPtables *tab, card *current,
 	int which;			/* which analysis we are performing */
 	char *token;		/* a token from the line */
 
-	NG_IGNORE(gnode);
+        NG_IGNORE(gnode);
 
 	/* .sens {AC} {DC} {TRAN} [dev=nnn parm=nnn]* */
 	which = ft_find_analysis("SENS2");
