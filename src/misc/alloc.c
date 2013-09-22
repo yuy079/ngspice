@@ -1,7 +1,6 @@
 /**********
 Copyright 1990 Regents of the University of California.  All rights reserved.
 **********/
-
 /* for thread handling */
 #if defined(__MINGW32__) || defined(_MSC_VER)
 #include <windows.h>
@@ -38,7 +37,6 @@ typedef pthread_mutex_t mutexType;
 extern mutexType allocMutex;
 #endif
 #endif
-
 
 #ifndef HAVE_LIBGC
 
@@ -131,7 +129,6 @@ trealloc(void *ptr, size_t num)
   }
   return(s);
 }
-
 
 void
 txfree(void *ptr)

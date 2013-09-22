@@ -14,7 +14,6 @@ Modified by Paolo Nenzi 2003 and Dietmar Warning 2012
 #include "ngspice/suffix.h"
 #include "ngspice/fteext.h"
 
-
 /* ARGSUSED */
 int
 DIOparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)

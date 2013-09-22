@@ -16,6 +16,7 @@
 #define STDERR_FILENO   2
 #endif
 
+
 /* If a calling function has high latency times during printing,
    causing memory access errors, you may undef the following line.
    Printing messages are assembled in a wordlist, and sent to the caller
@@ -254,7 +255,6 @@ static char* no_init = "Error: ngspice is not initialized!\n   Run ngSpice_Init 
 /* identifier for this ngspice invocation */
 int ng_ident = 0;
 
-
 static struct plot *
 get_plot_byname(char* plotname)
 {
@@ -368,7 +368,6 @@ sighandler_sharedspice(int num)
 }
 
 #endif /*THREADS*/
-
 
 /* run a ngspice command */
 static int
@@ -488,7 +487,6 @@ ngSpice_running (void)
     return (fl_running && !fl_exited);
 }
 #endif
-
 
 /* Initialise external voltage source and synchronization */
 IMPEXP
@@ -681,7 +679,6 @@ bot:
 #if !defined(low_latency)
     /* If caller has sent valid address for pfcn */
     if (!noprintfwanted)
-
 #ifdef HAVE_LIBPTHREAD
         pthread_create(&printtid, NULL, (void * (*)(void *))printsend, (void *)NULL);
 #elif defined _MSC_VER || defined __MINGW32__
@@ -691,6 +688,7 @@ bot:
         printtid = CreateThread(NULL, 0, (PTHREAD_START_ROUTINE)printsend, (void*)NULL,
                          0, NULL);
 #endif
+
 
 #endif
 
@@ -885,7 +883,6 @@ bool ngSpice_SetBkpt(double time)
     return(TRUE);
 }
 
-
 /* add the preliminary breakpoints to the list.
    called from dctran.c */
 int
@@ -905,7 +902,6 @@ add_bkpt(void)
         return(error);
     return(OK);
 }
-
 
 /*------------------------------------------------------*/
 /* Redefine the vfprintf() functions for callback       */
@@ -1080,7 +1076,6 @@ static char* outstringerr = NULL;
 static char* outstringout = NULL;
 
 #if defined (low_latency) || !defined(THREADS)
-
 /* The strings issued by printf etc. are sent directly to the caller.
    The callback has to be fast enough (low latency). */
 int
@@ -1697,7 +1692,6 @@ int sh_vecinit(runDesc *run)
             tfree(curvecvalsall->vecsa[i]);
         tfree(curvecvalsall->vecsa);
     }
-
     curvecvalsall->veccount = veccount;
     curvecvalsall->vecsa = TMALLOC(pvecvalues, veccount);
 
@@ -1711,7 +1705,6 @@ int sh_vecinit(runDesc *run)
     }
     return 0;
 }
-
 
 /* issue callback to request external voltage data for source vname */
 double getvsrcval(double time, char* vname)
@@ -1728,7 +1721,6 @@ double getvsrcval(double time, char* vname)
         return vval;
     }
 }
-
 
 /* issue callback to request external current data for source iname*/
 double getisrcval(double time, char* iname)

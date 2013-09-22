@@ -218,3 +218,5 @@ JFETnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt, Ndata *
 
     return(OK);
 }
+            
+

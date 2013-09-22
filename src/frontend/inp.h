@@ -11,5 +11,4 @@ void com_edit(wordlist *wl);
 void com_source(wordlist *wl);
 void com_circbyline(wordlist *wl);
 
-
 #endif

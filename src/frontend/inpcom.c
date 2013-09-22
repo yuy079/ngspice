@@ -529,14 +529,11 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
 
             /* gtri - end - 12/12/90 */
 #else
-
             buffer = readline(fp);
             if(!buffer)
                 break;
-
 #endif
         }
-
 #ifdef TRACE
         /* SDB debug statement */
         printf("in inp_readall, just read   %s", buffer);
@@ -1814,7 +1811,6 @@ inp_fix_ternary_operator_str(char *line, bool all)
     }
 
     all = TRUE;
-
     // get conditional
     question = strchr(str_ptr, '?');
     str_ptr2 = skip_back_ws(question);

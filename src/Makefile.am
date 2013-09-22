@@ -225,7 +225,6 @@ ngnutmeg_LDADD += \
 ## These programs are not required on Windows
 if !WINGUI
 if !SHWIN
-
 if !NO_X
 ngnutmeg_LDADD += \
 	frontend/help/libhlp.la
@@ -551,7 +550,6 @@ libngspice_la_LDFLAGS += -Wl,--output-def=ngspice.def  -Wl,--out-implib=ngspice.
 libngspice_la_LDFLAGS += -no-undefined
 EXTRA_DIST += ngspice.def
 endif
-
 if SHCYG
 libngspice_la_LDFLAGS += -Wl,--output-def=ngspice.def  -Wl,--out-implib=ngspice.dll.a
 libngspice_la_LDFLAGS += -no-undefined

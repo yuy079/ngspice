@@ -197,7 +197,6 @@ FILE *fplog;
                 }
             }
         }
-
         if ((model->BSIM3v32calcacm > 0) && (model->BSIM3v32acmMod != 12))
         {   fprintf(fplog, "Warning: CALCACM = %d is wrong. Set back to 0.\n",
                 model->BSIM3v32calcacm);
