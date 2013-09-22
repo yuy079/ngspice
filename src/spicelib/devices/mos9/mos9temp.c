@@ -56,7 +56,7 @@ MOS9temp(GENmodel *inModel, CKTcircuit *ckt)
 
         if (model->MOS9phi <= 0.0) {
             SPfrontEnd->IFerror (ERR_FATAL,
-               "%s: Phi is not positive.", &model->MOS9modName);
+               "%s: Phi is not positive.",&model->MOS9modName);
             return(E_BADPARM);
         }
         model->MOS9oxideCapFactor = 3.9 * 8.854214871e-12/

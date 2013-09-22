@@ -291,7 +291,7 @@ VSRCaccept(CKTcircuit *ckt, GENmodel *inModel)
                     }
                     break;
 #ifdef SHARED_MODULE
-                    case EXTERNAL: {
+                    case EXTERNAL:{
                         /* no  breakpoints (yet) */
                     }
                     break;

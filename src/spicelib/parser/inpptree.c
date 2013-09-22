@@ -641,7 +641,7 @@ static INPparseNode *PTdifferentiate(INPparseNode * p, int varnum)
              *        = signum(a) * exp(b*ln(abs(a))) * (D(b) * ln(abs(a)) + b * 1/abs(a) * signum(a)*D(a))
              *        = signum(a) * exp(b*ln(abs(a))) * (D(b) * ln(abs(a)) + b/a*D(a))
              *        = signum(a) * exp(b*ln(abs(a))) * D(b) * ln(abs(a) + signum(a) * exp(b*ln(abs(a))) / a * b * D(a)
-             *        = signum(a) * exp(b*ln(abs(a))) * D(b) * ln(abs(a) + abs(a)^(b-1) * b * D(a)
+             *        = signum(a) * exp(b*ln(abs(a))) * D(b) * ln(abs(a) + abs(a)^(b-1) * b * D(a)     
              */
              arg1 = PTdifferentiate(a, varnum);
              arg2 = PTdifferentiate(b, varnum);

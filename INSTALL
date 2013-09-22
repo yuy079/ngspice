@@ -258,7 +258,7 @@ Most of the options now following are not well maintained, are not tested or eve
         --enable-xspice --enable-cider --enable-openmp.
         No graphics inetrface is provided, this has to be
         handled by the controlling application.
-
+        
 1.4.3 Options Useful for Debugging Ngspice
 
  --enable-ansi

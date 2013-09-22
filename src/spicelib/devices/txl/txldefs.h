@@ -47,7 +47,7 @@ typedef struct sTXLinstance {
 	unsigned TXLibr1Given : 1;
 	unsigned TXLibr2Given : 1;
 	unsigned TXLdcGiven : 1;
-	unsigned TXLlengthgiven : 1;   /* flag to indicate that instance parameter len is specified */
+    unsigned TXLlengthgiven : 1;   /* flag to indicate that instance parameter len is specified */
 
 } TXLinstance ;
 

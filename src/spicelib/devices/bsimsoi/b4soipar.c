@@ -39,11 +39,11 @@ IFvalue *select)
 
     switch(param) 
     {   case B4SOI_W:
-            here->B4SOIw = value->rValue * scale;
+            here->B4SOIw = value->rValue*scale;
             here->B4SOIwGiven = TRUE;
             break;
         case B4SOI_L:
-            here->B4SOIl = value->rValue * scale;
+            here->B4SOIl = value->rValue*scale;
             here->B4SOIlGiven = TRUE;
             break;
         case B4SOI_M:
@@ -51,19 +51,19 @@ IFvalue *select)
             here->B4SOImGiven = TRUE;
             break;
         case B4SOI_AS:
-            here->B4SOIsourceArea = value->rValue * scale * scale;
+            here->B4SOIsourceArea = value->rValue*scale*scale;
             here->B4SOIsourceAreaGiven = TRUE;
             break;
         case B4SOI_AD:
-            here->B4SOIdrainArea = value->rValue * scale * scale;
+            here->B4SOIdrainArea = value->rValue*scale*scale;
             here->B4SOIdrainAreaGiven = TRUE;
             break;
         case B4SOI_PS:
-            here->B4SOIsourcePerimeter = value->rValue * scale;
+            here->B4SOIsourcePerimeter = value->rValue*scale;
             here->B4SOIsourcePerimeterGiven = TRUE;
             break;
         case B4SOI_PD:
-            here->B4SOIdrainPerimeter = value->rValue * scale;
+            here->B4SOIdrainPerimeter = value->rValue*scale;
             here->B4SOIdrainPerimeterGiven = TRUE;
             break;
         case B4SOI_NRS:

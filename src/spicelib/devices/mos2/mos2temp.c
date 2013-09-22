@@ -55,7 +55,7 @@ MOS2temp(GENmodel *inModel, CKTcircuit *ckt)
 
         if (model->MOS2phi <= 0.0) {
             SPfrontEnd->IFerror (ERR_FATAL,
-               "%s: Phi is not positive.", &model->MOS2modName);
+               "%s: Phi is not positive.",&model->MOS2modName);
             return(E_BADPARM);
         }
         if(!model->MOS2oxideThicknessGiven) {

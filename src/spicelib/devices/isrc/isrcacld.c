@@ -23,7 +23,7 @@ ISRCacLoad(GENmodel *inModel, CKTcircuit *ckt)
         for (here = model->ISRCinstances; here != NULL ;
                 here=here->ISRCnextInstance) {
 
-            m = here->ISRCmValue;
+            m = here->ISRCmValue; 
 
             *(ckt->CKTrhs + (here->ISRCposNode)) +=
                 m * here->ISRCacReal;

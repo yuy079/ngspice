@@ -6,7 +6,7 @@ Modified: 2001 AlansFixes
 
 /* Patch to noisean.c by Richard D. McRoberts.
  * Patched with modifications from Weidong Liu (2000)
- * Patched with modifications ftom Weidong Liu
+ * Patched with modifications ftom Weidong Liu 
  * in bsim4.1.0 code
  */
 

@@ -16,17 +16,17 @@ Callback funtion typedefs
 SendChar       typedef of callback function for reading printf, fprintf, fputs
 SendStat       typedef of callback function for reading status string and precent value
 ControlledExit typedef of callback function for tranferring a signal upon
-               ngspice controlled_exit to caller. May be used by caller
+               ngspice controlled_exit to caller. May be used by caller 
                to detach ngspice.dll.
 SendData       typedef of callback function for sending an array of structs containing
                data values of all vectors in the current plot (simulation output)
 SendInitData   typedef of callback function for sending an array of structs containing info on
                all vectors in the current plot (immediately before simulation starts)
-BGThreadRunning typedef of callback function for sending a boolean signal (true if thread
+BGThreadRunning typedef of callback function for sending a boolean signal (true if thread 
                 is running)
 
-The void pointer may contain the object address of the calling
-function ('self' or 'this' pointer), so that the answer may be directed
+The void pointer may contain the object address of the calling 
+function ('self' or 'this' pointer), so that the answer may be directed 
 to a calling object. Callback functions are defined in the global section.
 
 **
@@ -41,13 +41,13 @@ ngexit().
 ngGet_Vec_Info(char*)
 receives the name of a vector (may be in the form 'vectorname' or
 <plotname>.vectorname) and returns a pointer to a vector_info struct.
-The caller may then directly assess the vector data (but probably should
+The caller may then directly assess the vector data (but probably should 
 not modify them).
 
 **
 ngSpice_Circ(char**)
-sends an array of null-terminated char* to ngspice.dll. Each char* contains a
-single line of a circuit (each line like in an input file **.sp). The last
+sends an array of null-terminated char* to ngspice.dll. Each char* contains a 
+single line of a circuit (each line like in an input file **.sp). The last 
 entry to char** has to be NULL. Upon receiving the arry, ngspice.dll will
 immediately parse the input and set up the circuit structure (as if received
 the circuit from a file by the 'source' command.
@@ -71,7 +71,7 @@ No memory mallocing and freeing across the interface:
 Memory allocated in ngspice.dll has to be freed in ngspice.dll.
 Memory allocated in the calling program has to be freed only there.
 
-ngspice.dll should never call exit() directly, but handle either the 'quit'
+ngspice.dll should never call exit() directly, but handle either the 'quit' 
 request to the caller or an request for exiting upon error,
 done by callback function ngexit().
 */
@@ -100,7 +100,7 @@ extern "C" {
   #endif
 #endif
 
-/* required only if header is used by the caller,
+/* required only if header is used by the caller, 
    is already defined in ngspice.dll */
 #ifndef ngspice_NGSPICE_H
 /* Complex numbers. */
@@ -114,7 +114,7 @@ typedef struct ngcomplex ngcomplex_t;
 
 /* vector info obtained from any vector in ngspice.dll.
    Allows direct access to the ngspice internal vector structure,
-   as defined in include/ngspice/devc.h . */
+   as defined in include/ngspice/devc.h .*/
 typedef struct vector_info {
     char *v_name;		/* Same as so_vname. */
     int v_type;			/* Same as so_vtype. */
@@ -125,16 +125,16 @@ typedef struct vector_info {
 } vector_info, *pvector_info;
 
 typedef struct vecvalues {
-    char* name;        /* name of a specific vector */
-    double creal;      /* actual data value */
-    double cimag;      /* actual data value */
-    bool is_scale;     /* if 'name' is the scale vector */
-    bool is_complex;   /* if the data are complex numbers */
+    char* name; /* name of a specific vector */
+    double creal; /* actual data value */
+    double cimag; /* actual data value */
+    bool is_scale;/* if 'name' is the scale vector */
+    bool is_complex;/* if the data are complex numbers */
 } vecvalues, *pvecvalues;
 
 typedef struct vecvaluesall {
-    int veccount;      /* number of vectors in plot */
-    int vecindex;      /* index of actual set of vectors. i.e. the number of accepted data points */
+    int veccount; /* number of vectors in plot */
+    int vecindex; /* index of actual set of vectors. i.e. the number of accepted data points */
     pvecvalues *vecsa; /* values of actual set of vectors, indexed from 0 to veccount - 1 */
 } vecvaluesall, *pvecvaluesall;
 
@@ -159,13 +159,13 @@ typedef struct vecinfoall
     int veccount;
 
     /* the data as an array of vecinfo with length equal to the number of vectors in the plot */
-    pvecinfo *vecs;
+    pvecinfo *vecs; 
 
 } vecinfoall, *pvecinfoall;
 
 
-/* callback functions
-addresses received from caller with ngSpice_Init() function
+/* callback functions 
+addresses received from caller with ngSpice_Init() function 
 */
 /* sending output from stdout, stderr to caller */
 typedef int (SendChar)(char*, int, void*);
@@ -216,7 +216,7 @@ typedef int (BGThreadRunning)(bool, int, void*);
 */
 
 /* callback functions
-   addresses received from caller with ngSpice_Init_Sync() function
+addresses received from caller with ngSpice_Init_Sync() function
 */
 
 /* ask for VSRC EXTERNAL value */
@@ -251,17 +251,17 @@ typedef int (GetSyncData)(double, double*, double, int, int, int, void*);
    void*       return pointer received from caller
 */
 
-/* ngspice initialization,
+/* ngspice initialization, 
 printfcn: pointer to callback function for reading printf, fprintf
 statfcn: pointer to callback function for the status string and percent value
-ControlledExit: pointer to callback function for setting a 'quit' signal in caller
-SendData: pointer to callback function for returning data values of all current output vectors
-SendInitData: pointer to callback function for returning information of all output vectors just initialized
+ControlledExit: pointer to callback function for setting a 'quit' signal in caller 
+SendData: pointer to callback function for returning data values of all current output vectors 
+SendInitData: pointer to callback function for returning information of all output vectors just initialized 
 BGThreadRunning: pointer to callback function indicating if workrt thread is running
 userData: pointer to user-defined data, will not be modified, but
           handed over back to caller during Callback, e.g. address of calling object */
 IMPEXP
-int  ngSpice_Init(SendChar* printfcn, SendStat* statfcn, ControlledExit* ngexit,
+int  ngSpice_Init(SendChar* printfcn, SendStat* statfcn, ControlledExit* ngexit, 
                   SendData* sdata, SendInitData* sinitdata, BGThreadRunning* bgtrun, void* userData);
 
 /* initialization of synchronizing functions
@@ -275,7 +275,7 @@ userData: pointer to user-defined data, will not be modified, but
           userdata will be overridden by new value from here.
 */
 IMPEXP
-int  ngSpice_Init_Sync(GetVSRCData *vsrcdat, GetISRCData *isrcdat, GetSyncData *syncdat, int *ident, void *userData);
+int  ngSpice_Init_Sync(GetVSRCData* vsrcdat, GetISRCData* isrcdat, GetSyncData* syncdat, int* ident, void* userData);
 
 /* Caller may send ngspice commands to ngspice.dll.
 Commands are executed immediately */
@@ -288,7 +288,7 @@ IMPEXP
 pvector_info ngGet_Vec_Info(char* vecname);
 
 
-/* send a circuit to ngspice.dll
+/* send a circuit to ngspice.dll 
    The circuit description is a dynamic array
    of char*. Each char* corresponds to a single circuit
    line. The last entry of the array has to be a NULL */
@@ -301,7 +301,7 @@ IMPEXP
 char* ngSpice_CurPlot(void);
 
 
-/* return to the caller a pointer to an array of all plots created
+/* return to the caller a pointer to an array of all plots created 
 so far by ngspice.dll */
 IMPEXP
 char** ngSpice_AllPlots(void);

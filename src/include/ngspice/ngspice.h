@@ -269,7 +269,7 @@ extern void SetAnalyse(char *Analyse, int Percent);
 #define fprintf sh_fprintf
 
 #undef perror
-#define perror(string) fprintf(stderr, "%s: %s\n", string, sys_errlist[errno])
+#define perror(string) fprintf(stderr,"%s: %s\n",string,sys_errlist[errno])
 
 #undef fputs
 #define fputs sh_fputs

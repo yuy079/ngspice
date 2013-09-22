@@ -44,11 +44,11 @@ RESparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
         here->RESacresGiven = TRUE;
         break;
     case RES_WIDTH:
-        here->RESwidth = value->rValue * scale;
+        here->RESwidth = value->rValue*scale;
         here->RESwidthGiven = TRUE;
         break;
     case RES_LENGTH:
-        here->RESlength = value->rValue * scale;
+        here->RESlength = value->rValue*scale;
         here->RESlengthGiven = TRUE;
         break;
     case RES_SCALE:

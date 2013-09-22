@@ -37,11 +37,11 @@ DIOparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
             here->DIOpjGiven = TRUE;
             break;
         case DIO_W:
-            here->DIOw = value->rValue * scale;
+            here->DIOw = value->rValue*scale;
             here->DIOwGiven = TRUE;
             break;
         case DIO_L:
-            here->DIOl = value->rValue * scale;
+            here->DIOl = value->rValue*scale;
             here->DIOlGiven = TRUE;
             break;
         case DIO_M:

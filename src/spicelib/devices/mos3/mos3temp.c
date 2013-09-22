@@ -55,7 +55,7 @@ MOS3temp(GENmodel *inModel, CKTcircuit *ckt)
 
         if (model->MOS3phi <= 0.0) {
             SPfrontEnd->IFerror (ERR_FATAL,
-               "%s: Phi is not positive.", &model->MOS3modName);
+               "%s: Phi is not positive.",&model->MOS3modName);
             return(E_BADPARM);
         }
         model->MOS3oxideCapFactor = 3.9 * 8.854214871e-12/

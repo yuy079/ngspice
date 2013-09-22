@@ -10,10 +10,10 @@ Modified: Apr 2000 Paolo Nenzi
 #include "ngspice/sperror.h"
 
 
-int
+int 
 RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
-        /* load the resistor structure with those pointers needed later
-         * for fast matrix loading
+        /* load the resistor structure with those pointers needed later 
+         * for fast matrix loading 
          */
 {
     RESmodel *model = (RESmodel *)inModel;
@@ -30,7 +30,7 @@ RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
                 here=here->RESnextInstance) {
 
             if(!here->RESmGiven)
-                here->RESm = 1.0;
+                here->RESm      = 1.0;
 
 /* macro to make elements with built in test for out of memory */
 #define TSTALLOC(ptr,first,second) \

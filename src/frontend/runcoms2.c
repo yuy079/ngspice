@@ -271,6 +271,6 @@ com_remcirc(wordlist *wl)
     ft_curckt = ft_circuits;
     if (ft_curckt) {
         modtab = ft_curckt->ci_modtab;
-        dbs = ft_curckt->ci_dbs;
+        dbs =  ft_curckt->ci_dbs;
     }
 }

@@ -41,7 +41,7 @@ ISRCload(GENmodel *inModel, CKTcircuit *ckt)
         for (here = model->ISRCinstances; here != NULL ;
                 here=here->ISRCnextInstance) {
 
-            m = here->ISRCmValue;
+            m = here->ISRCmValue; 
 
             if( (ckt->CKTmode & (MODEDCOP | MODEDCTRANCURVE)) &&
                     here->ISRCdcGiven ) {

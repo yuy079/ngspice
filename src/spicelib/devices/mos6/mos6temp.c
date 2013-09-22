@@ -52,7 +52,7 @@ MOS6temp(GENmodel *inModel, CKTcircuit *ckt)
     /* now model parameter preprocessing */
         if (model->MOS6phi <= 0.0) {
             SPfrontEnd->IFerror (ERR_FATAL,
-               "%s: Phi is not positive.", &model->MOS6modName);
+               "%s: Phi is not positive.",&model->MOS6modName);
             return(E_BADPARM);
         }
         if(!model->MOS6oxideThicknessGiven || model->MOS6oxideThickness == 0) {
