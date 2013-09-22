@@ -196,7 +196,7 @@ double *sourceConductance
     default:
         break;
     }
-    return 0;
+return 0;
 }
 
 /* Area Calculation Method (ACM) for MOS models */
@@ -310,7 +310,7 @@ double *SourceSatCurrent
     default:
         break;
     }
-    return 0;
+return 0;
 }
 
 int
@@ -518,7 +518,7 @@ double *gateSourceBulkCapacitance
     default:
         break;
     }
-    return 0;
+return 0;
 }
 
 /* Compute the MOS overlap capacitances as functions of the device

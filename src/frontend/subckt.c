@@ -1469,15 +1469,15 @@ static bool
 model_bin_match(char *token, char *model_name)
 {
     /* find last dot in model_name */
-    char *dot_char = strrchr(model_name, '.');
+	char *dot_char  = strrchr(model_name, '.');
     bool  flag = FALSE;
     /* check if token equals the substring before last dot in model_name */
-    if (dot_char) {
-        char *mtoken = copy_substring(model_name, dot_char);
-        if (cieq(mtoken, token)) {
+	if(dot_char) {
+		char *mtoken = copy_substring(model_name, dot_char);
+		if (cieq(mtoken, token)) {
             flag = TRUE;
             dot_char++;
-            /* check if model_name has binning info (trailing digit(s)) */
+			/* check if model_name has binning info (trailing digit(s)) */
             while (*dot_char != '\0') {
                 if (!isdigit(*dot_char)) {
                     flag = FALSE;
@@ -1486,7 +1486,7 @@ model_bin_match(char *token, char *model_name)
                 dot_char++;
             }
         }
-        tfree(mtoken);
+		tfree(mtoken);
     }
     return flag;
 }

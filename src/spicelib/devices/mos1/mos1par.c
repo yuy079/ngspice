@@ -42,27 +42,27 @@ MOS1param(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
             here->MOS1mGiven = TRUE;
             break;
         case MOS1_W:
-            here->MOS1w = value->rValue * scale;
+            here->MOS1w = value->rValue*scale;
             here->MOS1wGiven = TRUE;
             break;
         case MOS1_L:
-            here->MOS1l = value->rValue * scale;
+            here->MOS1l = value->rValue*scale;
             here->MOS1lGiven = TRUE;
             break;
         case MOS1_AS:
-            here->MOS1sourceArea = value->rValue * scale * scale;
+            here->MOS1sourceArea = value->rValue*scale*scale;
             here->MOS1sourceAreaGiven = TRUE;
             break;
         case MOS1_AD:
-            here->MOS1drainArea = value->rValue * scale * scale;
+            here->MOS1drainArea = value->rValue*scale*scale;
             here->MOS1drainAreaGiven = TRUE;
             break;
         case MOS1_PS:
-            here->MOS1sourcePerimiter = value->rValue * scale;
+            here->MOS1sourcePerimiter = value->rValue*scale;
             here->MOS1sourcePerimiterGiven = TRUE;
             break;
         case MOS1_PD:
-            here->MOS1drainPerimiter = value->rValue * scale;
+            here->MOS1drainPerimiter = value->rValue*scale;
             here->MOS1drainPerimiterGiven = TRUE;
             break;
         case MOS1_NRS:

@@ -38,7 +38,7 @@ CKTop (CKTcircuit * ckt, long int firstmode, long int continuemode,
 #endif
         converged = NIiter (ckt, iterlim);
     } else {
-        converged = 1;          /* the 'go directly to gmin stepping' option */
+        converged = 1;		/* the 'go directly to gmin stepping' option */
     }
 
 
@@ -52,7 +52,7 @@ CKTop (CKTcircuit * ckt, long int firstmode, long int continuemode,
             else
                 converged = spice3_gmin(ckt, firstmode, continuemode, iterlim);
         }
-        if (!converged)         /* If gmin-stepping worked... move out */
+        if (!converged)		/* If gmin-stepping worked... move out */
             return (0);
 
         /* ... otherwise try stepping sources ...

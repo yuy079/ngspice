@@ -46,11 +46,11 @@ CAPparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
         here->CAPdtempGiven = TRUE;
         break;
     case CAP_WIDTH:
-        here->CAPwidth = value->rValue * scale;
+        here->CAPwidth = value->rValue*scale;
         here->CAPwidthGiven = TRUE;
         break;
     case CAP_LENGTH:
-        here->CAPlength = value->rValue * scale;
+        here->CAPlength = value->rValue*scale;
         here->CAPlengthGiven = TRUE;
         break;
     case CAP_M:

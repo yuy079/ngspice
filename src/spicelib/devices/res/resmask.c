@@ -54,12 +54,12 @@ RESmodAsk(CKTcircuit *ckt, GENmodel *inModel, int which, IFvalue *value)
             else
                 value->rValue = 0.0;
             return(OK);
-        case RES_MOD_AF:
+        case RES_MOD_AF: 
             if (model->RESfNexpGiven)
                 value->rValue = model->RESfNexp;
             else
                 value->rValue = 0.0;
-            return(OK);
+            return(OK);                    
         case RES_MOD_R:
             value->rValue = model->RESres;
             return(OK);

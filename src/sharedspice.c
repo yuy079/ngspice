@@ -317,7 +317,7 @@ static bool ps_exited = TRUE;
 #define EXPORT_FLAVOR
 #endif
 
-/* starts a background thread, e.g. from command bg_run */
+/*  starts a background thread, e.g. from command bg_run */
 static void * EXPORT_FLAVOR
 _thread_run(void *string)
 {
@@ -343,7 +343,7 @@ _thread_run(void *string)
 }
 
 
-/* Stops a running background thread, hopefully */
+/*Stops a running background thread, hopefully */
 static int EXPORT_FLAVOR
 _thread_stop(void)
 {
@@ -503,7 +503,7 @@ runc(char* command)
 
 #ifdef THREADS
 
-/* Checks if ngspice is running in the background */
+/* Checks if ngspice is running in the background        */
 IMPEXP
 bool
 ngSpice_running (void)
@@ -512,10 +512,10 @@ ngSpice_running (void)
 }
 #endif
 
-/* Initialise external voltage source and synchronization */
+/*  Initialise external voltage source and synchronization*/
 IMPEXP
 int
-ngSpice_Init_Sync(GetVSRCData *vsrcdat, GetISRCData *isrcdat, GetSyncData *syncdat, int *ident, void *userData)
+ngSpice_Init_Sync(GetVSRCData* vsrcdat, GetISRCData* isrcdat, GetSyncData* syncdat, int* ident, void* userData)
 {
     getvdat = vsrcdat;
     getidat = isrcdat;
@@ -542,7 +542,7 @@ ngSpice_Init_Sync(GetVSRCData *vsrcdat, GetISRCData *isrcdat, GetSyncData *syncd
 }
 
 
-/* Initialise ngspice and setup native methods */
+/*  Initialise ngspice and setup native methods          */
 IMPEXP
 int
 ngSpice_Init(SendChar* printfcn, SendStat* statusfcn, ControlledExit* ngspiceexit, 
@@ -687,7 +687,7 @@ bot:
     }
 #endif
 
-//  com_version(NULL);
+//    com_version(NULL);
     fprintf(cp_out,
             "******\n"
             "** %s-%s shared library\n",
@@ -703,7 +703,7 @@ bot:
 
 #if !defined(low_latency)
     /* If caller has sent valid address for pfcn */
-    if (!noprintfwanted) 
+    if (!noprintfwanted)
 #ifdef HAVE_LIBPTHREAD
         pthread_create(&printtid, NULL, (void * (*)(void *))printsend, (void *)NULL);
 #elif defined _MSC_VER || defined __MINGW32__
@@ -785,7 +785,7 @@ int ngSpice_Circ(char** circa){
 
     if ( ! setjmp(errbufm) ) {
         intermj = 0;
-        immediate = FALSE;
+        immediate = FALSE;     
         /* count the entries */
         while (circa[entries]) {
             entries++;
@@ -886,11 +886,11 @@ bool ngSpice_SetBkpt(double time)
 
     ckt = ft_curckt->ci_ckt;
     if (ckt->CKTbreakSize == 0) {
-    /* breakpoints have not yet been set up, so store here preliminary
-    and add with fcn add_bkpt() called from DCTran() */
+    /* breakpoints have not yet been set up, so store here preliminary 
+    and add with fcn add_bkpt() called from DCTran()*/
         if (bkpttmp == NULL) {
             bkpttmp = TMALLOC(double, bkpttmpsize + 1);
-            if(bkpttmp == NULL)
+            if(bkpttmp == NULL) 
                 return(FALSE);
             bkpttmpsize++;
         }
@@ -912,7 +912,7 @@ bool ngSpice_SetBkpt(double time)
    called from dctran.c */
 int
 add_bkpt(void)
-{
+{ 
     int i;
     int error = 0;
     CKTcircuit *ckt =  ft_curckt->ci_ckt;
@@ -932,7 +932,7 @@ add_bkpt(void)
 /* Redefine the vfprintf() functions for callback       */
 /*------------------------------------------------------*/
 
-/* handling of escape characters (extra \ added) only, if
+/* handling of escape characters (extra \ added) only, if 
    'set addescape' is given in .spiceinit */
 
 int
@@ -1101,7 +1101,7 @@ static char* outstringerr = NULL;
 static char* outstringout = NULL;
 
 #if defined (low_latency) || !defined(THREADS)
-/* The strings issued by printf etc. are sent directly to the caller.
+/* The strings issued by printf etc. are sent directly to the caller. 
    The callback has to be fast enough (low latency). */
 int
 sh_fputsll(const char *input, FILE* outf)
@@ -1191,7 +1191,7 @@ sh_fputsll(const char *input, FILE* outf)
 }
 
 /* provide a lock around printing function.
-   May become critical if latency of callback is too high. */
+   May become critical if latency of callback is too high.*/
 int
 sh_fputs(const char *input, FILE* outf)
 {
@@ -1321,7 +1321,7 @@ printsend(void)
 #else
         usleep(50000);
 #endif
-        if (printstopp) { // issued by shared_exit()
+        if (printstopp) {// issued by shared_exit()
             // catch the final error message
             mutex_lock(&fputsMutex);
             outsend = outstorage(NULL, FALSE);
@@ -1482,8 +1482,8 @@ void SetAnalyse(
 #endif
 }
 
-/* a dll or shared library should never exit, if loaded dynamically,
-   but ask for graceful shutdown (e.g. being detached) via a callback function */
+/* a dll or shared library should never exit, if loaded dynamically, 
+   but ask for graceful shutdown (e.g. being detached) via a callback function*/
 void shared_exit(int status)
 {
     /* alert caller to detach dll (if we are in the main thread), 
@@ -1508,7 +1508,7 @@ void shared_exit(int status)
     }
 #ifndef low_latency
     // set flag to stop the printsend thread
-    printstopp = TRUE;
+    printstopp = TRUE; 
     // leave this thread for 100ms to stop the printsend thread
 #if defined(__MINGW32__) || defined(_MSC_VER)
     Sleep(100);
@@ -1517,7 +1517,7 @@ void shared_exit(int status)
 #endif
     // send the final error message already caught in printsend()
     if (outsend) {
-        /* requires outsend to be copied by the caller,
+        /* requires outsend to be copied by the caller, 
         because it is freed immediately */
         pfcn(outsend, ng_ident, userptr);
         tfree(outsend);
@@ -1622,7 +1622,7 @@ int sh_ExecutePerLoop(void)
 {
     struct dvec *d;
     int i, veclen;
-//  double testval;
+//    double testval;
     struct plot *pl = plot_cur;
     /* return immediately if callback not wanted */
     if (nodatawanted)
@@ -1635,7 +1635,7 @@ int sh_ExecutePerLoop(void)
         /* test if real */
         if (d->v_flags & VF_REAL) {
             curvecvalsall->vecsa[i]->is_complex = FALSE;
-//          testval = d->v_realdata[veclen];
+//            testval =  d->v_realdata[veclen];
             curvecvalsall->vecsa[i]->creal = d->v_realdata[veclen];
             curvecvalsall->vecsa[i]->cimag = 0.;
         }
@@ -1731,7 +1731,7 @@ int sh_vecinit(runDesc *run)
     return 0;
 }
 
-/* issue callback to request external voltage data for source vname */
+/* issue callback to request external voltage data for source vname*/
 double getvsrcval(double time, char* vname)
 {
     double vval;

@@ -314,7 +314,7 @@ if test "x$with_ngshared" != x  &&  test "x$with_ngshared" != xno ; then
         *)
             CFLAGS="$CFLAGS -fvisibility=hidden"
             AC_CHECK_LIB([pthread], [pthread_create])
-            ;;
+			;;
     esac
 
     with_x=no
@@ -523,10 +523,10 @@ AC_ARG_WITH([wingui],
         AC_DEFINE([HAS_WINGUI], [1], [define to specify MS Windows executable with simple GUI])
     fi],
     [if test "x$with_windows" = xyes; then
-        with_wingui=yes
-    else
+	    with_wingui=yes
+	else
         with_wingui=no
-    fi])
+	fi])
 AC_MSG_RESULT([$with_wingui])
 AM_CONDITIONAL([WINGUI], [test "x$with_wingui" = xyes])
 
@@ -754,8 +754,8 @@ AC_TRY_LINK([#include <setjmp.h>],[jmp_buf env; sigsetjmp(env, 1);],
 # just skip it.
 case $host_os in
         *mingw* )
-            AC_MSG_RESULT([Cannot make dll from libiberty.a, no check for headers])
-            ;;
+AC_MSG_RESULT([Cannot make dll from libiberty.a, no check for headers])
+        ;;
         * )
 # Check for some headers (asprintf, dirname, etc.)
 AC_CHECK_HEADERS([libiberty.h libgen.h])
@@ -765,7 +765,7 @@ AC_CHECK_FUNCS([asprintf], [],
     [AC_CHECK_LIB([iberty], [asprintf],
         [AC_DEFINE([HAVE_ASPRINTF], [1], [Have asprintf in libiberty])
          LIBS="$LIBS -liberty"])])
-            ;;
+         ;;
 esac
 
 # Check for the snprintf function:

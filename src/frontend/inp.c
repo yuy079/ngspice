@@ -1256,7 +1256,7 @@ void
 com_circbyline(wordlist *wl)
 {
     /* undo the automatic wordline creation.
-       wl_flatten allocates memory on the heap for each newline.
+       wl_flatten allocates memory on the heap for each newline. 
        This memory will be released line by line in inp_source(). */
     char *newline = wl_flatten(wl);
     create_circbyline(newline);
@@ -1313,7 +1313,7 @@ dotifeval(struct line *deck)
             elsefound = elseiffound = iffound = 0;
             elsetrue = elseiftrue = iftrue = 0;
             *s = '*';
-//          inp_subcktexpand(dd);
+//            inp_subcktexpand(dd);
         }
         else {
             if (iffound && !iftrue) {
