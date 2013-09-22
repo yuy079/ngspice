@@ -6,8 +6,8 @@
 Interface between a calling program (caller) and ngspice.dll (ngspice.so)
 
 **
-ngSpice_Init(SendChar*, SendStat*, ControlledExit*,
-             SendData*, SendInitData*, BGThreadRunning*, void*)
+ngSpice_Init(SendChar*, SendStat*, ControlledExit*, SendData*, SendInitData*,
+             BGThreadRunning*, void)
 After caller has loaded ngspice.dll, the simulator has to be initialized
 by calling ngSpice_Init(). Address pointers of several callback functions
 defined in the caller are sent to ngspice.dll.

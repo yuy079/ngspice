@@ -326,6 +326,9 @@ if test "x$with_ngshared" != x  &&  test "x$with_ngshared" != xno ; then
     TCL_LIB_SPEC=""
 
 
+
+################### end of ngspice shared option #########################
+
 ##########################################################################
 #
 # tcl libraries test

@@ -293,10 +293,10 @@ line_free_x(struct line *deck, bool recurse)
 void
 inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
 /* arguments:
- *  *fp = pointer to the input file
- *  comfile = whether it is a command file.  Values are TRUE/FALSE
- *  *filename = name of input file
- *  intfile = whether input is from internal array.  Values are TRUE/FALSE
+    *fp = pointer to the input file
+    comfile = whether it is a command file.  Values are TRUE/FALSE
+    *filename = name of input file
+    intfile = whether input is from internal array.  Values are TRUE/FALSE
  */
 {
     struct line *deck, *dd, *ld, *prev_param = NULL, *prev_card = NULL;
