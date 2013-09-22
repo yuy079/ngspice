@@ -18,7 +18,6 @@ Modified 2001: AlansFixes
 /* gtri - end - wbk */
 #endif
 
-
 #define INIT_STATS() \
 do { \
     startTime  = SPfrontEnd->IFseconds();       \

@@ -238,6 +238,7 @@ ISRCparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
         }
         break;
 
+
 #ifdef SHARED_MODULE
         case ISRC_EXTERNAL: {
             here->ISRCfunctionType = EXTERNAL;

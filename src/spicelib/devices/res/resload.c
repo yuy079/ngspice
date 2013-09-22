@@ -30,7 +30,6 @@ RESload(GENmodel *inModel, CKTcircuit *ckt)
                                 *(ckt->CKTrhsOld+here->RESnegNode)) * here->RESconduct;
 
             m = (here->RESm);
-
             *(here->RESposPosptr) += m * here->RESconduct;
             *(here->RESnegNegptr) += m * here->RESconduct;
             *(here->RESposNegptr) -= m * here->RESconduct;
@@ -60,7 +59,6 @@ RESacload(GENmodel *inModel, CKTcircuit *ckt)
              here = here->RESnextInstance) {
 
             m = (here->RESm);
-
             if(here->RESacresGiven) {
                 *(here->RESposPosptr) += m * here->RESacConduct;
                 *(here->RESnegNegptr) += m * here->RESacConduct;

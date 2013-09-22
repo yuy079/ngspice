@@ -279,7 +279,6 @@ extern void SetAnalyse(char *Analyse, int Percent);
 
 #undef putc
 #define putc sh_putc
-
 #endif
 
 /* macro to ignore unused variables and parameters */

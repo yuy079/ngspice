@@ -1229,7 +1229,6 @@ cktislinear(CKTcircuit *ckt, struct line *deck)
    Last line of the array has to get the value NULL */
 char **circarray;
 
-
 void
 create_circbyline(char *line)
 {
@@ -1252,7 +1251,6 @@ create_circbyline(char *line)
     }
 }
 
-
 /* fcn called by command 'circbyline' */
 void
 com_circbyline(wordlist *wl)
@@ -1260,11 +1258,9 @@ com_circbyline(wordlist *wl)
     /* undo the automatic wordline creation.
        wl_flatten allocates memory on the heap for each newline.
        This memory will be released line by line in inp_source(). */
-
     char *newline = wl_flatten(wl);
     create_circbyline(newline);
 }
-
 
 /* handle .if('expr') ... .elseif('expr') ... .else ... .endif statements.
    numparam has evaluated .if('boolean expression') to

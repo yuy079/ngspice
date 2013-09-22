@@ -196,7 +196,6 @@ double *sourceConductance
     default:
         break;
     }
-
     return 0;
 }
 
@@ -311,7 +310,6 @@ double *SourceSatCurrent
     default:
         break;
     }
-
     return 0;
 }
 
@@ -520,7 +518,6 @@ double *gateSourceBulkCapacitance
     default:
         break;
     }
-
     return 0;
 }
 

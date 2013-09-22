@@ -66,7 +66,6 @@ fatal(void)
     (void) signal(SIGQUIT, SIG_DFL);
     (void) kill(getpid(), SIGQUIT);
 #endif
-
 #if defined (SHARED_MODULE)
     /* do not exit, if shared ngspice, but call back */
     shared_exit(EXIT_BAD);

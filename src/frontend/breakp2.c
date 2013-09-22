@@ -24,7 +24,6 @@ int debugnumber = 1;
 
 static char *copynode(char* s);
 
-
 /* Analyse the data given by the .save card or 'save' command.
    Store the data in the global dbs struct.
 */
@@ -135,11 +134,9 @@ ft_getSaves(struct save_info **savesp)
     return (count);
 }
 
-
 /* v(2) --> 2, i(vds) --> vds#branch, 3 --> 3, @mn1[vth0] --> @mn1[vth0]
 ( derived from wordlist *gettoks(char *s) )
  */
-
 static char* copynode(char *s)
 {
     char *l, *r;

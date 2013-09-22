@@ -59,7 +59,6 @@ MOS9temp(GENmodel *inModel, CKTcircuit *ckt)
                "%s: Phi is not positive.", &model->MOS9modName);
             return(E_BADPARM);
         }
-
         model->MOS9oxideCapFactor = 3.9 * 8.854214871e-12/
                 model->MOS9oxideThickness;
         if(!model->MOS9surfaceMobilityGiven) model->MOS9surfaceMobility=600;
