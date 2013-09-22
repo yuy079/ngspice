@@ -388,7 +388,6 @@ VNoi3 3 0  DC 0 TRNOISE(0 0 0 0 15m 22u 50u) : generate RTS noise
                             value += here->VSRCdcValue;
                     }
                     break;
-
 #ifdef SHARED_MODULE
                     case EXTERNAL: {
                         value = getvsrcval(time, here->VSRCname);
@@ -397,7 +396,6 @@ VNoi3 3 0  DC 0 TRNOISE(0 0 0 0 15m 22u 50u) : generate RTS noise
                     }
                     break;
 #endif
-
                 } // switch
             } // else (line 48)
 loadDone:

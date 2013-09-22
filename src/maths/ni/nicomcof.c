@@ -11,7 +11,6 @@ Author: 1985 Thomas L. Quarles
    xmu=0.48: good damping of current ringing, e.g. in R.O.s. */
 #define xmu 0.5
 
-
 int
 NIcomCof(CKTcircuit *ckt)
 {
@@ -20,6 +19,7 @@ NIcomCof(CKTcircuit *ckt)
     int i,j,k;          /* generic loop indicies */
     double arg;
     double arg1;
+
 
     /*  this routine calculates the timestep-dependent terms used in the
      *  numerical integration.

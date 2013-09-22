@@ -33,7 +33,6 @@ struct  MatrixElement
     // ...
 };
 
-
 int
 CKTsenComp(CKTcircuit *ckt)
 {

@@ -953,7 +953,6 @@ BSIM3instance **InstArray;
                 printf("Warning: acnqsMod has been set to its global value %d.\n",
                 model->BSIM3acnqsMod);
             }
-
             if (!here->BSIM3geoGiven)
                 here->BSIM3geo = 0;
 

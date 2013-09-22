@@ -1462,7 +1462,6 @@ gettrans(const char *name, const char *name_end)
     return (NULL);
 }
 
-
 /*
   check if current token matches model bin name -- <token>.[0-9]+
 */
