@@ -976,7 +976,6 @@ int Size_Not_Found, error;
                 if (error)
                     return(error);
               }
-
               if ((SourceSatCurrent > 0.0) && (model->BSIM3v32ijth > 0.0))
               {   here->BSIM3v32vjsm = Nvtm * log(model->BSIM3v32ijth
                                   / SourceSatCurrent + 1.0);

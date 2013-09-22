@@ -58,7 +58,6 @@ MOS2temp(GENmodel *inModel, CKTcircuit *ckt)
                "%s: Phi is not positive.", &model->MOS2modName);
             return(E_BADPARM);
         }
-
         if(!model->MOS2oxideThicknessGiven) {
             model->MOS2oxideThickness = 1e-7;
         } 

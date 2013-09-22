@@ -100,3 +100,4 @@ JFETmAsk(CKTcircuit *ckt, GENmodel *inModel, int which, IFvalue *value)
     }
     /* NOTREACHED */
 }
+

@@ -74,8 +74,8 @@ CKTop (CKTcircuit * ckt, long int firstmode, long int continuemode,
 #endif
 
     }
-
     return (converged);
+
 }
 
 
@@ -342,6 +342,7 @@ spice3_gmin (CKTcircuit * ckt, long int firstmode,
     }
 
     return (converged);
+
 }
 
 

@@ -137,11 +137,9 @@ DCtran(CKTcircuit *ckt,
         ckt->CKTbreaks[0] = 0;
         ckt->CKTbreaks[1] = ckt->CKTfinalTime;
         ckt->CKTbreakSize = 2;
-
 #ifdef SHARED_MODULE
         add_bkpt();
 #endif
-
 #ifdef XSPICE
 /* gtri - begin - wbk - 12/19/90 - Modify setting of CKTminBreak */
         /* Set to 10 times delmin for ATESSE 1 compatibity */
@@ -627,6 +625,7 @@ resume:
 
 /* gtri - end - wbk - Modify Breakpoint stuff */
 
+
 #ifdef SHARED_MODULE
         /* Either directly go to next time step, or modify ckt->CKTdelta depending on
            synchronization requirements. sharedsync() returns 0. */
@@ -684,12 +683,14 @@ resume:
     }
 #endif /* CLUSTER */
 
+
 #ifdef SHARED_MODULE
     /* Either directly go to next time step, or modify ckt->CKTdelta depending on
        synchronization requirements. sharedsync() returns 0.
     */
     sharedsync(&ckt->CKTtime, &ckt->CKTdelta, 0, 0, &ckt->CKTstat->STATrejected, 0);
 #endif
+
 
 #endif
     for(i=5; i>=0; i--)
@@ -839,7 +840,7 @@ resume:
                                  */
 #else
                 redostep = 0;
-                goto chkStep;
+                goto chkStep; // 924, 940
 #endif
             }
             newdelta = ckt->CKTdelta;
@@ -948,7 +949,6 @@ resume:
         }
 #endif
 #endif
-
 #if defined SHARED_MODULE
         /* redostep == 0:
            Either directly go to next time step, or modify ckt->CKTdelta depending on

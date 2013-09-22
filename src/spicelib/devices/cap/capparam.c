@@ -13,7 +13,6 @@ Modified: September 2003 Paolo Nenzi
 #include "ngspice/suffix.h"
 #include "ngspice/fteext.h"
 
-
 /* ARGSUSED */
 int
 CAPparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)

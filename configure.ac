@@ -506,7 +506,6 @@ AM_PROG_CC_C_O
 ## AM_PROG_LIBTOOL
 AC_PROG_LIBTOOL
 
-
 # --with-windows : the user wants to use generate the MS WINDOWS GUI executable
 # old command version, deprecated, use --with-wingui
 AC_ARG_WITH([windows],
@@ -758,7 +757,6 @@ case $host_os in
             AC_MSG_RESULT([Cannot make dll from libiberty.a, no check for headers])
             ;;
         * )
-
 # Check for some headers (asprintf, dirname, etc.)
 AC_CHECK_HEADERS([libiberty.h libgen.h])
 
@@ -767,7 +765,6 @@ AC_CHECK_FUNCS([asprintf], [],
     [AC_CHECK_LIB([iberty], [asprintf],
         [AC_DEFINE([HAVE_ASPRINTF], [1], [Have asprintf in libiberty])
          LIBS="$LIBS -liberty"])])
-
             ;;
 esac
 
@@ -781,6 +778,7 @@ AC_CHECK_FUNCS([dirname], [],
     [AC_CHECK_LIB([gen], [dirname],
         [AC_DEFINE([HAVE_DIRNAME], [1], [Have dirname in libgen])
          LIBS="$LIBS -lgen"])])
+
 
 AC_CHECK_HEADERS([getopt.h])
 AC_CHECK_FUNC([getopt_long], [getopt_long=true])

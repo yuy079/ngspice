@@ -517,3 +517,6 @@ int        BSIM3pTSize = NUMELEMS(BSIM3pTable);
 int        BSIM3mPTSize = NUMELEMS(BSIM3mPTable);
 int        BSIM3iSize = sizeof(BSIM3instance);
 int        BSIM3mSize = sizeof(BSIM3model);
+
+
+
