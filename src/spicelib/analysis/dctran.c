@@ -939,7 +939,7 @@ resume:
             EVTbackup(ckt, ckt->CKTtime + ckt->CKTdelta);
 
 /* gtri - end - wbk - Do event backup */
-#else
+#endif
 #ifdef CLUSTER
         chkStep:
         if(CLUsync(ckt->CKTtime,&ckt->CKTdelta,redostep)){
@@ -949,7 +949,7 @@ resume:
             ckt->CKTstat->STATrejected ++;
         }
 #endif
-#endif
+
 #if defined SHARED_MODULE
         /* redostep == 0:
            Either directly go to next time step, or modify ckt->CKTdelta depending on
