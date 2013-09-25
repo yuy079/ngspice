@@ -34,8 +34,8 @@
 sh_putc, through redefinition in ngspice.h */
 
 int myputs(const char* inp, FILE* f);
-int myputc(const char inp, FILE* f);
-int myfputc(const char inp, FILE* f);
+int myputc(int inp, FILE* f);
+int myfputc(int inp, FILE* f);
 
 int
 myputs(const char* inp, FILE* f)
@@ -44,13 +44,13 @@ myputs(const char* inp, FILE* f)
 }
 
 int
-myputc(const char inp, FILE* f)
+myputc(int inp, FILE* f)
 {
     return putc(inp, f);
 }
 
 int
-myfputc(const char inp, FILE* f)
+myfputc(int inp, FILE* f)
 {
     return fputc(inp, f);
 }
@@ -1064,7 +1064,7 @@ sh_printf(const char *format, ...)
 }
 
 int
-sh_putc(const char inp, FILE* f) 
+sh_putc(int inp, FILE* f) 
 {
     char inpconv[2];
     if ((fileno(f) != STDOUT_FILENO && fileno(f) != STDERR_FILENO &&
@@ -1077,7 +1077,7 @@ sh_putc(const char inp, FILE* f)
 }
 
 int
-sh_fputc(const char inp, FILE* f) 
+sh_fputc(int inp, FILE* f) 
 {
     char inpconv[2];
     if ((fileno(f) != STDOUT_FILENO && fileno(f) != STDERR_FILENO &&
