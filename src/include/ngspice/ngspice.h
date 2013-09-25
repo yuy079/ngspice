@@ -256,8 +256,8 @@ extern int tcl_fprintf(FILE *f, const char *format, ...);
 extern int sh_printf(const char *format, ...);
 extern int sh_fprintf(FILE *f, const char *format, ...);
 extern int sh_fputs(const char *input, FILE* outf);
-extern int sh_fputc(const char input, FILE* outf);
-extern int sh_putc(const char input, FILE* outf);
+extern int sh_fputc(int input, FILE* outf);
+extern int sh_putc(int input, FILE* outf);
 extern void SetAnalyse(char *Analyse, int Percent);
 
 #define HAS_PROGREP
