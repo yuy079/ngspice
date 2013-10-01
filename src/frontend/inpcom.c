@@ -852,7 +852,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
                 ;
 
         inp_reorder_params(subckt_w_params, working, cc, end);
- tprint(cc); /* test printout to file tprint-out.txt */
+// tprint(cc); /* test printout to file tprint-out.txt */
         inp_fix_inst_calls_for_numparam(subckt_w_params, working);
 
         delete_names(subckt_w_params);
