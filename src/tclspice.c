@@ -962,7 +962,7 @@ plot_get_value TCL_CMDPROCARGS(clientData, interp, argc, argv)
         return TCL_ERROR;
     }
     for (v = pl->pl_dvecs; v; v = v->v_next)
-        if (!strcmp(v->v_name, name)) {
+        if (!strcmp(v->v_name, name))
             if (index < v->v_length) {
                 Tcl_SetObjResult(interp, Tcl_NewDoubleObj((double) v->v_realdata[index]));
                 return TCL_OK;
@@ -970,7 +970,6 @@ plot_get_value TCL_CMDPROCARGS(clientData, interp, argc, argv)
                 Tcl_SetResult(interp, "Bad index", TCL_STATIC);
                 return TCL_ERROR;
             }
-        }
 
     Tcl_SetResult(interp, "variable not found", TCL_STATIC);
     return TCL_ERROR;
@@ -1446,8 +1445,6 @@ get_mod_param TCL_CMDPROCARGS(clientData, interp, argc, argv)
 static int
 delta TCL_CMDPROCARGS(clientData, interp, argc, argv)
 {
-    char buf[128];
-
     NG_IGNORE(clientData);
     if (argc < 1 ||argc > 2) {
         Tcl_SetResult(interp, "Wrong # args. spice::delta ?value?", TCL_STATIC);
@@ -1461,8 +1458,8 @@ delta TCL_CMDPROCARGS(clientData, interp, argc, argv)
     if (argc == 2)
         (ft_curckt->ci_ckt)->CKTdelta = atof(argv[1]);
 
-    sprintf(buf, "%G", (ft_curckt->ci_ckt)->CKTdelta);
-    Tcl_SetResult(interp, buf, TCL_VOLATILE);
+    /*Ok, as log as string less than 200 chars*/
+    sprintf(interp->result, "%G", (ft_curckt->ci_ckt)->CKTdelta);
     return TCL_OK;
 }
 
@@ -1475,8 +1472,6 @@ static int
 maxstep TCL_CMDPROCARGS(clientData, interp, argc, argv)
 {
     TRANan *job;
-    char buf[128];
-
     NG_IGNORE(clientData);
     if (argc < 1 ||argc > 2) {
         Tcl_SetResult(interp, "Wrong # args. spice::maxstep ?value?", TCL_STATIC);
@@ -1491,8 +1486,8 @@ maxstep TCL_CMDPROCARGS(clientData, interp, argc, argv)
     if (argc == 2)
         job->TRANmaxStep = atof(argv[1]);
 
-    sprintf(buf, "%G", job->TRANmaxStep);
-    Tcl_SetResult(interp, buf, TCL_VOLATILE);
+    /*Ok, as log as string less than 200 chars*/
+    sprintf(interp->result, "%G", job->TRANmaxStep);
     return TCL_OK;
 }
 
