@@ -1978,8 +1978,6 @@ inp_fix_ternary_operator_str(char *line, bool all)
 static void
 inp_fix_ternary_operator(struct line *card)
 {
-    bool found_control = FALSE;
-
     for (; card; card = card->li_next) {
 
         char *line = card->li_line;
