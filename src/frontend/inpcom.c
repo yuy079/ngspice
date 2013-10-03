@@ -1798,7 +1798,6 @@ inp_fix_ternary_operator_str(char *line, bool all)
 {
     char *conditional, *if_str, *else_str, *question, *colon, keep, *str_ptr, *str_ptr2, *str_ptr3, *new_str;
     char *end_str = NULL, *beg_str = NULL;
-    int  count = 0;
 
     if (!strchr(line, '?') && !strchr(line, ':'))
         return line;
@@ -1838,7 +1837,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr2 = skip_back_ws(question);
     /* test for (conditional)?... */
     if (str_ptr2[-1] == ')') {
-        count = 1;
+        int count = 1;
         str_ptr = str_ptr2 - 1;
         while ((count != 0) && (str_ptr != line)) {
             str_ptr--;
@@ -1874,7 +1873,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr = skip_ws(question + 1);
     if (*str_ptr == '(') {
         // find closing paren
-        count    = 1;
+        int count = 1;
         str_ptr2 = str_ptr/* + 1*/;
         while (count != 0 && *str_ptr2 != '\0') {
             str_ptr2++;
@@ -1912,7 +1911,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     if (*str_ptr == '(') {
         // find end paren ')'
         bool found_paren = FALSE;
-        count = 0;
+        int count = 0;
         str_ptr2 = str_ptr;
         while (*str_ptr2 != '\0') {
             if (*str_ptr2 == '(') {
