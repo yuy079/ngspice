@@ -5,6 +5,7 @@ Modified: 2000 AlansFixes
 **********/
 
 extern int DIOacLoad(GENmodel*,CKTcircuit*);
+extern int DIOaccept(CKTcircuit *, GENmodel *);
 extern int DIOask(CKTcircuit*,GENinstance*,int,IFvalue*,IFvalue*);
 extern int DIOconvTest(GENmodel *,CKTcircuit*);
 extern int DIOdelete(GENmodel*,IFuid,GENinstance**);
