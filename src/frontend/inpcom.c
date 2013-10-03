@@ -1816,7 +1816,7 @@ inp_search_closing_paren(char *s)
 static char*
 inp_fix_ternary_operator_str(char *line, bool all)
 {
-    char *conditional, *if_str, *else_str, *question, *colon, keep, *str_ptr, *str_ptr2, *str_ptr3, *new_str;
+    char *conditional, *if_str, *else_str, *question, *colon, keep, *str_ptr, *str_ptr2, *new_str;
     char *end_str = NULL, *beg_str = NULL;
 
     if (!strchr(line, '?') && !strchr(line, ':'))
@@ -1870,6 +1870,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     }
     /* test for (conditional?... */
     else {
+        char *str_ptr3;
         str_ptr3 = str_ptr2 - 1;
         while (str_ptr3 != line) {
             str_ptr3--;
