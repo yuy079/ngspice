@@ -22,6 +22,10 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
 
     int warn;   /* whether SOA check should be performed */
 
+    int maxwarns = 0;    /* specifies the maximum number of SOA warnings */
+    int maxwarns_fv = 0, maxwarns_bv = 0;
+    static int warns_fv = 0, warns_bv = 0;
+
     if (!cp_getvar("warn", CP_NUM, &warn))
         warn = 0;
 
@@ -30,6 +34,12 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
 
     if(!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
         return OK;
+
+    if (maxwarns == 0) {
+        if (!cp_getvar("maxwarns", CP_NUM, &maxwarns))
+            maxwarns = 5;
+        maxwarns_fv = maxwarns_bv = maxwarns;
+    }
 
     for(; model; model = model->DIOnextModel)
         for (here = model->DIOinstances; here; here = here->DIOnextInstance) {
@@ -40,12 +50,18 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
                 ckt->CKTrhsOld [here->DIOnegNode];
 
             if (vd > model->DIOfv_max)
-                printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
-                       here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                if (warns_fv < maxwarns_fv) {
+                    printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
+                           here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                    warns_fv++;
+                }
 
             if (-vd > model->DIObv_max)
-                printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
-                       here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
+                if (warns_bv < maxwarns_bv) {
+                    printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
+                           here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
+                    warns_bv++;
+                }
 
         }
 
