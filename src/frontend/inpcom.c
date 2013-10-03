@@ -1802,9 +1802,8 @@ inp_search_closing_paren1(char *s)
         if (count == 0)
             return s;
     }
-    if (count != 0)
-        return NULL;
-    return s;
+
+    return NULL;
 }
 
 
@@ -1822,9 +1821,8 @@ inp_search_for_closing_paren2(char *s)
         if (count == 0)
             return s;
     }
-    if (count != 0)
-        return NULL;
-    return s;
+
+    return NULL;
 }
 
 
