@@ -20,26 +20,15 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
 
-    int warn;   /* whether SOA check should be performed */
-
-    int maxwarns = 0;    /* specifies the maximum number of SOA warnings */
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
 
-    if (!cp_getvar("warn", CP_NUM, &warn))
-        warn = 0;
-
-    if (warn <= 0)
-        return OK;
 
     if(!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
         return OK;
 
-    if (maxwarns == 0) {
-        if (!cp_getvar("maxwarns", CP_NUM, &maxwarns))
-            maxwarns = 5;
-        maxwarns_fv = maxwarns_bv = maxwarns;
-    }
+    if (!ckt->CKTsoaCheck)
+        return OK;
 
     for(; model; model = model->DIOnextModel)
         for (here = model->DIOinstances; here; here = here->DIOnextInstance) {
