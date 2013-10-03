@@ -1873,8 +1873,8 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr = skip_ws(question + 1);
     if (*str_ptr == '(') {
         // find closing paren
+      char *inp_search_closing_paren1(char *str_ptr2) {
         int count = 1;
-        str_ptr2 = str_ptr/* + 1*/;
         // assert(*str_ptr2 == '(')
         while (count != 0 && *str_ptr2 != '\0') {
             str_ptr2++;
@@ -1885,6 +1885,9 @@ inp_fix_ternary_operator_str(char *line, bool all)
         }
         if (count != 0)
             str_ptr2 = NULL;
+        return str_ptr2;
+      }
+        str_ptr2 = inp_search_closing_paren1(str_ptr /* +1 */);
         if (!str_ptr2) {
             fprintf(stderr, "ERROR: problem parsing 'if' of ternary string %s!\n", line);
             controlled_exit(EXIT_FAILURE);
@@ -1912,10 +1915,10 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr = skip_ws(colon + 1);
     /* ... : (else) */
     if (*str_ptr == '(') {
+      char *inp_search_for_closing_paren2(char *str_ptr2) {
         // find end paren ')'
         bool found_paren = FALSE;
         int count = 0;
-        str_ptr2 = str_ptr;
         // assert(*str_ptr2 == '(')
         while (*str_ptr2 != '\0') {
             if (*str_ptr2 == '(') {
@@ -1930,6 +1933,9 @@ inp_fix_ternary_operator_str(char *line, bool all)
         }
         if (found_paren && count != 0)
             str_ptr2 = NULL;
+        return str_ptr2;
+      }
+        str_ptr2 = inp_search_for_closing_paren2(str_ptr);
         if (!str_ptr2) {
             fprintf(stderr, "ERROR: problem parsing ternary line %s!\n", line);
             controlled_exit(EXIT_FAILURE);
