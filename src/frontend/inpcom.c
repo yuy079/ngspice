@@ -1789,26 +1789,7 @@ comment_out_unused_subckt_models(struct line *start_card, int no_of_lines)
 
 // find closing paren
 static char *
-inp_search_closing_paren1(char *s)
-{
-    int count = 0;
-    // assert(*s == '(')
-    while (*s) {
-        if (*s == '(')
-            count++;
-        if (*s == ')')
-            count--;
-        if (count == 0)
-            return s + 1;
-        s++;
-    }
-
-    return NULL;
-}
-
-
-static char *
-inp_search_for_closing_paren2(char *s)
+inp_search_closing_paren(char *s)
 {
     int count = 0;
     // assert(*s == '(')
@@ -1911,7 +1892,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     // get if
     str_ptr = skip_ws(question + 1);
     if (*str_ptr == '(') {
-        colon = inp_search_closing_paren1(str_ptr);
+        colon = inp_search_closing_paren(str_ptr);
         if (!colon) {
             fprintf(stderr, "ERROR: problem parsing 'if' of ternary string %s!\n", line);
             controlled_exit(EXIT_FAILURE);
@@ -1938,7 +1919,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr = skip_ws(colon + 1);
     /* ... : (else) */
     if (*str_ptr == '(') {
-        str_ptr2 = inp_search_for_closing_paren2(str_ptr);
+        str_ptr2 = inp_search_closing_paren(str_ptr);
         if (!str_ptr2) {
             fprintf(stderr, "ERROR: problem parsing ternary line %s!\n", line);
             controlled_exit(EXIT_FAILURE);
