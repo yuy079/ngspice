@@ -51,7 +51,7 @@ SPICEdev DIOinfo = {
  /* DEVtrunc      */ DIOtrunc,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ DIOacLoad,
- /* DEVaccept     */ NULL,
+ /* DEVaccept     */ DIOaccept,
  /* DEVdestroy    */ DIOdestroy,
  /* DEVmodDelete  */ DIOmDelete,
  /* DEVdelete     */ DIOdelete,
