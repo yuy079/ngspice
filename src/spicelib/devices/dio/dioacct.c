@@ -17,13 +17,23 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
 {
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
-    int warn;       /* =1 SOA check should performed */
-    double vd;      /* current diode voltage */
-
+    double vd;         /* actual diode voltage */
+    int warn;          /* =1 SOA check should performed */
+    int maxwarns=0;    /* specifies the maximum number of SOA warnings */
+    int maxwarns_fv=0, maxwarns_bv=0;
+    static int warns_fv=0, warns_bv=0;
+   
     if (!cp_getvar("warn", CP_NUM, &warn))
         warn = 0;
 
     if (warn > 0) {
+
+        if (maxwarns == 0) {
+            if (!cp_getvar("maxwarns", CP_NUM, &maxwarns))
+                maxwarns = 5;
+            maxwarns_fv = maxwarns_bv = maxwarns;
+        }
+
         /* loop through all the models */
         for( ; model != NULL; model = model->DIOnextModel ) {
     
@@ -39,11 +49,17 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
                     return(OK);
                 } else {
                     if (vd > model->DIOfv_max)
-                        printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n", 
-                        here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                        if (warns_fv < maxwarns_fv) {
+                            printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n", 
+                            here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                            warns_fv++;
+                        }
                     if (-vd > model->DIObv_max)
-                        printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n", 
-                        here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
+                        if (warns_bv < maxwarns_bv) {
+                            printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n", 
+                            here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
+                            warns_bv++;
+                        }
                 } // if ... else
     
             } // end instance loop
