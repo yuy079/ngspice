@@ -1864,7 +1864,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     all = TRUE;
 
     // get conditional
-#warning "FIXME, this is search for beginning of the `conditional' expression is buggy."
+//#warning "FIXME, this is search for beginning of the `conditional' expression is buggy."
     /* FIXME, `question' might point to the end of this, for example
      *   "(a>2)||(b<4)?"
      */
@@ -1902,7 +1902,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     *str_ptr = keep;
 
     // get if
-#warning "FIXME, this search for a matching ':' is buggy."
+//#warning "FIXME, this search for a matching ':' is buggy."
     /* FIXME, str_ptr might look like this here
      *   "(foo+b)*(c?d:e):"
      */
@@ -1924,7 +1924,7 @@ inp_fix_ternary_operator_str(char *line, bool all)
     str_ptr = skip_ws(colon + 1);
     /* ... : (else) */
     if (*str_ptr == '(') {
-#warning "FIXME, this search for end of `else' expression is buggy."
+//#warning "FIXME, this search for end of `else' expression is buggy."
         /* FIXME, str_ptr might look like this here
          *   "(foo*2)+3"
          */
