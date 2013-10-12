@@ -13,30 +13,21 @@ Author: 1985 Thomas L. Quarles
 
 int
 DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
-        /* make SOA checks after NR has finished */
+/* make SOA checks after NR has finished */
 {
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
     double vd;         /* actual diode voltage */
-    int warn;          /* =1 SOA check should performed */
-    int maxwarns=0;    /* specifies the maximum number of SOA warnings */
     int maxwarns_fv=0, maxwarns_bv=0;
     static int warns_fv=0, warns_bv=0;
    
-    if (!cp_getvar("warn", CP_NUM, &warn))
-        warn = 0;
-
-    if (warn > 0) {
-
-        if (maxwarns == 0) {
-            if (!cp_getvar("maxwarns", CP_NUM, &maxwarns))
-                maxwarns = 5;
-            maxwarns_fv = maxwarns_bv = maxwarns;
-        }
+    if (ckt->CKTsoaCheck > 0) {
 
         /* loop through all the models */
         for( ; model != NULL; model = model->DIOnextModel ) {
     
+            maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
+
             /* loop through all the instances of the model */
             for (here = model->DIOinstances; here != NULL ;
                     here=here->DIOnextInstance) {
