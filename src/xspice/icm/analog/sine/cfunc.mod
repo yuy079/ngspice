@@ -144,8 +144,6 @@ void cm_sine(ARGS)
     double peak;       /* peak voltage value for the wave               */
     double radian;     /* phase value in radians                        */
 
-    Mif_Complex_t ac_gain;
-
     Local_Data_t *loc; /* Pointer to local static data, not to be included
                           in the state vector */
 
@@ -254,6 +252,8 @@ void cm_sine(ARGS)
         PARTIAL(out, cntl_in) = 0;
 
     } else {                /* Output AC Gain */
+
+        Mif_Complex_t ac_gain;
 
         ac_gain.real = 0.0;
         ac_gain.imag = 0.0;
