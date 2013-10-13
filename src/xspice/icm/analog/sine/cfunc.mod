@@ -170,6 +170,7 @@ void cm_sine(ARGS)
             return;
         }
 
+        OUTPUT(out) = (output_hi + output_low) / 2;
     }
 
     if (ANALYSIS == MIF_DC) {
