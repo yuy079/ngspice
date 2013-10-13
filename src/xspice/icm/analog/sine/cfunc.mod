@@ -240,7 +240,7 @@ void cm_sine(ARGS)
 
             int i;
 
-            for (i = 0; i < cntl_size - 1; i++)
+            for (i = 0; i < cntl_size; i++)
                 if ((cntl_input < x[i+1]) && (cntl_input >= x[i])) {
                     /* Interpolate to the correct frequency value */
                     freq = ((cntl_input - x[i]) / (x[i+1] - x[i])) *
