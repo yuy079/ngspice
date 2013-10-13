@@ -132,14 +132,8 @@ void cm_sine(ARGS)
 
     double *x;         /* pointer to the control array values           */
     double *y;         /* pointer to the frequency array values         */
-    double cntl_input; /* control input                                 */
-    double dout_din;   /* partial derivative of output wrt control in   */
     double output_low; /* output low value                              */
     double output_hi;  /* output high value                             */
-    double freq=0.0;   /* frequency of the sine wave                    */
-    double center;     /* dc offset for the sine wave                   */
-    double peak;       /* peak voltage value for the wave               */
-    double radian;     /* phase value in radians                        */
 
     Local_Data_t *loc; /* Pointer to local static data, not to be included
                           in the state vector */
@@ -190,6 +184,13 @@ void cm_sine(ARGS)
     } else if (ANALYSIS == MIF_TRAN) {
 
         int i;
+
+        double radian;     /* phase value in radians                        */
+        double freq = 0.0; /* frequency of the sine wave                    */
+        double dout_din;   /* partial derivative of output wrt control in   */
+        double center;     /* dc offset for the sine wave                   */
+        double peak;       /* peak voltage value for the wave               */
+        double cntl_input; /* control input                                 */
 
         double *phase;     /* pointer to the instantaneous phase value      */
         double *phase1;    /* pointer to the previous value for the phase   */
