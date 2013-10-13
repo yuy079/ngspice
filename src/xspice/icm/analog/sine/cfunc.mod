@@ -118,7 +118,8 @@ NON-STANDARD FEATURES
 
 /*=== CM_SINE ROUTINE ===*/
 
-void cm_sine(ARGS)
+void
+cm_sine(ARGS)
 {
     int i;             /* generic loop counter index                    */
     int cntl_size;     /* control array size                            */
