@@ -859,21 +859,23 @@ main(int argc, char **argv)
 
     /* --- Process command line options --- */
     for(;;) {
+        enum { soa_log = 1001, };
 
         static struct option long_options[] = {
-            {"help", 0, 0, 'h'},
-            {"version", 0, 0, 'v'},
-            {"batch", 0, 0, 'b'},
-            {"autorun", 0, 0, 'a'},
-            {"circuitfile", 1, 0, 'c'},
-            {"interactive", 0, 0, 'i'},
-            {"no-spiceinit", 0, 0, 'n'},
-            {"output", 1, 0, 'o'},
-            {"pipe", 0, 0, 'p'},
-            {"completion", 0, 0, 'q'},
-            {"rawfile", 1, 0, 'r'},
-            {"server", 0, 0, 's'},
-            {"terminal", 1, 0, 't'},
+            {"help",         no_argument,       0, 'h'},
+            {"version",      no_argument,       0, 'v'},
+            {"batch",        no_argument,       0, 'b'},
+            {"autorun",      no_argument,       0, 'a'},
+            {"circuitfile",  required_argument, 0, 'c'},
+            {"interactive",  no_argument,       0, 'i'},
+            {"no-spiceinit", no_argument,       0, 'n'},
+            {"output",       required_argument, 0, 'o'},
+            {"pipe",         no_argument,       0, 'p'},
+            {"completion",   no_argument,       0, 'q'},
+            {"rawfile",      required_argument, 0, 'r'},
+            {"server",       no_argument,       0, 's'},
+            {"terminal",     required_argument, 0, 't'},
+            {"soa-log",      required_argument, 0, soa_log},
             {0, 0, 0, 0}
         };
 
@@ -962,6 +964,10 @@ main(int argc, char **argv)
             case 't':
               if (optarg)
                   cp_vset("term", CP_STRING, optarg);
+              break;
+
+            case soa_log:
+              fprintf(stderr, "fixme: --soa-log the arg was \"%s\"\n", optarg);
               break;
 
             case '?':
