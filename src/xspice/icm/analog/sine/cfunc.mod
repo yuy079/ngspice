@@ -137,8 +137,6 @@ void cm_sine(ARGS)
     double dout_din;   /* partial derivative of output wrt control in   */
     double output_low; /* output low value                              */
     double output_hi;  /* output high value                             */
-    double *phase;     /* pointer to the instantaneous phase value      */
-    double *phase1;    /* pointer to the previous value for the phase   */
     double freq=0.0;   /* frequency of the sine wave                    */
     double center;     /* dc offset for the sine wave                   */
     double peak;       /* peak voltage value for the wave               */
@@ -183,12 +181,17 @@ void cm_sine(ARGS)
 
     if (ANALYSIS == MIF_DC) {
 
+        double *phase;     /* pointer to the instantaneous phase value      */
+
         OUTPUT(out) = (output_hi + output_low) / 2;
         PARTIAL(out, cntl_in) = 0;
         phase = (double *) cm_analog_get_ptr(INT1, 0);
         *phase = 0;
 
     } else if (ANALYSIS == MIF_TRAN) {
+
+        double *phase;     /* pointer to the instantaneous phase value      */
+        double *phase1;    /* pointer to the previous value for the phase   */
 
         phase  = (double *) cm_analog_get_ptr(INT1, 0);
         phase1 = (double *) cm_analog_get_ptr(INT1, 1);
