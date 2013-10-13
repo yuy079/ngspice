@@ -245,6 +245,7 @@ void cm_sine(ARGS)
                     /* Interpolate to the correct frequency value */
                     freq = ((cntl_input - x[i]) / (x[i+1] - x[i])) *
                         (y[i+1] - y[i]) + y[i];
+                    break;
                 }
         }
 
