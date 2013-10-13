@@ -127,7 +127,6 @@ NON-STANDARD FEATURES
 
 void cm_sine(ARGS)
 {
-    int i;             /* generic loop counter index                    */
     int cntl_size;     /* control array size                            */
     int freq_size;     /* frequency array size                          */
 
@@ -190,6 +189,8 @@ void cm_sine(ARGS)
 
     } else if (ANALYSIS == MIF_TRAN) {
 
+        int i;
+
         double *phase;     /* pointer to the instantaneous phase value      */
         double *phase1;    /* pointer to the previous value for the phase   */
 
@@ -234,6 +235,8 @@ void cm_sine(ARGS)
             /*** cntl_input within bounds of end midpoints...
                  must determine position progressively & then
                  calculate required output. ***/
+
+            int i;
 
             for (i = 0; i < cntl_size - 1; i++)
                 if ((cntl_input < x[i+1]) && (cntl_input >= x[i])) {
