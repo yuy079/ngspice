@@ -4,6 +4,7 @@ noinst_LTLIBRARIES = libbjt.la
 
 libbjt_la_SOURCES =	\
 	bjt.c		\
+	bjtacct.c	\
 	bjtacld.c	\
 	bjtask.c	\
 	bjtconv.c	\
