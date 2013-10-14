@@ -1,0 +1,82 @@
+/**********
+Copyright 1990 Regents of the University of California.  All rights reserved.
+Author: 1985 Thomas L. Quarles
+**********/
+
+#include "ngspice/ngspice.h"
+#include "ngspice/cktdefs.h"
+#include "bjtdefs.h"
+#include "ngspice/trandefs.h"
+#include "ngspice/sperror.h"
+#include "ngspice/suffix.h"
+#include "ngspice/cpdefs.h" 
+
+extern FILE *slogp;          /* soa log file ('--soa-log file' command line option) */
+
+int
+BJTaccept(CKTcircuit *ckt, GENmodel *inModel)
+/* make SOA checks after NR has finished */
+{
+    BJTmodel *model = (BJTmodel *) inModel;
+    BJTinstance *here;
+    double vbe, vbc, vce;    /* actual bjt voltages */
+    int maxwarns_vbe=0, maxwarns_vbc=0, maxwarns_vce=0;
+    static int warns_vbe=0, warns_vbc=0, warns_vce=0;
+   
+    if (ckt->CKTsoaCheck > 0) {
+
+        /* loop through all the models */
+        for( ; model != NULL; model = model->BJTnextModel ) {
+    
+            maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
+
+            /* loop through all the instances of the model */
+            for (here = model->BJTinstances; here != NULL ;
+                    here=here->BJTnextInstance) {
+
+                vbe = fabs(*(ckt->CKTrhsOld+here->BJTbasePrimeNode)-
+                           *(ckt->CKTrhsOld+here->BJTemitPrimeNode));
+                vbc = fabs(*(ckt->CKTrhsOld+here->BJTbasePrimeNode)-
+                           *(ckt->CKTrhsOld+here->BJTcolPrimeNode));
+                vce = fabs(vbe-vbc);
+
+                if(!(ckt->CKTmode & (MODETRAN | MODETRANOP))) {
+                    /* not transient, so shouldn't be here */
+                    return(OK);
+                } else {
+                    if (vbe > model->BJTvbeMax)
+                        if (warns_vbe < maxwarns_vbe) {
+                            printf("Instance: %s Model: %s Time: %g |Vbe|=%g has exceeded Vbe_max=%g\n", 
+                            here->BJTname, model->BJTmodName, ckt->CKTtime, vbe, model->BJTvbeMax);
+                            if (slogp)
+                                fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbe|=%g has exceeded Vbe_max=%g\n", 
+                                here->BJTname, model->BJTmodName, ckt->CKTtime, vbe, model->BJTvbeMax);
+                            warns_vbe++;
+                        }
+                    if (vbc > model->BJTvbcMax)
+                        if (warns_vbc < maxwarns_vbc) {
+                            printf("Instance: %s Model: %s Time: %g |Vbc|=%g has exceeded Vbc_max=%g\n", 
+                            here->BJTname, model->BJTmodName, ckt->CKTtime, vbc, model->BJTvbcMax);
+                            if (slogp)
+                                fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbc|=%g has exceeded Vbc_max=%g\n", 
+                                here->BJTname, model->BJTmodName, ckt->CKTtime, vbc, model->BJTvbcMax);
+                            warns_vbc++;
+                        }
+                    if (vce > model->BJTvceMax)
+                        if (warns_vce < maxwarns_vce) {
+                            printf("Instance: %s Model: %s Time: %g |Vce|=%g has exceeded Vce_max=%g\n", 
+                            here->BJTname, model->BJTmodName, ckt->CKTtime, vce, model->BJTvceMax);
+                            if (slogp)
+                                fprintf(slogp, "Instance: %s Model: %s Time: %g |Vce|=%g has exceeded Vce_max=%g\n", 
+                                here->BJTname, model->BJTmodName, ckt->CKTtime, vce, model->BJTvceMax);
+                            warns_vce++;
+                        }
+                } // if ... else
+    
+            } // end instance loop
+    
+        } // end model loop
+
+    }
+    return(OK);
+}
