@@ -8,6 +8,7 @@ Modified: 2000 AlansFixes
 
 
 extern int BJTacLoad(GENmodel *,CKTcircuit*);
+extern int BJTaccept(CKTcircuit *, GENmodel *);
 extern int BJTask(CKTcircuit *,GENinstance*,int,IFvalue*,IFvalue*);
 extern int BJTconvTest(GENmodel*,CKTcircuit*);
 extern int BJTdelete(GENmodel*,IFuid,GENinstance**);

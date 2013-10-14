@@ -50,7 +50,7 @@ SPICEdev BJTinfo = {                  /* description from struct IFdevice  */
  /* DEVtrunc      */ BJTtrunc,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ BJTacLoad,
- /* DEVaccept     */ NULL,
+ /* DEVaccept     */ BJTaccept,
  /* DEVdestroy    */ BJTdestroy,
  /* DEVmodDelete  */ BJTmDelete,
  /* DEVdelete     */ BJTdelete,
