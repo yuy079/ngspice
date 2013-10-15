@@ -1846,6 +1846,8 @@ inp_fix_ternary_operator_str(char *line, bool all)
     char *conditional, *if_str, *else_str, *question, *colon, keep, *str_ptr, *str_ptr2, *new_str;
     char *end_str, *beg_str = NULL;
 
+    return line;
+
     if (!strchr(line, '?') && !strchr(line, ':'))
         return line;
 
@@ -2016,6 +2018,7 @@ inp_fix_ternary_operator(struct line *card)
            The while loop cares for two or more ternary functions at top level,
            nesting is taken care of by recursive action inside of
            inp_fix_ternary_operator_str */
+        if (0)
         while (strchr(line, '?') && strchr(line, ':')) {
             card->li_line = inp_fix_ternary_operator_str(line, FALSE);
             line = card->li_line;
