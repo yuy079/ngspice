@@ -1157,6 +1157,7 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
     SPICE_DSTRING tstr;
     const char *s_orig = s;
 
+    fprintf(stderr, "formula: \"%.*s\"\n", (int)(s_end - s), s);
     spice_dstring_init(&tstr);
 
     for (i = 0; i <= nprece; i++) {
@@ -1307,8 +1308,10 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
 
         if ((state == S_binop) || (state == S_stop)) {
             /* do pending binaries of priority Upto "level" */
+            fprintf(stderr, "--------------------- with c='%c' @ %d\n", c, level);
             for (i = 1; i <= level; i++) {
                 if (i < level && oper[i] == ':' && oper[i+1] == '?') {
+                    fprintf(stderr, "oper[%d]='%c', accu[+1]=%g accu[0]=%g accu[-1]=%g !!!\n", i, oper[i+1], accu[i+1], accu[i], accu[i-1]);
                     accu[i + 1] = ternary_fcn((int) accu[i+1], accu[i], accu[i-1]);
                     accu[i - 1] = 0.0;
                     oper[i] = ' ';  /* reset intermediates */
@@ -1316,6 +1319,7 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
                     oper[i + 1] = ' ';  /* reset intermediates */
                     i++;
                 } else {
+                fprintf(stderr, "oper[%d]='%c', accu[-1]=%g accu[0]=%g\n", i, oper[i], accu[i-1], accu[i]);
                 /* not yet speed optimized! */
                 accu[i] = operate(oper[i], accu[i], accu[i - 1]);
                 accu[i - 1] = 0.0;
@@ -1342,6 +1346,9 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
     *perror = error;
 
     spice_dstring_free(&tstr);
+
+    if (!error)
+        fprintf(stderr, " --> %g\n", accu[topop]);
 
     if (error)
         return 1.0;
