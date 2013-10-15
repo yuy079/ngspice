@@ -3,20 +3,23 @@
 * (compile (concat "../w32/src/ngspice " buffer-file-name) t)
 * (compile "cd ../w32 && LC_ALL=C make -k")
 *
-* these .param lines get transformed in inpcom.c
+* these lines don't get transformed in inpcom.c
 *   a?b:c --> ternary_fcn(a,b,c)
 
-.param foo_1001 = {1+2}
-.param foo_1002 = {1 + 2 }
-.param foo_1003 = {1+2*3}
-.param foo_1004 = {(1?2:3)+100}
-.param foo_1005 = {(1>2?2*4:1+2*3)+100}
+i1001  1001 0 -1
+r1001  1001 0  {1+2}
 
-v1001  1001 0  {foo_1001}
-v1002  1002 0  {foo_1002}
-v1003  1003 0  {foo_1003}
-v1004  1004 0  {foo_1004}
-v1005  1005 0  {foo_1005}
+i1002  1002 0 -1
+r1002  1002 0  {1 + 2 }
+
+i1003  1003 0 -1
+r1003  1003 0  {1+2*3}
+
+i1004  1004 0 -1
+r1004  1004 0  {(1?2:3)+100}
+
+i1005  1005 0 -1
+r1005  1005 0  {(1>2?2*4:1+2*3)+100}
 
 
 .control
