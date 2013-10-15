@@ -959,6 +959,12 @@ fetchoperator(tdico *dico,
         level = 7;
     } else if (c == '!') {
         state = S_unop;
+    } else if (c == '?') {
+        state = S_binop;
+        level = 9;
+    } else if (c == ':') {
+        state = S_binop;
+        level = 8;
     } else {
         state = S_init;
         if (c > ' ')
@@ -1302,10 +1308,19 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
         if ((state == S_binop) || (state == S_stop)) {
             /* do pending binaries of priority Upto "level" */
             for (i = 1; i <= level; i++) {
+                if (i < level && oper[i] == ':' && oper[i+1] == '?') {
+                    accu[i + 1] = ternary_fcn((int) accu[i+1], accu[i], accu[i-1]);
+                    accu[i - 1] = 0.0;
+                    oper[i] = ' ';  /* reset intermediates */
+                    accu[i] = 0.0;
+                    oper[i + 1] = ' ';  /* reset intermediates */
+                    i++;
+                } else {
                 /* not yet speed optimized! */
                 accu[i] = operate(oper[i], accu[i], accu[i - 1]);
                 accu[i - 1] = 0.0;
                 oper[i] = ' ';  /* reset intermediates */
+                }
             }
             oper[level] = c;
 
