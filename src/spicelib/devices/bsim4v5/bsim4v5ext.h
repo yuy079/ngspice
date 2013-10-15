@@ -6,6 +6,7 @@ File: bsim4v5ext.h
 **********/
 
 extern int BSIM4v5acLoad(GENmodel *,CKTcircuit*);
+extern int BSIM4v5accept(CKTcircuit *, GENmodel *);
 extern int BSIM4v5ask(CKTcircuit *,GENinstance*,int,IFvalue*,IFvalue*);
 extern int BSIM4v5convTest(GENmodel *,CKTcircuit*);
 extern int BSIM4v5delete(GENmodel*,IFuid,GENinstance**);
