@@ -1228,7 +1228,7 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
                 state = S_atom;
                 if (fu > 0) {
                     if ((fu == 18))
-                        u = ternary_fcn((int) v, w, u);
+                        u = ternary_fcn((int) v, w, u); /* round !!! */
                     else if ((fu == 20))
                         u = agauss(v, w, u);
                     else if ((fu == 22))
