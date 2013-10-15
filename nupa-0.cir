@@ -1,0 +1,17 @@
+* nupa
+
+* (compile (concat "../w32/src/ngspice " buffer-file-name) t)
+* (compile "cd ../w32 && LC_ALL=C make -k")
+*
+* these lines a?b:c are lexed/parsed in ...
+
+R1  1 0  1k
+
+.control
+
+let foo = 10001 ? 200003 : 4
+echo "hey you sunshine $&foo"
+
+quit 0
+
+.endc

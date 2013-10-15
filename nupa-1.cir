@@ -1,0 +1,44 @@
+* nupa
+
+* (compile (concat "../w32/src/ngspice " buffer-file-name) t)
+* (compile "cd ../w32 && LC_ALL=C make -k")
+*
+* these lines don't get transformed in inpcom.c
+*   a?b:c --> ternary_fcn(a,b,c)
+
+v1001  1001 0  {1+2}
+v1002  1002 0  {1 + 2 }
+v1003  1003 0  {1+2*3}
+v1004  1004 0  {(1?2:3)+100}
+v1005  1005 0  {(1>2?2*4:1+2*3)+100}
+
+
+.control
+
+define mismatch(a,b,err) abs(a-b)>err
+
+op
+
+if mismatch(v(1001), 3, 1e-9)
+  echo "ERROR, mismatch 1001"
+end
+
+if mismatch(v(1002), 3, 1e-9)
+  echo "ERROR, mismatch 1002"
+end
+
+if mismatch(v(1003), 7, 1e-9)
+  echo "ERROR, mismatch 1003"
+end
+
+if mismatch(v(1004), 102, 1e-9)
+  echo "ERROR, mismatch 1004"
+end
+
+if mismatch(v(1005), 107, 1e-9)
+  echo "ERROR, mismatch 1005"
+end
+
+quit 1
+
+.endc
