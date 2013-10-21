@@ -11,6 +11,7 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
+extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
 /* make SOA checks after NR has finished */
 
@@ -36,12 +37,15 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
             double vd;  /* current diode voltage */
 
             vd = ckt->CKTrhsOld [here->DIOposPrimeNode] -
-                ckt->CKTrhsOld [here->DIOnegNode];
+                 ckt->CKTrhsOld [here->DIOnegNode];
 
             if (vd > model->DIOfv_max)
                 if (warns_fv < maxwarns_fv) {
                     printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
                            here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                    if (slogp)
+                        fprintf(slogp, "Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
+                                here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
                     warns_fv++;
                 }
 
@@ -49,6 +53,9 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
                 if (warns_bv < maxwarns_bv) {
                     printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
                            here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
+                    if (slogp)
+                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
+                                here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
                     warns_bv++;
                 }
 
