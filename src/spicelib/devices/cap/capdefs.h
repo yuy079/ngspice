@@ -91,6 +91,7 @@ typedef struct sCAPmodel {      /* model structure for a capacitor */
     double CAPdel;        /* amount by which length and width are less than drawn */
     double CAPdi;         /* Relative dielectric constant */
     double CAPthick;      /* Insulator thickness */
+    double CAPbv_max;     /* Maximum capacitor voltage */
     unsigned CAPmCapGiven      : 1;    /* flag indicates default capacitance given */
     unsigned CAPcjGiven        : 1;    /* Unit Area Capacitance ( F/ M**2 ) */
     unsigned CAPcjswGiven      : 1;    /* Unit Length Sidewall Capacitance( F/M )*/
@@ -104,6 +105,7 @@ typedef struct sCAPmodel {      /* model structure for a capacitor */
     unsigned CAPtc2Given       : 1;    /* flag indicates tc2 was specified */
     unsigned CAPdiGiven        : 1;    /* flag indicates epsilon-ins given */
     unsigned CAPthickGiven     : 1;    /* flags indicates insulator thickness given */
+    unsigned CAPbv_maxGiven    : 1;    /* flags indicates maximum voltage is given */
 
 } CAPmodel;
 
@@ -137,6 +139,7 @@ typedef struct sCAPmodel {      /* model structure for a capacitor */
 #define CAP_MOD_THICK 112
 #define CAP_MOD_CAP 113
 #define CAP_MOD_DEFLENGTH 114
+#define CAP_MOD_BV_MAX 115
 
 /* device questions */
 #define CAP_QUEST_SENS_REAL      201

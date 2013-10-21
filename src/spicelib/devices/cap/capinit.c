@@ -49,7 +49,7 @@ SPICEdev CAPinfo = {
  /* DEVtrunc      */ CAPtrunc,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ CAPacLoad,
- /* DEVaccept     */ NULL,
+ /* DEVaccept     */ CAPaccept,
  /* DEVdestroy    */ CAPdestroy,
  /* DEVmodDelete  */ CAPmDelete,
  /* DEVdelete     */ CAPdelete,

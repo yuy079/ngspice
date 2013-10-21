@@ -25,6 +25,10 @@ RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
     /*  loop through all the resistor models */
     for( ; model != NULL; model = model->RESnextModel ) {
 
+        if(!model->RESbv_maxGiven) {
+            model->RESbv_max = 1e99;
+        }
+
         /* loop through all the instances of the model */
         for (here = model->RESinstances; here != NULL ;
                 here=here->RESnextInstance) {

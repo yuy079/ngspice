@@ -105,6 +105,7 @@ typedef struct sRESmodel {       /* model structure for a resistor */
     double RESfNcoef;       /* Flicker noise coefficient */
     double RESfNexp;        /* Flicker noise exponent */
     double RESres;          /* Default model resistance */
+    double RESbv_max;       /* Maximum resistor voltage */
     unsigned REStnomGiven       :1; /* flag to indicate nominal temp. was given */
     unsigned REStc1Given        :1; /* flag to indicate tc1 was specified */
     unsigned REStc2Given        :1; /* flag to indicate tc2 was specified */
@@ -116,6 +117,7 @@ typedef struct sRESmodel {       /* model structure for a resistor */
     unsigned RESfNcoefGiven     :1; /* flag to indicate kf given */
     unsigned RESfNexpGiven      :1; /* flag to indicate af given */
     unsigned RESresGiven        :1; /* flag to indicate model resistance given */
+    unsigned RESbv_maxGiven     :1; /* flags indicates maximum voltage is given */
 } RESmodel;
 
 /* device parameters */
@@ -150,6 +152,7 @@ typedef struct sRESmodel {       /* model structure for a resistor */
 #define RES_MOD_SHORT 109
 #define RES_MOD_KF 110
 #define RES_MOD_AF 111
+#define RES_MOD_BV_MAX 112
 
 /* device questions */
 #define RES_QUEST_SENS_REAL      201

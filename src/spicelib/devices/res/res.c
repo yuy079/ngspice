@@ -55,7 +55,8 @@ IFparm RESmPTable[] = { /* model parameters */
     IOPQ(  "af",     RES_MOD_AF,       IF_REAL,"Flicker noise exponent"),
     IOPXU( "tnom",   RES_MOD_TNOM,     IF_REAL,"Parameter measurement temperature"),
     IOP(   "r",      RES_MOD_R,        IF_REAL,"Resistor model default value"),
-    IOPR(  "res",    RES_MOD_R,        IF_REAL,"Resistor model default value")
+    IOPR(  "res",    RES_MOD_R,        IF_REAL,"Resistor model default value"),
+    IOP( "bv_max",   RES_MOD_BV_MAX,   IF_REAL, "maximum voltage over resistor") 
 };
 
 char *RESnames[] = {
