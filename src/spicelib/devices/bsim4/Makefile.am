@@ -4,6 +4,7 @@ noinst_LTLIBRARIES = libbsim4.la
 
 libbsim4_la_SOURCES =	\
 	b4.c		\
+	b4acct.c	\
 	b4acld.c	\
 	b4ask.c		\
 	b4check.c	\

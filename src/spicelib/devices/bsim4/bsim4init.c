@@ -50,7 +50,7 @@ SPICEdev BSIM4info = {
     BSIM4trunc,    /* DEVtrunc       */
     NULL,          /* DEVfindBranch  */
     BSIM4acLoad,   /* DEVacLoad      */
-    NULL,          /* DEVaccept      */
+    BSIM4accept,   /* DEVaccept      */
     BSIM4destroy,  /* DEVdestroy     */
     BSIM4mDelete,  /* DEVmodDelete   */
     BSIM4delete,   /* DEVdelete      */

@@ -3913,6 +3913,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4\b4acct.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim4\b4acld.c"
 				>
 			</File>
@@ -4221,6 +4225,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6acct.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6acld.c"
 				>
 			</File>
@@ -4462,6 +4470,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\cap\cap.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\cap\capacct.c"
 				>
 			</File>
 			<File
@@ -7926,6 +7938,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\res\res.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\res\resacct.c"
 				>
 			</File>
 			<File
