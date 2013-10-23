@@ -3382,7 +3382,7 @@ GENmodel *inMod)
             mod->BSIM4v6vgsMaxGiven = TRUE;
             break;
 
-		case BSIM4v6_MOD_VGD_MAX:
+        case BSIM4v6_MOD_VGD_MAX:
             mod->BSIM4v6vgdMax = value->rValue;
             mod->BSIM4v6vgdMaxGiven = TRUE;
             break;
@@ -3403,7 +3403,7 @@ GENmodel *inMod)
             mod->BSIM4v6vbdMaxGiven = TRUE;
             break;
 
-		case  BSIM4v6_MOD_NMOS  :
+        case  BSIM4v6_MOD_NMOS  :
             if(value->iValue) {
                 mod->BSIM4v6type = 1;
                 mod->BSIM4v6typeGiven = TRUE;

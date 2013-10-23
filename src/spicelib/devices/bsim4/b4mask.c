@@ -2713,7 +2713,7 @@ IFvalue *value)
             value->rValue = model->BSIM4vbdMax;
             return(OK);
 
-		default:
+        default:
             return(E_BADPARM);
     }
     /* NOTREACHED */
