@@ -42,6 +42,7 @@ typedef struct sRESinstance {
     double RESm;                    /* Multiplicity factor for this instance */
     double REStc1;                  /* first temperature coefficient of resistors */
     double REStc2;                  /* second temperature coefficient of resistors */
+    double RESbv_max;               /* Maximum resistor voltage */
     int    RESnoisy;                /* Set if the resistor generates noise */
     double *RESposPosptr;           /* pointer to sparse matrix diagonal at
                                      * (positive,positive) */
@@ -63,6 +64,7 @@ typedef struct sRESinstance {
     unsigned REStc1Given    : 1;    /* indicates tc1 parameter specified */
     unsigned REStc2Given    : 1;    /* indicates tc2 parameter specified */
     unsigned RESnoisyGiven  : 1;    /* indicates if noisy is specified */
+    unsigned RESbv_maxGiven : 1;    /* flags indicates maximum voltage is given */
     int    RESsenParmNo;            /* parameter # for sensitivity use;
                                      * set equal to  0 if not a design parameter*/
 
@@ -139,6 +141,7 @@ typedef struct sRESmodel {       /* model structure for a resistor */
 /* tanaka */
 #define RES_TC1 16
 #define RES_TC2 17
+#define RES_BV_MAX 18
 
 /* model parameters */
 #define RES_MOD_TC1 101

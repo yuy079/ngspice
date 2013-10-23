@@ -35,6 +35,9 @@ RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
 
             if(!here->RESmGiven)
                 here->RESm = 1.0;
+            if (!here->RESbv_maxGiven) {
+                here->RESbv_max = model->RESbv_max;
+            }
 
 /* macro to make elements with built in test for out of memory */
 #define TSTALLOC(ptr,first,second) \

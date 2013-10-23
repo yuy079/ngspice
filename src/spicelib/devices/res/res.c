@@ -22,6 +22,7 @@ IFparm RESpTable[] = { /* parameters */
     IOPU(  "tc",		RES_TC1,	     IF_REAL,    "First order temp. coefficient"),
     IOPU(  "tc1",		RES_TC1,	     IF_REAL,    "First order temp. coefficient"),
     IOPU(  "tc2",		RES_TC2,	     IF_REAL,    "Second order temp. coefficient"),
+    IOP( "bv_max",      RES_BV_MAX,          IF_REAL, "maximum voltage over resistor"), 
     IOPU(  "scale",	RES_SCALE,	     IF_REAL,    "Scale factor"),
     IOP(   "noisy",        RES_NOISY,           IF_INTEGER, "Resistor generate noise"),
     IP(    "sens_resist",  RES_RESIST_SENS,     IF_FLAG,

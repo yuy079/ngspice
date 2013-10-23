@@ -95,6 +95,9 @@ CAPsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit *ckt, int *states)
             if (!here->CAPlengthGiven) {
                 here->CAPlength = 0;
             }
+            if (!here->CAPbv_maxGiven) {
+                here->CAPbv_max = model->CAPbv_max;
+            }
 
             here->CAPqcap = *states;
             *states += 2;

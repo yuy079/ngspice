@@ -39,13 +39,13 @@ CAPaccept(CKTcircuit *ckt, GENmodel *inModel)
             vc = ckt->CKTrhsOld [here->CAPposNode] -
                  ckt->CKTrhsOld [here->CAPnegNode];
 
-            if (vc > model->CAPbv_max)
+            if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {
                     printf("Instance: %s Model: %s Time: %g |Vc|=%g has exceeded Bv_max=%g\n",
-                           here->CAPname, model->CAPmodName, ckt->CKTtime, vc, model->CAPbv_max);
+                           here->CAPname, model->CAPmodName, ckt->CKTtime, vc, here->CAPbv_max);
                     if (slogp)
                         fprintf(slogp, "Instance: %s Model: %s Time: %g |Vc|=%g has exceeded Bv_max=%g\n",
-                                here->CAPname, model->CAPmodName, ckt->CKTtime, vc, model->CAPbv_max);
+                                here->CAPname, model->CAPmodName, ckt->CKTtime, vc, here->CAPbv_max);
                     warns_bv++;
                 }
 

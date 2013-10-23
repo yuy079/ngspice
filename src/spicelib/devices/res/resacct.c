@@ -39,13 +39,13 @@ RESaccept(CKTcircuit *ckt, GENmodel *inModel)
             vr = ckt->CKTrhsOld [here->RESposNode] -
                  ckt->CKTrhsOld [here->RESnegNode];
 
-            if (vr > model->RESbv_max)
+            if (vr > here->RESbv_max)
                 if (warns_bv < maxwarns_bv) {
                     printf("Instance: %s Model: %s Time: %g |Vr|=%g has exceeded Bv_max=%g\n",
-                           here->RESname, model->RESmodName, ckt->CKTtime, vr, model->RESbv_max);
+                           here->RESname, model->RESmodName, ckt->CKTtime, vr, here->RESbv_max);
                     if (slogp)
                         fprintf(slogp, "Instance: %s Model: %s Time: %g |Vr|=%g has exceeded Bv_max=%g\n",
-                                here->RESname, model->RESmodName, ckt->CKTtime, vr, model->RESbv_max);
+                                here->RESname, model->RESmodName, ckt->CKTtime, vr, here->RESbv_max);
                     warns_bv++;
                 }
 
