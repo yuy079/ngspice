@@ -13,6 +13,43 @@ Author: 1985 Thomas L. Quarles
 
 extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
+
+static void
+soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...)
+{
+    FILE *fp;
+
+    va_list ap;
+    va_start(ap, fmt);
+
+    for (fp = stdout; fp; fp = slogp) {
+
+        if(ckt->CKTmode & (MODEDC | MODEDCOP))
+            fprintf(fp, "Instance: %s Model: %s ",
+                    instance->GENname, model->GENmodName);
+        else
+            fprintf(fp, "Instance: %s Model: %s Time: %g ",
+                    instance->GENname, model->GENmodName, ckt->CKTtime);
+
+        vfprintf(fp, fmt, ap);
+
+        if (fp == slogp)
+            break;
+    }
+
+    va_end(ap);
+}
+
+
+#define soa_check(value, limit, warn_counter, message)                  \
+    do {                                                                \
+        if (fabs(value) > limit  &&  warn_counter < max##warn_counter) { \
+            soa_printf((GENinstance*) here, (GENmodel*) model, ckt, message, value, limit); \
+            warn_counter++;                                             \
+        }                                                               \
+    } while (0)
+
+
 /* make SOA checks after NR has finished */
 
 int
@@ -44,24 +81,14 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vd > model->DIOfv_max)
                 if (warns_fv < maxwarns_fv) {
-                    printf("Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
-                           here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g Vf=%g has exceeded Fv_max=%g\n",
-                                here->DIOname, model->DIOmodName, ckt->CKTtime, vd, model->DIOfv_max);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "Vf=%g has exceeded Fv_max=%g\n",
+                               vd, model->DIOfv_max);
                     warns_fv++;
                 }
 
-            if (-vd > model->DIObv_max)
-                if (warns_bv < maxwarns_bv) {
-                    printf("Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
-                           here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vj|=%g has exceeded Bv_max=%g\n",
-                                here->DIOname, model->DIOmodName, ckt->CKTtime, -vd, model->DIObv_max);
-                    warns_bv++;
-                }
-
+            // alternativ
+            soa_check(vd, model->DIObv_max, warns_bv, "|Vj|=%g has exceeded Bv_max=%g\n");
         }
 
     return OK;
