@@ -262,8 +262,12 @@ static struct library *
 read_a_lib(char *y, char *dir_name)
 {
     struct library *lib;
-
-    char *y_resolved, *yy;
+    char *y_resolved;
+#if defined(__MINGW32__) || defined(_MSC_VER)
+    char yy[1024];
+#else
+    char *yy;
+#endif
 
     y_resolved = inp_pathresolve_at(y, dir_name);
     if (!y_resolved) {
@@ -272,9 +276,12 @@ read_a_lib(char *y, char *dir_name)
     }
 
     // a variant of realpath(, NULL)
-    //   fixme on windows we need something like _fullpath
+#if defined(__MINGW32__) || defined(_MSC_VER)
+    if (!_fullpath(yy, y_resolved, 1024)) {
+#else
     yy = canonicalize_file_name(y_resolved);
     if (!yy) {
+#endif
         fprintf(cp_err, "Error: Could not `realpath' library file %s\n", y);
         controlled_exit(EXIT_FAILURE);
     }
@@ -294,7 +301,7 @@ read_a_lib(char *y, char *dir_name)
         lib = new_lib();
 
         lib->realpath = strdup(yy);
-        lib->habitat = ngdirname(y); /* !! lieber yy ? */
+        lib->habitat = ngdirname(yy); /* !! lieber yy ? */ // y liefert irgendwann '.', dann gehts nicht mehr
 
         lib->deck = inp_read(newfp, 1 /*dummy*/, lib->habitat, FALSE, FALSE) . cc;
 
@@ -989,8 +996,9 @@ inp_pathopen(char *name, char *mode)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if (strchr(name, DIR_TERM) || strchr(name, DIR_TERM_LINUX) ||
-        !cp_getvar("sourcepath", CP_LIST, &v))
+    if ((name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) /* mingw /d/... */
+        || isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)/* D:\... or  D:/...etc */
+        || !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
 #else
 
@@ -1074,9 +1082,9 @@ inp_pathresolve(char *name)
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    /* fixme, not that easy on windows, consider drive prefix and other things */
-    if (*name == DIR_TERM || *name == DIR_TERM_LINUX ||
-        !cp_getvar("sourcepath", CP_LIST, &v))
+    if ((name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) /* mingw /d/... */
+        || isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)/* D:\... or  D:/... etc */
+        || !cp_getvar("sourcepath", CP_LIST, &v))
             return stat(name, &st) ? NULL : copy(name);
 #else
 
