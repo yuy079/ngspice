@@ -32,6 +32,9 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
 
     for(; model; model = model->DIOnextModel)
+
+        maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
+
         for (here = model->DIOinstances; here; here = here->DIOnextInstance) {
 
             double vd;  /* current diode voltage */

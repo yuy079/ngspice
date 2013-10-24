@@ -32,6 +32,9 @@ RESaccept(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
 
     for(; model; model = model->RESnextModel)
+
+        maxwarns_bv = ckt->CKTsoaMaxWarns;
+
         for (here = model->RESinstances; here; here = here->RESnextInstance) {
 
             double vr;  /* current resistor voltage */

@@ -32,6 +32,9 @@ CAPaccept(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
 
     for(; model; model = model->CAPnextModel)
+
+        maxwarns_bv = ckt->CKTsoaMaxWarns;
+
         for (here = model->CAPinstances; here; here = here->CAPnextInstance) {
 
             double vc;  /* current capacitor voltage */
