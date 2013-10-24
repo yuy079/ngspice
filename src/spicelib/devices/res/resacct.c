@@ -31,7 +31,7 @@ RESaccept(CKTcircuit *ckt, GENmodel *inModel)
     if (!ckt->CKTsoaCheck)
         return OK;
 
-    for(; model; model = model->RESnextModel)
+    for(; model; model = model->RESnextModel) {
 
         maxwarns_bv = ckt->CKTsoaMaxWarns;
 
@@ -53,6 +53,8 @@ RESaccept(CKTcircuit *ckt, GENmodel *inModel)
                 }
 
         }
+
+    }
 
     return OK;
 }

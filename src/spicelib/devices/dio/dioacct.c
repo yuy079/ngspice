@@ -68,7 +68,7 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
     if (!ckt->CKTsoaCheck)
         return OK;
 
-    for(; model; model = model->DIOnextModel)
+    for(; model; model = model->DIOnextModel) {
 
         maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
 
@@ -90,6 +90,8 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
             // alternativ
             soa_check(vd, model->DIObv_max, warns_bv, "|Vj|=%g has exceeded Bv_max=%g\n");
         }
+
+    }
 
     return OK;
 }
