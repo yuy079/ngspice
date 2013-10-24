@@ -3401,6 +3401,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim3\b3acct.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim3\b3acld.c"
 				>
 			</File>
@@ -3838,6 +3842,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32acct.c"
 				>
 			</File>
 			<File

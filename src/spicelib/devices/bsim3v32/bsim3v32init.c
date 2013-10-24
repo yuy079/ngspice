@@ -49,7 +49,7 @@ SPICEdev BSIM3v32info = {
  /* DEVtrunc      */ BSIM3v32trunc,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ BSIM3v32acLoad,
- /* DEVaccept     */ NULL,
+ /* DEVaccept     */ BSIM3v32accept,
  /* DEVdestroy    */ BSIM3v32destroy,
  /* DEVmodDelete  */ BSIM3v32mDelete,
  /* DEVdelete     */ BSIM3v32delete,
