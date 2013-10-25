@@ -1132,7 +1132,12 @@ inp_pathresolve_at(char *name, char *dir)
      *   or if we haven't anything to prepend anyway
      */
 
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    if (isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)
+        || !dir || !dir[0])
+#else
     if (*name == DIR_TERM || !dir || !dir[0])
+#endif
         return inp_pathresolve(name);
 
     if (name[0] == '~' && name[1] == '/') {
