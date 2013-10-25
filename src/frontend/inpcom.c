@@ -971,7 +971,7 @@ inp_pathopen(char *name, char *mode)
     char buf[BSIZE_SP];
     struct variable *v;
 
-#if defined(HAS_WINGUI)
+#if defined(__MINGW32__) || defined(_MSC_VER)
     char buf2[BSIZE_SP];
 
     /* search in the path where the source (input) file has been found,
@@ -996,11 +996,18 @@ inp_pathopen(char *name, char *mode)
             return (fp);
     }
 
+    /* If variable 'mingwpath' is set: convert mingw /d/... to d:/... */
+    if (cp_getvar("mingwpath", CP_BOOL, NULL) && name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) {
+        name[0] = name[1];
+        name[1] = ':';
+    }
+
     /* If this is an abs pathname, or there is no sourcepath var, just
      * do an fopen.
      */
-    if ((name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) /* mingw /d/... */
-        || isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)/* D:\... or  D:/...etc */
+    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))/* D:\... or  D:/... etc */
+        || (name[0] == DIR_TERM)
+        || (name[0] == DIR_TERM_LINUX)
         || !cp_getvar("sourcepath", CP_LIST, &v))
         return (fopen(name, mode));
 #else
@@ -1057,7 +1064,7 @@ inp_pathresolve(char *name)
     struct variable *v;
     struct stat st;
 
-#if defined(HAS_WINGUI)
+#if defined(__MINGW32__) || defined(_MSC_VER)
     char buf2[BSIZE_SP];
 
     /* search in the path where the source (input) file has been found,
@@ -1082,20 +1089,37 @@ inp_pathresolve(char *name)
             return copy(buf2);
     }
 
+    /* If variable 'mingwpath' is set: convert mingw /d/... to d:/... */
+    if (cp_getvar("mingwpath", CP_BOOL, NULL) &&  name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) {
+        name[0] = name[1];
+        name[1] = ':';
+    }
+
     /* If this is an abs pathname, or there is no sourcepath var, just
-     * do an fopen.
+     * return the pathname, otherwise return NULL.
      */
-    if ((name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) /* mingw /d/... */
-        || isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)/* D:\... or  D:/... etc */
-        || !cp_getvar("sourcepath", CP_LIST, &v))
-            return stat(name, &st) ? NULL : copy(name);
+    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))/* D:\... or  D:/... etc */
+            || (name[0] == DIR_TERM)
+            || (name[0] == DIR_TERM_LINUX)
+            || !cp_getvar("sourcepath", CP_LIST, &v)) {
+        int rval = stat(name, &st);
+        if (rval == 0)
+            return copy(name);
+        else
+            return NULL;
+    }
 #else
 
     /* If this is an abs pathname, or there is no sourcepath var, just
-     * do an fopen.
+     * return the pathname, otherwise return NULL.
      */
-    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v))
-        return stat(name, &st) ? NULL : copy(name);
+    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v)) {
+        int rval = stat(name, &st);
+        if (rval == 0)
+            return copy(name);
+        else
+            return NULL;
+    }
 
 #endif
 
@@ -1136,8 +1160,8 @@ inp_pathresolve_at(char *name, char *dir)
      */
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
-    if (isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM)
-        || !dir || !dir[0])
+    if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))
+        || (name[0] == DIR_TERM) || (name[0] == DIR_TERM_LINUX) || !dir || !dir[0])
 #else
     if (*name == DIR_TERM || !dir || !dir[0])
 #endif
