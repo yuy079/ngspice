@@ -11,7 +11,8 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
+void
+soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -20,15 +21,14 @@ CAPaccept(CKTcircuit *ckt, GENmodel *inModel)
 {
     CAPmodel *model = (CAPmodel *) inModel;
     CAPinstance *here;
-
+    double vc;  /* current capacitor voltage */
     int maxwarns_bv = 0;
     static int warns_bv = 0;
 
-
-    if(!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
+    if (!ckt->CKTsoaCheck)
         return OK;
 
-    if (!ckt->CKTsoaCheck)
+    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
     for(; model; model = model->CAPnextModel) {
@@ -37,18 +37,14 @@ CAPaccept(CKTcircuit *ckt, GENmodel *inModel)
 
         for (here = model->CAPinstances; here; here = here->CAPnextInstance) {
 
-            double vc;  /* current capacitor voltage */
-
             vc = ckt->CKTrhsOld [here->CAPposNode] -
                  ckt->CKTrhsOld [here->CAPnegNode];
 
             if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {
-                    printf("Instance: %s Model: %s Time: %g |Vc|=%g has exceeded Bv_max=%g\n",
-                           here->CAPname, model->CAPmodName, ckt->CKTtime, vc, here->CAPbv_max);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vc|=%g has exceeded Bv_max=%g\n",
-                                here->CAPname, model->CAPmodName, ckt->CKTtime, vc, here->CAPbv_max);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vc|=%g has exceeded Bv_max=%g\n",
+                               vc, here->CAPbv_max);
                     warns_bv++;
                 }
 

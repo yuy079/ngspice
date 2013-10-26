@@ -11,9 +11,8 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-
-extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
-
+void
+soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -29,7 +28,7 @@ BSIM3accept(CKTcircuit *ckt, GENmodel *inModel)
     if (!ckt->CKTsoaCheck)
         return OK;
 
-    if (!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
+    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
     for (; model; model = model->BSIM3nextModel) {
@@ -58,61 +57,49 @@ BSIM3accept(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vgs > model->BSIM3vgsMax)
                 if (warns_vgs < maxwarns_vgs) {
-                    printf("Instance: %s Model: %s Time: %g |Vgs|=%g has exceeded Vgs_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgs, model->BSIM3vgsMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vgs|=%g has exceeded Vgs_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgs, model->BSIM3vgsMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vgs|=%g has exceeded Vgs_max=%g\n",
+                               vgs, model->BSIM3vgsMax);
                     warns_vgs++;
                 }
 
             if (vgd > model->BSIM3vgdMax)
                 if (warns_vgd < maxwarns_vgd) {
-                    printf("Instance: %s Model: %s Time: %g |Vgd|=%g has exceeded Vgd_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgd, model->BSIM3vgdMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vgd|=%g has exceeded Vgd_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgd, model->BSIM3vgdMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vgd|=%g has exceeded Vgd_max=%g\n",
+                               vgd, model->BSIM3vgdMax);
                     warns_vgd++;
                 }
 
             if (vgb > model->BSIM3vgbMax)
                 if (warns_vgb < maxwarns_vgb) {
-                    printf("Instance: %s Model: %s Time: %g |Vgb|=%g has exceeded Vgb_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgb, model->BSIM3vgbMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vgb|=%g has exceeded Vgb_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vgb, model->BSIM3vgbMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vgb|=%g has exceeded Vgb_max=%g\n",
+                               vgb, model->BSIM3vgbMax);
                     warns_vgb++;
                 }
 
             if (vds > model->BSIM3vdsMax)
                 if (warns_vds < maxwarns_vds) {
-                    printf("Instance: %s Model: %s Time: %g |Vds|=%g has exceeded Vds_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vds, model->BSIM3vdsMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vds|=%g has exceeded Vds_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vds, model->BSIM3vdsMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vds|=%g has exceeded Vds_max=%g\n",
+                               vds, model->BSIM3vdsMax);
                     warns_vds++;
                 }
 
             if (vbs > model->BSIM3vbsMax)
                 if (warns_vbs < maxwarns_vbs) {
-                    printf("Instance: %s Model: %s Time: %g |Vbs|=%g has exceeded Vbs_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vbs, model->BSIM3vbsMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbs|=%g has exceeded Vbs_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vbs, model->BSIM3vbsMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vbs|=%g has exceeded Vbs_max=%g\n",
+                               vbs, model->BSIM3vbsMax);
                     warns_vbs++;
                 }
 
             if (vbd > model->BSIM3vbdMax)
                 if (warns_vbd < maxwarns_vbd) {
-                    printf("Instance: %s Model: %s Time: %g |Vbd|=%g has exceeded Vbd_max=%g\n",
-                           here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vbd, model->BSIM3vbdMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbd|=%g has exceeded Vbd_max=%g\n",
-                                here->BSIM3name, model->BSIM3modName, ckt->CKTtime, vbd, model->BSIM3vbdMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vbd|=%g has exceeded Vbd_max=%g\n",
+                               vbd, model->BSIM3vbdMax);
                     warns_vbd++;
                 }
 

@@ -11,8 +11,8 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
-
+void
+soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -28,7 +28,7 @@ BJTaccept(CKTcircuit *ckt, GENmodel *inModel)
     if (!ckt->CKTsoaCheck)
         return OK;
 
-    if (!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
+    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
     for (; model; model = model->BJTnextModel) {
@@ -45,31 +45,25 @@ BJTaccept(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbe > model->BJTvbeMax)
                 if (warns_vbe < maxwarns_vbe) {
-                    printf("Instance: %s Model: %s Time: %g |Vbe|=%g has exceeded Vbe_max=%g\n",
-                           here->BJTname, model->BJTmodName, ckt->CKTtime, vbe, model->BJTvbeMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbe|=%g has exceeded Vbe_max=%g\n",
-                                here->BJTname, model->BJTmodName, ckt->CKTtime, vbe, model->BJTvbeMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vbe|=%g has exceeded Vbe_max=%g\n",
+                               vbe, model->BJTvbeMax);
                     warns_vbe++;
                 }
 
             if (vbc > model->BJTvbcMax)
                 if (warns_vbc < maxwarns_vbc) {
-                    printf("Instance: %s Model: %s Time: %g |Vbc|=%g has exceeded Vbc_max=%g\n",
-                           here->BJTname, model->BJTmodName, ckt->CKTtime, vbc, model->BJTvbcMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vbc|=%g has exceeded Vbc_max=%g\n",
-                                here->BJTname, model->BJTmodName, ckt->CKTtime, vbc, model->BJTvbcMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vbc|=%g has exceeded Vbc_max=%g\n",
+                               vbc, model->BJTvbcMax);
                     warns_vbc++;
                 }
 
             if (vce > model->BJTvceMax)
                 if (warns_vce < maxwarns_vce) {
-                    printf("Instance: %s Model: %s Time: %g |Vce|=%g has exceeded Vce_max=%g\n",
-                           here->BJTname, model->BJTmodName, ckt->CKTtime, vce, model->BJTvceMax);
-                    if (slogp)
-                        fprintf(slogp, "Instance: %s Model: %s Time: %g |Vce|=%g has exceeded Vce_max=%g\n",
-                                here->BJTname, model->BJTmodName, ckt->CKTtime, vce, model->BJTvceMax);
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vce|=%g has exceeded Vce_max=%g\n",
+                               vce, model->BJTvceMax);
                     warns_vce++;
                 }
 

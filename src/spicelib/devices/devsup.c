@@ -11,6 +11,8 @@ Modified: 2000 AlansFixes
 #include "ngspice/cktdefs.h"
 #include "ngspice/suffix.h"
 
+#include <stdarg.h> /* va_start() and va_end() for vprintf() */
+
 /* 
  * Limit the per-iteration change of VDS 
  */
@@ -769,4 +771,41 @@ DEVpred(CKTcircuit *ckt, int loct)
     return( ( (1+xfact) * *(ckt->CKTstate1+loct) ) -
             (    xfact  * *(ckt->CKTstate2+loct) )  );
 #endif /* NEWTRUNC */
+}
+
+/* SOA check printout used in DEVaccept functions */
+extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
+
+void
+soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+
+    if (slogp) {
+
+        if(ckt->CKTmode & MODETRAN)
+            fprintf(slogp, "Instance: %s Model: %s Time: %g ",
+                    instance->GENname, model->GENmodName, ckt->CKTtime);
+        else
+            fprintf(slogp, "Instance: %s Model: %s ",
+                    instance->GENname, model->GENmodName);
+
+        vfprintf(slogp, fmt, ap);
+
+    } else {
+
+        if(ckt->CKTmode & MODETRAN)
+            printf("Instance: %s Model: %s Time: %g ",
+                   instance->GENname, model->GENmodName, ckt->CKTtime);
+        else
+            printf("Instance: %s Model: %s ",
+                    instance->GENname, model->GENmodName);
+
+        vprintf(fmt, ap);
+
+    }
+
+    va_end(ap);
 }
