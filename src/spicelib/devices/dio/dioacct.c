@@ -11,8 +11,8 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
+extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
 static void
 soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...)
@@ -24,12 +24,12 @@ soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *
 
     for (fp = stdout; fp; fp = slogp) {
 
-        if(ckt->CKTmode & (MODEDC | MODEDCOP))
-            fprintf(fp, "Instance: %s Model: %s ",
-                    instance->GENname, model->GENmodName);
-        else
+        if(ckt->CKTmode & MODETRAN)
             fprintf(fp, "Instance: %s Model: %s Time: %g ",
                     instance->GENname, model->GENmodName, ckt->CKTtime);
+        else
+            fprintf(fp, "Instance: %s Model: %s ",
+                    instance->GENname, model->GENmodName);
 
         vfprintf(fp, fmt, ap);
 
@@ -39,15 +39,6 @@ soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *
 
     va_end(ap);
 }
-
-
-#define soa_check(value, limit, warn_counter, message)                  \
-    do {                                                                \
-        if (fabs(value) > limit  &&  warn_counter < max##warn_counter) { \
-            soa_printf((GENinstance*) here, (GENmodel*) model, ckt, message, value, limit); \
-            warn_counter++;                                             \
-        }                                                               \
-    } while (0)
 
 
 /* make SOA checks after NR has finished */
@@ -60,10 +51,6 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
 
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
-
-
-    if(!(ckt->CKTmode & (MODETRAN | MODETRANOP)))
-        return OK;
 
     if (!ckt->CKTsoaCheck)
         return OK;
@@ -87,8 +74,14 @@ DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
                     warns_fv++;
                 }
 
-            // alternativ
-            soa_check(vd, model->DIObv_max, warns_bv, "|Vj|=%g has exceeded Bv_max=%g\n");
+            if (fabs(vd) > model->DIObv_max)
+                if (warns_bv < maxwarns_bv) {
+                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                               "|Vj|=%g has exceeded Bv_max=%g\n",
+                               vd, model->DIObv_max);
+                    warns_bv++;
+                }
+
         }
 
     }
