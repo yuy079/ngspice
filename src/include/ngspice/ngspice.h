@@ -282,6 +282,9 @@ extern void SetAnalyse(char *analyse, int percent);
 
 #endif
 
+
+void soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...);
+
 /* macro to ignore unused variables and parameters */
 #define NG_IGNORE(x)  (void)x
 #define NG_IGNOREABLE(x)  (void)x
