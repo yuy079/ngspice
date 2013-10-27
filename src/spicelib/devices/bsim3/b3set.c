@@ -908,16 +908,16 @@ BSIM3instance **InstArray;
         if (!model->BSIM3vbdMaxGiven)
             model->BSIM3vbdMax = 1e99;
 
-       /* loop through all the instances of the model */
-       for (here = model->BSIM3instances; here != NULL ;
-            here=here->BSIM3nextInstance)
-       {
-           /* allocate a chunk of the state vector */
-           here->BSIM3states = *states;
-           *states += BSIM3numStates;
+        /* loop through all the instances of the model */
+        for (here = model->BSIM3instances; here != NULL ;
+             here=here->BSIM3nextInstance)
+        {
+            /* allocate a chunk of the state vector */
+            here->BSIM3states = *states;
+            *states += BSIM3numStates;
 
-           /* perform the parameter defaulting */
-           if (!here->BSIM3drainAreaGiven)
+            /* perform the parameter defaulting */
+            if (!here->BSIM3drainAreaGiven)
                 here->BSIM3drainArea = 0.0;
             if (!here->BSIM3drainPerimeterGiven)
                 here->BSIM3drainPerimeter = 0.0;

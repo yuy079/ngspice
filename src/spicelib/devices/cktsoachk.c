@@ -11,20 +11,20 @@
 
 #include "dev.h"
 
+
 int
 CKTsoaCheck(CKTcircuit *ckt)
 {
     int i;
     int error;
-    SPICEdev **devs;
+    SPICEdev **devs = devices();
 
-    devs = devices();
-    for (i = 0; i < DEVmaxnum; i++) {
-        if ( devs[i] && devs[i]->DEVsoaCheck && ckt->CKThead[i] ) {
+    for (i = 0; i < DEVmaxnum; i++)
+        if (devs[i] && devs[i]->DEVsoaCheck && ckt->CKThead[i]) {
             error = devs[i]->DEVsoaCheck (ckt, ckt->CKThead[i]);
             if (error)
-                return(error);
+                return error;
         }
-    }
-    return(OK);
+
+    return OK;
 }

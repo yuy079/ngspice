@@ -785,7 +785,7 @@ soa_printf(CKTcircuit *ckt, GENinstance *instance, const char *fmt, ...)
 
     va_start(ap, fmt);
 
-    if(ckt->CKTmode & MODETRAN)
+    if (ckt->CKTmode & MODETRAN)
         fprintf(fp, "Instance: %s Model: %s Time: %g ",
                 instance->GENname, instance->GENmodPtr->GENmodName, ckt->CKTtime);
     else

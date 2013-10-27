@@ -64,7 +64,7 @@ CAPsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit *ckt, int *states)
         if (!model->CAPthickGiven) {
             model->CAPthick = 0.0;
         }
-        if(!model->CAPbv_maxGiven) {
+        if (!model->CAPbv_maxGiven) {
             model->CAPbv_max = 1e99;
         }
 
