@@ -52,7 +52,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vgs > model->BSIM4v5vgsMax)
                 if (warns_vgs < maxwarns_vgs) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vgs|=%g has exceeded Vgs_max=%g\n",
                                vgs, model->BSIM4v5vgsMax);
                     warns_vgs++;
@@ -60,7 +60,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vgd > model->BSIM4v5vgdMax)
                 if (warns_vgd < maxwarns_vgd) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vgd|=%g has exceeded Vgd_max=%g\n",
                                vgd, model->BSIM4v5vgdMax);
                     warns_vgd++;
@@ -68,7 +68,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vgb > model->BSIM4v5vgbMax)
                 if (warns_vgb < maxwarns_vgb) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vgb|=%g has exceeded Vgb_max=%g\n",
                                vgb, model->BSIM4v5vgbMax);
                     warns_vgb++;
@@ -76,7 +76,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vds > model->BSIM4v5vdsMax)
                 if (warns_vds < maxwarns_vds) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vds|=%g has exceeded Vds_max=%g\n",
                                vds, model->BSIM4v5vdsMax);
                     warns_vds++;
@@ -84,7 +84,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbs > model->BSIM4v5vbsMax)
                 if (warns_vbs < maxwarns_vbs) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbs|=%g has exceeded Vbs_max=%g\n",
                                vbs, model->BSIM4v5vbsMax);
                     warns_vbs++;
@@ -92,7 +92,7 @@ BSIM4v5soaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbd > model->BSIM4v5vbdMax)
                 if (warns_vbd < maxwarns_vbd) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbd|=%g has exceeded Vbd_max=%g\n",
                                vbd, model->BSIM4v5vbdMax);
                     warns_vbd++;

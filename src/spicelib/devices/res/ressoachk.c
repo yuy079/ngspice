@@ -37,7 +37,7 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vr > here->RESbv_max)
                 if (warns_bv < maxwarns_bv) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vr|=%g has exceeded Bv_max=%g\n",
                                vr, here->RESbv_max);
                     warns_bv++;

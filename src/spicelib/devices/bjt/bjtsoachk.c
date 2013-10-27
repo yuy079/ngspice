@@ -40,7 +40,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbe > model->BJTvbeMax)
                 if (warns_vbe < maxwarns_vbe) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbe|=%g has exceeded Vbe_max=%g\n",
                                vbe, model->BJTvbeMax);
                     warns_vbe++;
@@ -48,7 +48,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbc > model->BJTvbcMax)
                 if (warns_vbc < maxwarns_vbc) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbc|=%g has exceeded Vbc_max=%g\n",
                                vbc, model->BJTvbcMax);
                     warns_vbc++;
@@ -56,7 +56,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vce > model->BJTvceMax)
                 if (warns_vce < maxwarns_vce) {
-                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vce|=%g has exceeded Vce_max=%g\n",
                                vce, model->BJTvceMax);
                     warns_vce++;
