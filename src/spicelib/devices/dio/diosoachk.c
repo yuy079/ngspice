@@ -37,7 +37,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vd > model->DIOfv_max)
                 if (warns_fv < maxwarns_fv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
                                "Vf=%g has exceeded Fv_max=%g\n",
                                vd, model->DIOfv_max);
                     warns_fv++;
@@ -45,7 +45,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (-vd > model->DIObv_max)
                 if (warns_bv < maxwarns_bv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
                                "|Vj|=%g has exceeded Bv_max=%g\n",
                                -vd, model->DIObv_max);
                     warns_bv++;

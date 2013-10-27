@@ -777,7 +777,7 @@ DEVpred(CKTcircuit *ckt, int loct)
 extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
 void
-soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...)
+soa_printf(CKTcircuit *ckt, GENinstance *instance, GENmodel *model, const char *fmt, ...)
 {
     va_list ap;
 

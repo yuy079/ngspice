@@ -37,7 +37,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here, (GENmodel*) model,
                                "|Vc|=%g has exceeded Bv_max=%g\n",
                                vc, here->CAPbv_max);
                     warns_bv++;
