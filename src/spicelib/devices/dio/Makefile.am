@@ -4,7 +4,6 @@ noinst_LTLIBRARIES = libdio.la
 
 libdio_la_SOURCES =	\
 	dio.c		\
-	dioacct.c	\
 	dioacld.c	\
 	dioask.c	\
 	dioconv.c	\
@@ -28,6 +27,7 @@ libdio_la_SOURCES =	\
 	diosacl.c	\
 	diosetup.c	\
 	diosload.c	\
+	diosoachk.c	\
 	diosprt.c	\
 	diosset.c	\
 	diosupd.c	\

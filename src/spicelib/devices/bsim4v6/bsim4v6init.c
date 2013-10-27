@@ -50,7 +50,7 @@ SPICEdev BSIM4v6info = {
     BSIM4v6trunc,    /* DEVtrunc       */
     NULL,          /* DEVfindBranch  */
     BSIM4v6acLoad,   /* DEVacLoad      */
-    BSIM4v6accept,   /* DEVaccept      */
+    NULL,          /* DEVaccept      */
     BSIM4v6destroy,  /* DEVdestroy     */
     BSIM4v6mDelete,  /* DEVmodDelete   */
     BSIM4v6delete,   /* DEVdelete      */
@@ -67,6 +67,7 @@ SPICEdev BSIM4v6info = {
     NULL,          /* DEVsenTrunc    */
     NULL,          /* DEVdisto       */
     BSIM4v6noise,    /* DEVnoise       */
+    BSIM4v6soaCheck,/* DEVsoaCheck    */
 #ifdef CIDER
     NULL,          /* DEVdump        */
     NULL,          /* DEVacct        */

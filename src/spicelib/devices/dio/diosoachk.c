@@ -17,16 +17,13 @@ soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 /* make SOA checks after NR has finished */
 
 int
-DIOaccept(CKTcircuit *ckt, GENmodel *inModel)
+DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
     double vd;  /* current diode voltage */
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
-
-    if (!ckt->CKTsoaCheck)
-        return OK;
 
     if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;

@@ -3401,10 +3401,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\bsim3\b3acct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\bsim3\b3acld.c"
 				>
 			</File>
@@ -3462,6 +3458,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim3\b3set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsim3\b3soachk.c"
 				>
 			</File>
 			<File
@@ -3845,10 +3845,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32acct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32acld.c"
 				>
 			</File>
@@ -3909,6 +3905,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32temp.c"
 				>
 			</File>
@@ -3918,10 +3918,6 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim4\b4.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\spicelib\devices\bsim4\b4acct.c"
 				>
 			</File>
 			<File
@@ -3986,6 +3982,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim4\b4set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsim4\b4soachk.c"
 				>
 			</File>
 			<File
@@ -4153,10 +4153,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5acct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5acld.c"
 				>
 			</File>
@@ -4221,6 +4217,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5temp.c"
 				>
 			</File>
@@ -4230,10 +4230,6 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6acct.c"
 				>
 			</File>
 			<File
@@ -4301,6 +4297,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6temp.c"
 				>
 			</File>
@@ -4322,10 +4322,6 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bjt\bjt.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\spicelib\devices\bjt\bjtacct.c"
 				>
 			</File>
 			<File
@@ -4405,6 +4401,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bjt\bjtsoachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bjt\bjtsprt.c"
 				>
 			</File>
@@ -4481,10 +4481,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\cap\capacct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\cap\capacld.c"
 				>
 			</File>
@@ -4542,6 +4538,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\cap\capsload.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\cap\capsoachk.c"
 				>
 			</File>
 			<File
@@ -4922,6 +4922,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\analysis\cktsgen.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\cktsoachk.c"
 				>
 			</File>
 			<File
@@ -5329,10 +5333,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\dio\dioacct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\dio\dioacld.c"
 				>
 			</File>
@@ -5406,6 +5406,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\dio\diosload.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\dio\diosoachk.c"
 				>
 			</File>
 			<File
@@ -7949,10 +7953,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\devices\res\resacct.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\spicelib\devices\res\resask.c"
 				>
 			</File>
@@ -8010,6 +8010,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\res\ressload.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\res\ressoachk.c"
 				>
 			</File>
 			<File

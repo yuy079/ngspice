@@ -51,7 +51,7 @@ SPICEdev DIOinfo = {
  /* DEVtrunc      */ DIOtrunc,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ DIOacLoad,
- /* DEVaccept     */ DIOaccept,
+ /* DEVaccept     */ NULL,
  /* DEVdestroy    */ DIOdestroy,
  /* DEVmodDelete  */ DIOmDelete,
  /* DEVdelete     */ DIOdelete,
@@ -68,6 +68,7 @@ SPICEdev DIOinfo = {
  /* DEVsenTrunc   */ NULL,
  /* DEVdisto      */ DIOdisto,
  /* DEVnoise      */ DIOnoise,
+ /* DEVsoaCheck   */ DIOsoaCheck,
 #ifdef CIDER
  /* DEVdump       */ NULL,
  /* DEVacct       */ NULL,

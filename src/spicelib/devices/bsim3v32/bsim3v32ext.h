@@ -7,7 +7,6 @@ File: bsim3ext.h
 **********/
 
 extern int BSIM3v32acLoad(GENmodel *,CKTcircuit*);
-extern int BSIM3v32accept(CKTcircuit *, GENmodel *);
 extern int BSIM3v32ask(CKTcircuit *,GENinstance*,int,IFvalue*,IFvalue*);
 extern int BSIM3v32convTest(GENmodel *,CKTcircuit*);
 extern int BSIM3v32delete(GENmodel*,IFuid,GENinstance**);
@@ -30,3 +29,4 @@ extern int BSIM3v32temp(GENmodel*,CKTcircuit*);
 extern int BSIM3v32trunc(GENmodel*,CKTcircuit*,double*);
 extern int BSIM3v32noise(int,int,GENmodel*,CKTcircuit*,Ndata*,double*);
 extern int BSIM3v32unsetup(GENmodel*,CKTcircuit*);
+extern int BSIM3v32soaCheck(CKTcircuit *, GENmodel *);

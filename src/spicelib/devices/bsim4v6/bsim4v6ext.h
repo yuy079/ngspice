@@ -6,7 +6,6 @@ File: bsim4v6ext.h
 **********/
 
 extern int BSIM4v6acLoad(GENmodel *,CKTcircuit*);
-extern int BSIM4v6accept(CKTcircuit *, GENmodel *);
 extern int BSIM4v6ask(CKTcircuit *,GENinstance*,int,IFvalue*,IFvalue*);
 extern int BSIM4v6convTest(GENmodel *,CKTcircuit*);
 extern int BSIM4v6delete(GENmodel*,IFuid,GENinstance**);
@@ -29,3 +28,4 @@ extern int BSIM4v6temp(GENmodel*,CKTcircuit*);
 extern int BSIM4v6trunc(GENmodel*,CKTcircuit*,double*);
 extern int BSIM4v6noise(int,int,GENmodel*,CKTcircuit*,Ndata*,double*);
 extern int BSIM4v6unsetup(GENmodel*,CKTcircuit*);
+extern int BSIM4v6soaCheck(CKTcircuit *, GENmodel *);

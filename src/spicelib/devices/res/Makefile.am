@@ -4,7 +4,6 @@ noinst_LTLIBRARIES = libres.la
 
 libres_la_SOURCES =	\
 	res.c		\
-	resacct.c	\
 	resask.c	\
 	resdefs.h	\
 	resdel.c	\
@@ -22,6 +21,7 @@ libres_la_SOURCES =	\
 	respzld.c	\
 	ressacl.c	\
 	ressetup.c	\
+	ressoachk.c	\
 	ressload.c	\
 	ressprt.c	\
 	ressset.c	\

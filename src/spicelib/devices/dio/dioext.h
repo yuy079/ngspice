@@ -5,7 +5,6 @@ Modified: 2000 AlansFixes
 **********/
 
 extern int DIOacLoad(GENmodel*,CKTcircuit*);
-extern int DIOaccept(CKTcircuit *, GENmodel *);
 extern int DIOask(CKTcircuit*,GENinstance*,int,IFvalue*,IFvalue*);
 extern int DIOconvTest(GENmodel *,CKTcircuit*);
 extern int DIOdelete(GENmodel*,IFuid,GENinstance**);
@@ -29,4 +28,5 @@ extern int DIOtrunc(GENmodel*,CKTcircuit*,double*);
 extern int DIOdisto(int,GENmodel*,CKTcircuit*);
 extern int DIOnoise(int,int,GENmodel*,CKTcircuit*,Ndata*,double*);
 extern int DIOdSetup(DIOmodel*,CKTcircuit*);
+extern int DIOsoaCheck(CKTcircuit *, GENmodel *);
 

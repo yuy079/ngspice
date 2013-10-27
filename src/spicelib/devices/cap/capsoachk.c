@@ -17,16 +17,13 @@ soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 /* make SOA checks after NR has finished */
 
 int
-CAPaccept(CKTcircuit *ckt, GENmodel *inModel)
+CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
     CAPmodel *model = (CAPmodel *) inModel;
     CAPinstance *here;
     double vc;  /* current capacitor voltage */
     int maxwarns_bv = 0;
     static int warns_bv = 0;
-
-    if (!ckt->CKTsoaCheck)
-        return OK;
 
     if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;

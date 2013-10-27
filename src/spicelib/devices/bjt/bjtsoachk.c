@@ -17,16 +17,13 @@ soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 /* make SOA checks after NR has finished */
 
 int
-BJTaccept(CKTcircuit *ckt, GENmodel *inModel)
+BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
     BJTmodel *model = (BJTmodel *) inModel;
     BJTinstance *here;
     double vbe, vbc, vce;    /* actual bjt voltages */
     int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
-
-    if (!ckt->CKTsoaCheck)
-        return OK;
 
     if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;

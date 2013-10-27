@@ -17,16 +17,13 @@ soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 /* make SOA checks after NR has finished */
 
 int
-RESaccept(CKTcircuit *ckt, GENmodel *inModel)
+RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
     RESmodel *model = (RESmodel *) inModel;
     RESinstance *here;
     double vr;  /* current resistor voltage */
     int maxwarns_bv = 0;
     static int warns_bv = 0;
-
-    if (!ckt->CKTsoaCheck)
-        return OK;
 
     if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;

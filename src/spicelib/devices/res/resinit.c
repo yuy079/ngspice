@@ -50,7 +50,7 @@ SPICEdev RESinfo = {
  /* DEVtrunc      */ NULL,
  /* DEVfindBranch */ NULL,
  /* DEVacLoad     */ RESacload,  /* ac load and normal load are identical */
- /* DEVaccept     */ RESaccept,
+ /* DEVaccept     */ NULL,
  /* DEVdestroy    */ RESdestroy,
  /* DEVmodDelete  */ RESmDelete,
  /* DEVdelete     */ RESdelete,
@@ -67,6 +67,7 @@ SPICEdev RESinfo = {
  /* DEVsenTrunc   */ NULL,
  /* DEVdisto      */ NULL,
  /* DEVnoise      */ RESnoise,
+ /* DEVsoaCheck   */ RESsoaCheck,
 #ifdef CIDER
  /* DEVdump       */ NULL,
  /* DEVacct       */ NULL,

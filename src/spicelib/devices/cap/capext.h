@@ -4,7 +4,6 @@ Author: 1985 Thomas L. Quarles
 **********/
 
 extern int CAPacLoad(GENmodel*,CKTcircuit*);
-extern int CAPaccept(CKTcircuit *, GENmodel *);
 extern int CAPask(CKTcircuit*,GENinstance*,int,IFvalue*,IFvalue*);
 extern int CAPdelete(GENmodel*,IFuid,GENinstance**);
 extern void CAPdestroy(GENmodel**);
@@ -23,4 +22,5 @@ extern int CAPsUpdate(GENmodel*,CKTcircuit*);
 extern int CAPsetup(SMPmatrix*,GENmodel*,CKTcircuit*,int*);
 extern int CAPtemp(GENmodel*,CKTcircuit*);
 extern int CAPtrunc(GENmodel*,CKTcircuit*,double*);
+extern int CAPsoaCheck(CKTcircuit *, GENmodel *);
 

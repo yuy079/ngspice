@@ -4,7 +4,6 @@ noinst_LTLIBRARIES = libcap.la
 
 libcap_la_SOURCES =	\
 	cap.c		\
-	capacct.c	\
 	capacld.c	\
 	capask.c	\
 	capdefs.h	\
@@ -24,6 +23,7 @@ libcap_la_SOURCES =	\
 	capsacl.c	\
 	capsetup.c	\
 	capsload.c	\
+	capsoachk.c	\
 	capsprt.c	\
 	capsset.c	\
 	capsupd.c	\
