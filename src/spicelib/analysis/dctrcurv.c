@@ -477,6 +477,9 @@ resume:
 
         CKTdump(ckt,ckt->CKTtime,plot);
 
+        if (ckt->CKTsoaCheck)
+            error = CKTsoaCheck(ckt);
+
 #ifdef XSPICE
         if(g_ipc.enabled)
             ipc_send_data_suffix();
@@ -523,8 +526,6 @@ nextstep:;
             job->TRCVnestState = i;
             return(E_PAUSE);
         }
-        if (ckt->CKTsoaCheck)
-            error = CKTsoaCheck(ckt);
 #ifdef HAS_PROGREP
         if (i == job->TRCVnestLevel) {
             actval += job->TRCVvStep[job->TRCVnestLevel];

@@ -156,16 +156,21 @@ DCop(CKTcircuit *ckt, int notused)
 
     CKTdump(ckt, 0.0, plot);
 
+    if (ckt->CKTsoaCheck)
+        error = CKTsoaCheck(ckt);
+
     if(g_ipc.enabled)
         ipc_send_dcop_suffix();
 
 /* gtri - end - wbk */
 #else
     if(converged == 0) {
-	   CKTdump(ckt, 0.0, plot);
-         } else {
-           fprintf(stderr,"error: circuit reload failed.\n");
-         }
+        CKTdump(ckt, 0.0, plot);
+        if (ckt->CKTsoaCheck)
+            error = CKTsoaCheck(ckt);
+    } else {
+        fprintf(stderr,"error: circuit reload failed.\n");
+    }
 #endif
     SPfrontEnd->OUTendPlot (plot);
     return(converged);
