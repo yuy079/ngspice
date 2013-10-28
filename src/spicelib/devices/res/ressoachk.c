@@ -29,8 +29,8 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
         for (here = model->RESinstances; here; here = here->RESnextInstance) {
 
-            vr = ckt->CKTrhsOld [here->RESposNode] -
-                 ckt->CKTrhsOld [here->RESnegNode];
+            vr = fabs(ckt->CKTrhsOld [here->RESposNode] -
+                      ckt->CKTrhsOld [here->RESnegNode]);
 
             if (vr > here->RESbv_max)
                 if (warns_bv < maxwarns_bv) {

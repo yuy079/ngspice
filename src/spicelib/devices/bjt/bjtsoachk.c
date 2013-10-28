@@ -33,7 +33,8 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                        ckt->CKTrhsOld [here->BJTemitPrimeNode]);
             vbc = fabs(ckt->CKTrhsOld [here->BJTbasePrimeNode] -
                        ckt->CKTrhsOld [here->BJTcolPrimeNode]);
-            vce = fabs(vbe - vbc);
+            vce = fabs(ckt->CKTrhsOld [here->BJTcolPrimeNode] -
+                       ckt->CKTrhsOld [here->BJTemitPrimeNode]);
 
             if (vbe > model->BJTvbeMax)
                 if (warns_vbe < maxwarns_vbe) {

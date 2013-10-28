@@ -29,8 +29,8 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
         for (here = model->CAPinstances; here; here = here->CAPnextInstance) {
 
-            vc = ckt->CKTrhsOld [here->CAPposNode] -
-                 ckt->CKTrhsOld [here->CAPnegNode];
+            vc = fabs(ckt->CKTrhsOld [here->CAPposNode] -
+                      ckt->CKTrhsOld [here->CAPnegNode]);
 
             if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {
