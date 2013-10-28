@@ -15,16 +15,20 @@
 int
 CKTsoaCheck(CKTcircuit *ckt)
 {
-    int i;
-    int error;
-    SPICEdev **devs = devices();
+    int i, error;
 
-    for (i = 0; i < DEVmaxnum; i++)
-        if (devs[i] && devs[i]->DEVsoaCheck && ckt->CKThead[i]) {
-            error = devs[i]->DEVsoaCheck (ckt, ckt->CKThead[i]);
-            if (error)
-                return error;
+    if (ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)) {
+
+        SPICEdev **devs = devices();
+
+        for (i = 0; i < DEVmaxnum; i++) {
+            if (devs[i] && devs[i]->DEVsoaCheck && ckt->CKThead[i]) {
+                error = devs[i]->DEVsoaCheck (ckt, ckt->CKThead[i]);
+                if (error)
+                    return error;
+            }
         }
+    }
 
     return OK;
 }
