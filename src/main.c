@@ -101,6 +101,7 @@ char *ft_rawfile = "rawspice.raw";
  extern int  xmain(int argc, char **argv);
  FILE *flogp = NULL;         /* log file ('-o logfile' command line option) */
 #endif
+
 FILE *slogp = NULL;          /* soa log file ('--soa-log file' command line option) */
 
 /* Frontend and circuit options */

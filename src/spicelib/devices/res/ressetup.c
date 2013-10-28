@@ -25,9 +25,8 @@ RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
     /*  loop through all the resistor models */
     for( ; model != NULL; model = model->RESnextModel ) {
 
-        if(!model->RESbv_maxGiven) {
+        if(!model->RESbv_maxGiven)
             model->RESbv_max = 1e99;
-        }
 
         /* loop through all the instances of the model */
         for (here = model->RESinstances; here != NULL ;
@@ -35,9 +34,8 @@ RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
 
             if(!here->RESmGiven)
                 here->RESm = 1.0;
-            if (!here->RESbv_maxGiven) {
+            if(!here->RESbv_maxGiven)
                 here->RESbv_max = model->RESbv_max;
-            }
 
 /* macro to make elements with built in test for out of memory */
 #define TSTALLOC(ptr,first,second) \

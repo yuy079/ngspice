@@ -11,8 +11,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-void
-soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -25,10 +23,10 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
 
-    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
+    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
-    for(; model; model = model->DIOnextModel) {
+    for (; model; model = model->DIOnextModel) {
 
         maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
 
@@ -39,7 +37,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vd > model->DIOfv_max)
                 if (warns_fv < maxwarns_fv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "Vf=%g has exceeded Fv_max=%g\n",
                                vd, model->DIOfv_max);
                     warns_fv++;
@@ -47,7 +45,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (-vd > model->DIObv_max)
                 if (warns_bv < maxwarns_bv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vj|=%g has exceeded Bv_max=%g\n",
                                -vd, model->DIObv_max);
                     warns_bv++;

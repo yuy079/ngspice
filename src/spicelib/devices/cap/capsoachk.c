@@ -11,8 +11,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-void
-soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -25,10 +23,10 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_bv = 0;
     static int warns_bv = 0;
 
-    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
+    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
-    for(; model; model = model->CAPnextModel) {
+    for (; model; model = model->CAPnextModel) {
 
         maxwarns_bv = ckt->CKTsoaMaxWarns;
 
@@ -39,7 +37,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vc|=%g has exceeded Bv_max=%g\n",
                                vc, here->CAPbv_max);
                     warns_bv++;

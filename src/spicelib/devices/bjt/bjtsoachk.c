@@ -11,8 +11,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/suffix.h"
 #include "ngspice/cpdefs.h"
 
-void
-soa_printf(GENinstance *, GENmodel *, CKTcircuit *, const char *, ...);
 
 /* make SOA checks after NR has finished */
 
@@ -25,7 +23,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
 
-    if(!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
+    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
         return OK;
 
     for (; model; model = model->BJTnextModel) {
@@ -42,7 +40,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbe > model->BJTvbeMax)
                 if (warns_vbe < maxwarns_vbe) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbe|=%g has exceeded Vbe_max=%g\n",
                                vbe, model->BJTvbeMax);
                     warns_vbe++;
@@ -50,7 +48,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vbc > model->BJTvbcMax)
                 if (warns_vbc < maxwarns_vbc) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vbc|=%g has exceeded Vbc_max=%g\n",
                                vbc, model->BJTvbcMax);
                     warns_vbc++;
@@ -58,7 +56,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 
             if (vce > model->BJTvceMax)
                 if (warns_vce < maxwarns_vce) {
-                    soa_printf((GENinstance*) here, (GENmodel*) model, ckt,
+                    soa_printf(ckt, (GENinstance*) here,
                                "|Vce|=%g has exceeded Vce_max=%g\n",
                                vce, model->BJTvceMax);
                     warns_vce++;

@@ -777,35 +777,22 @@ DEVpred(CKTcircuit *ckt, int loct)
 extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
 void
-soa_printf(GENinstance *instance, GENmodel *model, CKTcircuit *ckt, const char *fmt, ...)
+soa_printf(CKTcircuit *ckt, GENinstance *instance, const char *fmt, ...)
 {
+    FILE *fp = slogp ? slogp : stdout;
+
     va_list ap;
 
     va_start(ap, fmt);
 
-    if (slogp) {
+    if (ckt->CKTmode & MODETRAN)
+        fprintf(fp, "Instance: %s Model: %s Time: %g ",
+                instance->GENname, instance->GENmodPtr->GENmodName, ckt->CKTtime);
+    else
+        fprintf(fp, "Instance: %s Model: %s ",
+                instance->GENname, instance->GENmodPtr->GENmodName);
 
-        if(ckt->CKTmode & MODETRAN)
-            fprintf(slogp, "Instance: %s Model: %s Time: %g ",
-                    instance->GENname, model->GENmodName, ckt->CKTtime);
-        else
-            fprintf(slogp, "Instance: %s Model: %s ",
-                    instance->GENname, model->GENmodName);
-
-        vfprintf(slogp, fmt, ap);
-
-    } else {
-
-        if(ckt->CKTmode & MODETRAN)
-            printf("Instance: %s Model: %s Time: %g ",
-                   instance->GENname, model->GENmodName, ckt->CKTtime);
-        else
-            printf("Instance: %s Model: %s ",
-                    instance->GENname, model->GENmodName);
-
-        vprintf(fmt, ap);
-
-    }
+    vfprintf(fp, fmt, ap);
 
     va_end(ap);
 }
