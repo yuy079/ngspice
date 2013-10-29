@@ -12,8 +12,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cpdefs.h"
 
 
-/* make SOA checks after NR has finished */
-
 int
 BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
@@ -22,9 +20,6 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     double vbe, vbc, vce;    /* actual bjt voltages */
     int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
-
-    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
-        return OK;
 
     for (; model; model = model->BJTnextModel) {
 
@@ -36,7 +31,8 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                        ckt->CKTrhsOld [here->BJTemitPrimeNode]);
             vbc = fabs(ckt->CKTrhsOld [here->BJTbasePrimeNode] -
                        ckt->CKTrhsOld [here->BJTcolPrimeNode]);
-            vce = fabs(vbe - vbc);
+            vce = fabs(ckt->CKTrhsOld [here->BJTcolPrimeNode] -
+                       ckt->CKTrhsOld [here->BJTemitPrimeNode]);
 
             if (vbe > model->BJTvbeMax)
                 if (warns_vbe < maxwarns_vbe) {

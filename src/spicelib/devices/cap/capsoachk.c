@@ -12,8 +12,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cpdefs.h"
 
 
-/* make SOA checks after NR has finished */
-
 int
 CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
@@ -23,17 +21,14 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_bv = 0;
     static int warns_bv = 0;
 
-    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
-        return OK;
-
     for (; model; model = model->CAPnextModel) {
 
         maxwarns_bv = ckt->CKTsoaMaxWarns;
 
         for (here = model->CAPinstances; here; here = here->CAPnextInstance) {
 
-            vc = ckt->CKTrhsOld [here->CAPposNode] -
-                 ckt->CKTrhsOld [here->CAPnegNode];
+            vc = fabs(ckt->CKTrhsOld [here->CAPposNode] -
+                      ckt->CKTrhsOld [here->CAPnegNode]);
 
             if (vc > here->CAPbv_max)
                 if (warns_bv < maxwarns_bv) {

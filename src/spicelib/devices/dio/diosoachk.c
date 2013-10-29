@@ -12,8 +12,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cpdefs.h"
 
 
-/* make SOA checks after NR has finished */
-
 int
 DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
@@ -22,9 +20,6 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     double vd;  /* current diode voltage */
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
-
-    if (!(ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)))
-        return OK;
 
     for (; model; model = model->DIOnextModel) {
 
