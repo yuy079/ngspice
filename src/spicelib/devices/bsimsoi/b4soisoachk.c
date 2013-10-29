@@ -12,8 +12,6 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/cpdefs.h"
 
 
-/* make SOA checks after NR has finished */
-
 int
 B4SOIsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
 {
