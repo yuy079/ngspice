@@ -5389,6 +5389,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\dio\diosoachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\dio\diosprt.c"
 				>
 			</File>
