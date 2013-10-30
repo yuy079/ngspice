@@ -2145,10 +2145,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\parser\inpxx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\frontend\inp.h"
 				>
 			</File>
@@ -2186,6 +2182,10 @@
 			</File>
 			<File
 				RelativePath="..\src\frontend\parser\input.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\parser\inpxx.h"
 				>
 			</File>
 			<File

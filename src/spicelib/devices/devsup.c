@@ -11,8 +11,7 @@ Modified: 2000 AlansFixes
 #include "ngspice/cktdefs.h"
 #include "ngspice/suffix.h"
 
-#include <stdarg.h>
-
+#include <stdarg.h> /* va_start() and va_end() for vprintf() */
 
 /* 
  * Limit the per-iteration change of VDS 
@@ -774,8 +773,7 @@ DEVpred(CKTcircuit *ckt, int loct)
 #endif /* NEWTRUNC */
 }
 
-
-/* SOA check printout used in DEVsoaCheck functions */
+/* SOA check printout used in DEVaccept functions */
 extern FILE *slogp;  /* soa log file ('--soa-log file' command line option) */
 
 void
