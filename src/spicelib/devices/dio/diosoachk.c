@@ -21,6 +21,11 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_fv = 0, maxwarns_bv = 0;
     static int warns_fv = 0, warns_bv = 0;
 
+    if (ckt->CKTmode & MODEINITTRAN) {
+        warns_fv = 0;
+        warns_bv = 0;
+    }
+
     for (; model; model = model->DIOnextModel) {
 
         maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
