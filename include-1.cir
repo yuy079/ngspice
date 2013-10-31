@@ -1,0 +1,40 @@
+test inp_pathresolve usage for .inc processing
+* (compile (concat "SPICE_SCRIPTS=. " "../w32/src/ngspice -b " buffer-file-name))
+* (copy-file "inc-x.cir" "~/tmp-x.cir" t)
+* (copy-file "inc-y.cir" "/tmp/tmp-y.cir" t)
+
+.inc 'inc-2a.cir'
+.inc 'sub/inc-2a.cir'
+.inc '~/tmp-x.cir'
+.inc '/tmp/tmp-y.cir'
+
+v1 1 0 DC=101
+
+.control
+op
+print v(1) v(21) v(22) v(3) v(4) v(5) v(6)
+
+define mismatch(a,b,err) abs(a-b)>err
+
+let cnt = 0
+let cnt = 2*cnt + mismatch(v(1),  101.00, 1e-9)
+let cnt = 2*cnt + mismatch(v(21), 102.01, 1e-9)
+let cnt = 2*cnt + mismatch(v(22), 102.02, 1e-9)
+let cnt = 2*cnt + mismatch(v(3),  103.00, 1e-9)
+let cnt = 2*cnt + mismatch(v(4),  104.00, 1e-9)
+let cnt = 2*cnt + mismatch(v(5),  105.00, 1e-9)
+let cnt = 2*cnt + mismatch(v(6),  106.00, 1e-9)
+
+if cnt > 0
+  print cnt
+  echo "ERROR, mismatch"
+  quit 1
+else
+  echo "INFO, ok"
+  quit 0
+end
+
+.endc
+
+.end
+
