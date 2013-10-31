@@ -1114,7 +1114,7 @@ inp_pathresolve(char *name)
             (void) sprintf(buf, "%g%s%s", v->va_real, DIR_PATHSEP, name);
             break;
         default:
-            fprintf(stderr, "ERROR: enumeration value `CP_BOOL' or `CP_LIST' not handled in inp_pathopen\nAborting...\n");
+            fprintf(stderr, "ERROR: enumeration value `CP_BOOL' or `CP_LIST' not handled in inp_pathresolve\nAborting...\n");
             controlled_exit(EXIT_FAILURE);
             break;
         }
