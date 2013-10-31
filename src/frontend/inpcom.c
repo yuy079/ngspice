@@ -1076,31 +1076,26 @@ inp_pathresolve(char *name)
         name[1] = ':';
     }
 
-    /* If this is an abs pathname, or there is no sourcepath var, just
-     * return the pathname, otherwise return NULL.
-     */
+    if (0 == stat(name, &st))
+        return copy(name);
+
+    /* If this is an abs pathname, or there is no sourcepath var ... */
+
     if ((isalpha(name[0]) && name[1] == ':' && (name[2] == DIR_TERM_LINUX || name[2] == DIR_TERM))/* D:\... or  D:/... etc */
             || (name[0] == DIR_TERM)
             || (name[0] == DIR_TERM_LINUX)
-            || !cp_getvar("sourcepath", CP_LIST, &v)) {
-        int rval = stat(name, &st);
-        if (rval == 0)
-            return copy(name);
-        else
-            return NULL;
-    }
+            || !cp_getvar("sourcepath", CP_LIST, &v))
+        return NULL;
+
 #else
 
-    /* If this is an abs pathname, or there is no sourcepath var, just
-     * return the pathname, otherwise return NULL.
-     */
-    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v)) {
-        int rval = stat(name, &st);
-        if (rval == 0)
-            return copy(name);
-        else
-            return NULL;
-    }
+    if (0 == stat(name, &st))
+        return copy(name);
+
+    /* If this is an abs pathname, or there is no sourcepath var ... */
+
+    if (*name == DIR_TERM || !cp_getvar("sourcepath", CP_LIST, &v))
+        return NULL;
 
 #endif
 
