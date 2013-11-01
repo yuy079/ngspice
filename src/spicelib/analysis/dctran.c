@@ -173,6 +173,10 @@ DCtran(CKTcircuit *ckt,
         tfree(nameList);
         if(error) return(error);
 
+        /* initialize CKTsoaCheck `warn' counters */
+        if (ckt->CKTsoaCheck)
+            error = CKTsoaCheck(NULL);
+
         ckt->CKTtime = 0;
         ckt->CKTdelta = 0;
         ckt->CKTbreak = 1;
