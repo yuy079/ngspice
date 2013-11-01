@@ -18,7 +18,7 @@ VBICsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     VBICmodel *model = (VBICmodel *) inModel;
     VBICinstance *here;
     double vbe, vbc, vce;    /* actual bjt voltages */
-    int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
+    int maxwarns_vbe, maxwarns_vbc, maxwarns_vce;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
 
     if (!ckt) {
@@ -28,9 +28,9 @@ VBICsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->VBICnextModel) {
+    maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
 
-        maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->VBICnextModel) {
 
         for (here = model->VBICinstances; here; here=here->VBICnextInstance) {
 

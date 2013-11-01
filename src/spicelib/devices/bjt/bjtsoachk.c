@@ -18,7 +18,7 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     BJTmodel *model = (BJTmodel *) inModel;
     BJTinstance *here;
     double vbe, vbc, vce;    /* actual bjt voltages */
-    int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
+    int maxwarns_vbe, maxwarns_vbc, maxwarns_vce;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
 
     if (!ckt) {
@@ -28,9 +28,9 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->BJTnextModel) {
+    maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
 
-        maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->BJTnextModel) {
 
         for (here = model->BJTinstances; here; here=here->BJTnextInstance) {
 

@@ -18,7 +18,7 @@ BSIM3soaCheck(CKTcircuit *ckt, GENmodel *inModel)
     BSIM3model *model = (BSIM3model *) inModel;
     BSIM3instance *here;
     double vgs, vgd, vgb, vds, vbs, vbd;    /* actual mos voltages */
-    int maxwarns_vgs = 0, maxwarns_vgd = 0, maxwarns_vgb = 0, maxwarns_vds = 0, maxwarns_vbs = 0, maxwarns_vbd = 0;
+    int maxwarns_vgs, maxwarns_vgd, maxwarns_vgb, maxwarns_vds, maxwarns_vbs, maxwarns_vbd;
     static int warns_vgs = 0, warns_vgd = 0, warns_vgb = 0, warns_vds = 0, warns_vbs = 0, warns_vbd = 0;
 
     if (!ckt) {
@@ -31,9 +31,9 @@ BSIM3soaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->BSIM3nextModel) {
+    maxwarns_vgs = maxwarns_vgd = maxwarns_vgb = maxwarns_vds = maxwarns_vbs = maxwarns_vbd = ckt->CKTsoaMaxWarns;
 
-        maxwarns_vgs = maxwarns_vgd = maxwarns_vgb = maxwarns_vds = maxwarns_vbs = maxwarns_vbd = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->BSIM3nextModel) {
 
         for (here = model->BSIM3instances; here; here = here->BSIM3nextInstance) {
 

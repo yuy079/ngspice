@@ -18,7 +18,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     CAPmodel *model = (CAPmodel *) inModel;
     CAPinstance *here;
     double vc;  /* current capacitor voltage */
-    int maxwarns_bv = 0;
+    int maxwarns_bv;
     static int warns_bv = 0;
 
     if (!ckt) {
@@ -26,9 +26,9 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->CAPnextModel) {
+    maxwarns_bv = ckt->CKTsoaMaxWarns;
 
-        maxwarns_bv = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->CAPnextModel) {
 
         for (here = model->CAPinstances; here; here = here->CAPnextInstance) {
 

@@ -18,7 +18,7 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     RESmodel *model = (RESmodel *) inModel;
     RESinstance *here;
     double vr;  /* current resistor voltage */
-    int maxwarns_bv = 0;
+    int maxwarns_bv;
     static int warns_bv = 0;
 
     if (!ckt) {
@@ -26,9 +26,9 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->RESnextModel) {
+    maxwarns_bv = ckt->CKTsoaMaxWarns;
 
-        maxwarns_bv = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->RESnextModel) {
 
         for (here = model->RESinstances; here; here = here->RESnextInstance) {
 

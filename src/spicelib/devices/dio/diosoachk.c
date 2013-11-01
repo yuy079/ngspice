@@ -18,7 +18,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
     double vd;  /* current diode voltage */
-    int maxwarns_fv = 0, maxwarns_bv = 0;
+    int maxwarns_fv, maxwarns_bv;
     static int warns_fv = 0, warns_bv = 0;
 
     if (!ckt) {
@@ -27,9 +27,9 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    for (; model; model = model->DIOnextModel) {
+    maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
 
-        maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
+    for (; model; model = model->DIOnextModel) {
 
         for (here = model->DIOinstances; here; here = here->DIOnextInstance) {
 
