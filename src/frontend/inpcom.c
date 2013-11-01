@@ -630,13 +630,15 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
 
             {
                 char *y_resolved = inp_pathresolve_at(y, dir_name);
+                FILE *newfp;
+                char *y_dir_name;
 
                 if (!y_resolved) {
                     fprintf(cp_err, "Error: Could not find include file %s\n", y);
                     return NULL;
                 }
 
-                FILE *newfp = fopen(y_resolved, "r");
+                newfp = fopen(y_resolved, "r");
 
                 if (!newfp) {
                     fprintf(cp_err, "Error: .include statement failed.\n");
@@ -644,7 +646,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
                     controlled_exit(EXIT_FAILURE);
                 }
 
-                char *y_dir_name = ngdirname(y_resolved);
+                y_dir_name = ngdirname(y_resolved);
 
                 newcard = inp_readall(newfp, call_depth+1, y_dir_name, FALSE, FALSE);  /* read stuff in include file into netlist */
 
