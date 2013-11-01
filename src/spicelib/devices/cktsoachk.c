@@ -13,23 +13,24 @@
 
 
 int
+CKTsoaInit(void)
+{
+    int i;
+
+    SPICEdev **devs = devices();
+
+    for (i = 0; i < DEVmaxnum; i++)
+        if (devs[i] && devs[i]->DEVsoaCheck)
+            devs[i]->DEVsoaCheck (NULL, NULL);
+
+    return OK;
+}
+
+
+int
 CKTsoaCheck(CKTcircuit *ckt)
 {
     int i, error;
-
-    /* ckt == NULL is used to invoke initialization code in the DEVsoaCheck functions */
-
-    if (!ckt) {
-
-        SPICEdev **devs = devices();
-
-        for (i = 0; i < DEVmaxnum; i++)
-            if (devs[i] && devs[i]->DEVsoaCheck)
-                devs[i]->DEVsoaCheck (NULL, NULL);
-
-        return OK;
-    }
-
 
     if (ckt->CKTmode & (MODEDC | MODEDCOP | MODEDCTRANCURVE | MODETRAN | MODETRANOP)) {
 

@@ -228,7 +228,7 @@ found:;
 
     /* initialize CKTsoaCheck `warn' counters */
     if (ckt->CKTsoaCheck)
-        error = CKTsoaCheck(NULL);
+        error = CKTsoaInit();
 
     /* now have finished the initialization - can start doing hard part */
     

@@ -60,7 +60,7 @@ DCop(CKTcircuit *ckt, int notused)
 
     /* initialize CKTsoaCheck `warn' counters */
     if (ckt->CKTsoaCheck)
-        error = CKTsoaCheck(NULL);
+        error = CKTsoaInit();
 
 #ifdef XSPICE
 /* gtri - begin - wbk - 6/10/91 - Call EVTop if event-driven instances exist */
