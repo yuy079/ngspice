@@ -1,0 +1,46 @@
+* nupa
+
+* (exec-spice "ngspice %s")
+* (compile "cd ../w32 && LC_ALL=C make -k")
+*
+* these .param lines get transformed in inpcom.c
+*   a?b:c --> ternary_fcn(a,b,c)
+*
+* these rewrites are broken on the `master' branch
+
+* incorrectly transformed --> (3>2)||ternary_fcn((1<4),0.2,0.3)
+.param foo_1001 = '(3>2)||(1<4) ? 0.2 : 0.3'
+
+* incorrectly transformed --> controlled_exit()
+.param foo_1002 = '(3>2) ? (3+2)*((2>1)?1:1) : 42'
+
+* incorrectly transformed --> ternary_fcn((3>2),42,(2*2))3
+.param foo_1003 = '(3>2) ? 42 : (2*2)+3'
+
+
+v1001  1001 0  'foo_1001'
+v1002  1002 0  'foo_1002'
+v1003  1003 0  'foo_1003'
+
+
+.control
+
+define mismatch(a,b,err) abs(a-b)>err
+
+op
+
+if mismatch(v(1001), 0.2, 1e-9)
+  echo "ERROR, mismatch 1001"
+end
+
+if mismatch(v(1002), 5, 1e-9)
+  echo "ERROR, mismatch 1002"
+end
+
+if mismatch(v(1003), 42, 1e-9)
+  echo "ERROR, mismatch 1003"
+end
+
+quit 1
+
+.endc
