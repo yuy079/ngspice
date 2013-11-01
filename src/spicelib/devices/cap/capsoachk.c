@@ -21,6 +21,11 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_bv = 0;
     static int warns_bv = 0;
 
+    if (!ckt) {
+        warns_bv = 0;
+        return OK;
+    }
+
     for (; model; model = model->CAPnextModel) {
 
         maxwarns_bv = ckt->CKTsoaMaxWarns;

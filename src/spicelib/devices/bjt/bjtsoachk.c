@@ -21,6 +21,13 @@ BJTsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     int maxwarns_vbe = 0, maxwarns_vbc = 0, maxwarns_vce = 0;
     static int warns_vbe = 0, warns_vbc = 0, warns_vce = 0;
 
+    if (!ckt) {
+        warns_vbe = 0;
+        warns_vbc = 0;
+        warns_vce = 0;
+        return OK;
+    }
+
     for (; model; model = model->BJTnextModel) {
 
         maxwarns_vbe = maxwarns_vbc = maxwarns_vce = ckt->CKTsoaMaxWarns;
