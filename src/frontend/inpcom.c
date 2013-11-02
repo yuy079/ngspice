@@ -758,7 +758,7 @@ inp_readall(FILE *fp, int call_depth, char *dir_name, bool comfile, bool intfile
     if (!end) /* No stuff here */
         return NULL;
 
-    if (call_depth == 0 && found_end == TRUE) {
+    if (call_depth == 0 && !comfile) {
         cc->li_next = xx_new_line(cc->li_next, copy(".global gnd"), 1, 0);
 
         if (inp_compat_mode == COMPATMODE_ALL ||
