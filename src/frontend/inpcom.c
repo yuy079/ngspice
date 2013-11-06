@@ -478,7 +478,7 @@ inp_readall(FILE *fp, char *dir_name, bool comfile, bool intfile)
     /* The following processing of an input file is not required for command files
        like spinit or .spiceinit, so return command files here. */
 
-    if (!comfile) {
+    if (!comfile && cc) {
 
         unsigned int no_braces; /* number of '{' */
         size_t max_line_length; /* max. line length in input deck */
