@@ -937,7 +937,9 @@ fetchoperator(tdico *dico,
         iptr++;
     } else if ((c == '|') && (d == '|')) {
         iptr++;
-    } if ((c == '+') || (c == '-')) {
+    }
+
+    if ((c == '+') || (c == '-')) {
         state = S_binop;        /* pending operator */
         level = 4;
     } else if ((c == '*') || (c == '/') || (c == '%') || (c == '\\')) {
