@@ -987,30 +987,6 @@ inp_pathopen(char *name, char *mode)
     struct variable *v;
 
 #if defined(__MINGW32__) || defined(_MSC_VER)
-    char buf2[BSIZE_SP];
-
-    /* search in the path where the source (input) file has been found,
-       but only if "name" is just a file name */
-    if (is_plain_filename(name)) {
-        /* If pathname is found, get path.
-           (char *dirname(const char *name) might have been used here) */
-        if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
-            int i, j = 0;
-            for (i = 0; i < BSIZE_SP-1; i++) {
-                if (buf2[i] == '\0')
-                    break;
-                if ((buf2[i] == DIR_TERM) || (buf2[i] == DIR_TERM_LINUX))
-                    j = i;
-            }
-            buf2[j+1] = '\0'; /* include path separator */
-        }
-        /* add file name */
-        strcat(buf2, name);
-        /* try to open file */
-        if ((fp = fopen(buf2, mode)) != NULL)
-            return (fp);
-    }
-
     /* If variable 'mingwpath' is set: convert mingw /d/... to d:/... */
     if (cp_getvar("mingwpath", CP_BOOL, NULL) && name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) {
         name[0] = name[1];
@@ -1077,29 +1053,6 @@ inp_pathresolve(char *name)
     struct stat st;
 
 #if defined(__MINGW32__) || defined(_MSC_VER)
-    char buf2[BSIZE_SP];
-
-    /* search in the path where the source (input) file has been found,
-       but only if "name" is just a file name */
-    if (is_plain_filename(name)) {
-        /* If pathname is found, get path.
-           (char *dirname(const char *name) might have been used here) */
-        if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
-            int i, j = 0;
-            for (i = 0; i < BSIZE_SP-1; i++) {
-                if (buf2[i] == '\0')
-                    break;
-                if ((buf2[i] == DIR_TERM) || (buf2[i] == DIR_TERM_LINUX))
-                    j = i;
-            }
-            buf2[j+1] = '\0'; /* include path separator */
-        }
-        /* add file name */
-        strcat(buf2, name);
-        /* try to open file */
-        if (0 == stat(buf2, &st))
-            return copy(buf2);
-    }
 
     /* If variable 'mingwpath' is set: convert mingw /d/... to d:/... */
     if (cp_getvar("mingwpath", CP_BOOL, NULL) &&  name[0] == DIR_TERM_LINUX && isalpha(name[1]) && name[2] == DIR_TERM_LINUX) {
