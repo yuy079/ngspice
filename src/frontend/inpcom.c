@@ -960,7 +960,7 @@ inp_pathopen(char *name, char *mode)
 
     /* search in the path where the source (input) file has been found,
        but only if "name" is just a file name */
-    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX) && cp_getvar("sourcefile", CP_STRING, buf2)) {
+    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX)) {
         /* If pathname is found, get path.
            (char *dirname(const char *name) might have been used here) */
         if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
@@ -1053,7 +1053,7 @@ inp_pathresolve(char *name)
 
     /* search in the path where the source (input) file has been found,
        but only if "name" is just a file name */
-    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX) && cp_getvar("sourcefile", CP_STRING, buf2)) {
+    if (!strchr(name, DIR_TERM) && !strchr(name, DIR_TERM_LINUX)) {
         /* If pathname is found, get path.
            (char *dirname(const char *name) might have been used here) */
         if (substring(DIR_PATHSEP, buf2) || substring(DIR_PATHSEP_LINUX, buf2)) {
