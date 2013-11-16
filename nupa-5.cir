@@ -1,6 +1,6 @@
 * nupa
 
-* (compile (concat "../w32/src/ngspice " buffer-file-name) t)
+* (exec-spice "ngspice %s")
 * (compile "cd ../w32 && LC_ALL=C make -k")
 *
 * these .param lines get transformed in inpcom.c
