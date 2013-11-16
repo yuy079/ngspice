@@ -1310,9 +1310,20 @@ formula(tdico *dico, const char *s, const char *s_end, bool *perror)
             /* do pending binaries of priority Upto "level" */
             fprintf(stderr, "--------------------- with c='%c' @ %d\n", c, level);
             for (i = 1; i <= level; i++) {
-                if (i < level && oper[i] == ':' && oper[i+1] == '?') {
+                if (i < level && oper[i] == ':' && (oper[i+1] == '?' ||oper[i+1] == 'x')) {
                     fprintf(stderr, "oper[%d]='%c', accu[+1]=%g accu[0]=%g accu[-1]=%g !!!\n", i, oper[i+1], accu[i+1], accu[i], accu[i-1]);
-                    accu[i + 1] = ternary_fcn((int) accu[i+1], accu[i], accu[i-1]);
+                    if (oper[i+1] == 'x') {
+                        /* this is a `first-of-triple' op */
+                        accu[i + 1] = accu[i+1];
+                        c = 'x';  /* transform next '?' into 'first' */
+                    } else if ((int) accu[i+1]) { /* fixme, round !?!! */
+                        /* this is a `true' ternary */
+                        accu[i + 1] = accu[i];
+                        c = 'x';  /* transform the new '?' to a `first-of-triple' */
+                    } else {
+                        /* this is a `false' ternary */
+                        accu[i + 1] = accu[i-1];
+                    }
                     accu[i - 1] = 0.0;
                     oper[i] = ' ';  /* reset intermediates */
                     accu[i] = 0.0;
