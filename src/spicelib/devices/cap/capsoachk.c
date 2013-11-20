@@ -18,7 +18,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     CAPmodel *model = (CAPmodel *) inModel;
     CAPinstance *here;
     double vc;  /* current capacitor voltage */
-    int maxwarns_bv;
+    int maxwarns;
     static int warns_bv = 0;
 
     if (!ckt) {
@@ -26,7 +26,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    maxwarns_bv = ckt->CKTsoaMaxWarns;
+    maxwarns = ckt->CKTsoaMaxWarns;
 
     for (; model; model = model->CAPnextModel) {
 
@@ -36,7 +36,7 @@ CAPsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                       ckt->CKTrhsOld [here->CAPnegNode]);
 
             if (vc > here->CAPbv_max)
-                if (warns_bv < maxwarns_bv) {
+                if (warns_bv < maxwarns) {
                     soa_printf(ckt, (GENinstance*) here,
                                "|Vc|=%g has exceeded Bv_max=%g\n",
                                vc, here->CAPbv_max);

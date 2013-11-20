@@ -18,7 +18,7 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     RESmodel *model = (RESmodel *) inModel;
     RESinstance *here;
     double vr;  /* current resistor voltage */
-    int maxwarns_bv;
+    int maxwarns;
     static int warns_bv = 0;
 
     if (!ckt) {
@@ -26,7 +26,7 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    maxwarns_bv = ckt->CKTsoaMaxWarns;
+    maxwarns = ckt->CKTsoaMaxWarns;
 
     for (; model; model = model->RESnextModel) {
 
@@ -36,7 +36,7 @@ RESsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                       ckt->CKTrhsOld [here->RESnegNode]);
 
             if (vr > here->RESbv_max)
-                if (warns_bv < maxwarns_bv) {
+                if (warns_bv < maxwarns) {
                     soa_printf(ckt, (GENinstance*) here,
                                "|Vr|=%g has exceeded Bv_max=%g\n",
                                vr, here->RESbv_max);

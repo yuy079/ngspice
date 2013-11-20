@@ -18,7 +18,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
     DIOmodel *model = (DIOmodel *) inModel;
     DIOinstance *here;
     double vd;  /* current diode voltage */
-    int maxwarns_fv, maxwarns_bv;
+    int maxwarns;
     static int warns_fv = 0, warns_bv = 0;
 
     if (!ckt) {
@@ -27,7 +27,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
         return OK;
     }
 
-    maxwarns_fv = maxwarns_bv = ckt->CKTsoaMaxWarns;
+    maxwarns = ckt->CKTsoaMaxWarns;
 
     for (; model; model = model->DIOnextModel) {
 
@@ -37,7 +37,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                  ckt->CKTrhsOld [here->DIOnegNode];
 
             if (vd > model->DIOfv_max)
-                if (warns_fv < maxwarns_fv) {
+                if (warns_fv < maxwarns) {
                     soa_printf(ckt, (GENinstance*) here,
                                "Vj=%g has exceeded Fv_max=%g\n",
                                vd, model->DIOfv_max);
@@ -45,7 +45,7 @@ DIOsoaCheck(CKTcircuit *ckt, GENmodel *inModel)
                 }
 
             if (-vd > model->DIObv_max)
-                if (warns_bv < maxwarns_bv) {
+                if (warns_bv < maxwarns) {
                     soa_printf(ckt, (GENinstance*) here,
                                "Vj=%g has exceeded Bv_max=%g\n",
                                vd, model->DIObv_max);
