@@ -180,6 +180,9 @@
 /* Define to 1 if you have the <libintl.h> header file. */
 /* #undef HAVE_LIBINTL_H */
 
+/* Define to 1 if you have the `fftw3' library (-lfftw3). */
+#define HAVE_LIBFFTW3 1
+
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
 
