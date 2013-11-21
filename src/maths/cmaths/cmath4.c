@@ -779,7 +779,7 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 {
     ngcomplex_t *indata = (ngcomplex_t *) data;
     int i, tpts;
-    double span, scale;
+    double span;
     double *xscale;
     ngcomplex_t *outdata = NULL;
     struct dvec  *sv;
@@ -791,6 +791,7 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 #else
     int N, M;
     double *datax = NULL;
+    double scale;
 #endif
 
     if (grouping == 0)
@@ -894,10 +895,9 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     *newlength = tpts;
     outdata = alloc_c(tpts);
 
-    scale = (double) tpts;
     for (i = 0; i < tpts; i++) {
-        outdata[i].cx_real = out[i][0] * scale;
-        outdata[i].cx_imag = out[i][1] * scale;
+        outdata[i].cx_real = out[i][0];
+        outdata[i].cx_imag = out[i][1];
     }
 
     fftw_free(in);
