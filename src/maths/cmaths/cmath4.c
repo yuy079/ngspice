@@ -702,14 +702,14 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
         for (i = 0; i < length; i++)
             ind[i] = indata[i] * win[i];
 
-        plan_forward = fftw_plan_dft_r2c_1d ( fpts, ind, out, FFTW_ESTIMATE );
+        plan_forward = fftw_plan_dft_r2c_1d ( length, ind, out, FFTW_ESTIMATE );
 
         fftw_execute ( plan_forward );
 
         *newlength = fpts;
         outdata = alloc_c(fpts);
 
-        scale = (double) fpts;
+        scale = (double) length;
         for (i = 0; i < fpts; i++) {
             outdata[i].cx_real = out[i][0]/scale;
             outdata[i].cx_imag = out[i][1]/scale;
@@ -876,10 +876,9 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     *newlength = tpts;
     outdata = alloc_c(tpts);
 
-    scale = (double) tpts;
     for (i = 0; i < tpts; i++) {
-        outdata[i].cx_real = out[i][0] * scale;
-        outdata[i].cx_imag = out[i][1] * scale;
+        outdata[i].cx_real = out[i][0];
+        outdata[i].cx_imag = out[i][1];
     }
     fftw_free ( in );
     fftw_destroy_plan ( plan_backward );
