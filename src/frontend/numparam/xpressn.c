@@ -133,11 +133,11 @@ mathfunction(int f, double z, double x)
     case 8:
         y = fabs(x);
         break;
-    case 9:
-        y = pow(z, x);
+    case 9:                     /* pow(x,y), spicy sort of "absolute power" */
+        y = pow(z, trunc(x));
         break;
-    case 10:
-        y = pow(fabs(z), x);
+    case 10:                    /* pwr(x,y), spicy sort of "signed power" */
+        y = copysign(pow(fabs(z), x), z);
         break;
     case 11:
         y = MAX(x, z);
@@ -1068,8 +1068,13 @@ operate(char op, double x, double y)
         // if (absf(y) > epsi)
         x = x / y;
         break;
-    case '^':                   /* power */
-        x = pow(fabs(x), y);
+    case '^':                   /* spicy / non-mathematical sort of '**' power */
+        if (x > 0)
+            x = pow(x, y);
+        else if (x < 0)
+            x = pow(x, trunc(y));
+        else
+            x = 0;
         break;
     case 'A':                   /* && */
         x = ((x != 0.0) && (y != 0.0)) ? 1.0 : 0.0;
