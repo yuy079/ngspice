@@ -149,7 +149,7 @@ mathfunction(int f, double z, double x)
         y = trunc(x);
         break;
     case 14:                    /* log(x), spicy sort of "log" */
-        y = copysign(log(fabs(x)), x);
+        y = copysign(1, x) * log(fabs(x));
         break;
     case 15:
         y = sinh(x);
