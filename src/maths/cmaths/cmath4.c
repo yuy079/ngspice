@@ -632,7 +632,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
     sv->v_realdata = xscale;
     vec_new(sv);
 
-    if (type == VF_COMPLEX) {
+    if (type == VF_COMPLEX) { /* input vector is complex */
 
         ngcomplex_t *indata = (ngcomplex_t *) data;
 #ifdef HAVE_LIBFFTW3
@@ -660,7 +660,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
             outdata[i].cx_imag = out[i][1]/scale;
         }
         fftw_free ( inc );
-#else
+#else /* Green's FFT */
         printf("FFT: Time span: %g s, input length: %d, zero padding: %d\n", span, length, N-length);
         printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span, N);
 
@@ -689,7 +689,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
         }
 #endif
 
-    } else {
+    } else { /* input vector is real */
 
         double *indata = (double *) data;
 #ifdef HAVE_LIBFFTW3
@@ -715,9 +715,9 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
             outdata[i].cx_imag = out[i][1]/scale;
         }
         fftw_free ( ind );
-#else
+#else /* Green's FFT */
         printf("FFT: Time span: %g s, input length: %d, zero padding: %d\n", span, length, N-length);
-        printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span, N/2);
+        printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span*, N/2);
 
         realdata = (double *) data;
 
@@ -763,7 +763,7 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 {
     ngcomplex_t *indata = (ngcomplex_t *) data;
     int i, tpts;
-    double span, scale;
+    double span;
     double *xscale;
     ngcomplex_t *outdata = NULL;
     struct dvec  *sv;
@@ -774,6 +774,7 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
 #else
     int N, M;
     double *datax = NULL;
+    double scale;
 #endif
 
     if (grouping == 0)
@@ -883,7 +884,7 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     fftw_free ( in );
     fftw_destroy_plan ( plan_backward );
     fftw_free ( out );
-#else
+#else /* Green's IFFT */
     printf("IFFT: Frequency span: %g Hz, input length: %d, zero padding: %d\n", 1/span*length, length, N-length);
     printf("IFFT: Time resolution: %g s, output length: %d\n", span/(tpts-1), tpts);
 
