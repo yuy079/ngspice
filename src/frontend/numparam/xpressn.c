@@ -112,8 +112,8 @@ mathfunction(int f, double z, double x)
     case 1:
         y = x * x;
         break;
-    case 2:
-        y = sqrt(x);
+    case 2:                     /* sqrt(x), spicy sort of "square root" */
+        y = copysign(sqrt(fabs(x)), x);
         break;
     case 3:
         y = sin(x);
@@ -148,8 +148,8 @@ mathfunction(int f, double z, double x)
     case 13:                    /* int(x) */
         y = trunc(x);
         break;
-    case 14:
-        y = log(x);
+    case 14:                    /* log(x), spicy sort of "log" */
+        y = copysign(log(fabs(x)), x);
         break;
     case 15:
         y = sinh(x);
