@@ -516,6 +516,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
     ngcomplex_t *outdata = NULL;
     struct dvec  *sv;
     char   window[BSIZE_SP];
+    double *realdata;
 
 #ifdef HAVE_LIBFFTW3
     fftw_complex *inc;
@@ -525,7 +526,6 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 #else
     int N, M;
     double *datax = NULL;
-    double *realdata;
 #endif
 
     if (grouping == 0)
@@ -557,7 +557,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
     if (type == VF_COMPLEX)
         fpts = N;
     else
-        fpts = N/2;
+        fpts = N/2 + 1;
 #endif
 
     *newtype = VF_COMPLEX;
@@ -700,7 +700,9 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 
     } else { /* input vector is real */
 
-        double *indata = (double *) data;
+        realdata = (double *) data;
+        *newlength = fpts;
+        outdata = alloc_c(fpts);
 
 #ifdef HAVE_LIBFFTW3
 
@@ -711,14 +713,11 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
         out = fftw_malloc(sizeof(fftw_complex) * (unsigned int) fpts);
 
         for (i = 0; i < length; i++)
-            ind[i] = indata[i] * win[i];
+            ind[i] = realdata[i] * win[i];
 
         plan_forward = fftw_plan_dft_r2c_1d(length, ind, out, FFTW_ESTIMATE);
 
         fftw_execute(plan_forward);
-
-        *newlength = fpts;
-        outdata = alloc_c(fpts);
 
         scale = (double) length;
         for (i = 0; i < fpts; i++) {
@@ -731,9 +730,7 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 #else /* Green's FFT */
 
         printf("FFT: Time span: %g s, input length: %d, zero padding: %d\n", span, length, N-length);
-        printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span, N/2);
-
-        realdata = (double *) data;
+        printf("FFT: Frequency resolution: %g Hz, output length: %d\n", 1.0/span, fpts);
 
         datax = TMALLOC(double, N);
 
@@ -746,15 +743,16 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
         rffts(datax, M, 1);
         fftFree();
 
-        *newlength = N/2;
-        outdata = alloc_c(N/2);
-
         scale = (double) N;
         /* Re(x[0]), Re(x[N/2]), Re(x[1]), Im(x[1]), Re(x[2]), Im(x[2]), ... Re(x[N/2-1]), Im(x[N/2-1]). */
-        for (i = 0; i < N/2; i++) {
+        outdata[0].cx_real = datax[0]/scale;
+        outdata[0].cx_imag = 0.0;
+        for (i = 1; i < fpts-1; i++) {
             outdata[i].cx_real = datax[2*i]/scale;
             outdata[i].cx_imag = datax[2*i+1]/scale;
         }
+        outdata[fpts-1].cx_real = datax[1]/scale;
+        outdata[fpts-1].cx_imag = 0.0;
 
 #endif
 
@@ -762,8 +760,8 @@ cx_fft(void *data, short int type, int length, int *newlength, short int *newtyp
 
 done:
 #ifdef HAVE_LIBFFTW3
-    fftw_destroy_plan(plan_forward);
     fftw_free(out);
+    fftw_destroy_plan(plan_forward);
 #else
     tfree(datax);
 #endif
@@ -874,6 +872,10 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     sv->v_realdata = xscale;
     vec_new(sv);
 
+    *newtype = VF_COMPLEX;
+    *newlength = tpts;
+    outdata = alloc_c(tpts);
+
 #ifdef HAVE_LIBFFTW3
 
     printf("IFFT: Frequency span: %g Hz, input length: %d\n", 1/span*length, length);
@@ -890,10 +892,6 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     plan_backward = fftw_plan_dft_1d(tpts, in, out, FFTW_BACKWARD, FFTW_ESTIMATE);
 
     fftw_execute(plan_backward);
-
-    *newtype = VF_COMPLEX;
-    *newlength = tpts;
-    outdata = alloc_c(tpts);
 
     for (i = 0; i < tpts; i++) {
         outdata[i].cx_real = out[i][0];
@@ -924,12 +922,8 @@ cx_ifft(void *data, short int type, int length, int *newlength, short int *newty
     iffts(datax, M, 1);
     fftFree();
 
-    *newtype = VF_COMPLEX;
-    *newlength = N;
-    outdata = alloc_c(N);
-
-    scale = (double) N;
-    for (i = 0; i < N; i++) {
+    scale = (double) tpts;
+    for (i = 0; i < tpts; i++) {
         outdata[i].cx_real = datax[2*i] * scale;
         outdata[i].cx_imag = datax[2*i+1] * scale;
     }
