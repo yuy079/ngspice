@@ -12,9 +12,9 @@ Author: 1985 Thomas L. Quarles
 #include "ngspice/missing_math.h"
 #include "ngspice/1-f-code.h"
 
-extern int fftInit(long M);
+#ifndef HAVE_LIBFFTW3
 extern void fftFree(void);
-extern void rffts(float *data, long M, long Rows);
+#endif
 
 extern bool ft_ngdebug; /* some additional debug info printed */
 
@@ -83,7 +83,7 @@ VSRCaccept(CKTcircuit *ckt, GENmodel *inModel)
                         tshift = TD;
 
 #ifdef XSPICE
-                     /* normalize phase to 0 - 360Â° */
+                     /* normalize phase to 0 - 360° */
                      /* normalize phase to cycles */
                         phase = PHASE / 360.0;
                         phase = fmod(phase, 1.0);
@@ -196,14 +196,14 @@ VSRCaccept(CKTcircuit *ckt, GENmodel *inModel)
 
                         if ((TS == 0.0) &&  (RTSAM == 0.0)) // no further breakpoint if value not given
                             break;
-
+#ifndef HAVE_LIBFFTW3
                         /* FIXME, dont' want this here, over to aof_get or somesuch */
                         if (ckt->CKTtime == 0.0) {
                             if(ft_ngdebug)
                                 printf("VSRC: free fft tables\n");
                             fftFree();
                         }
-
+#endif
                         if(ckt->CKTbreak) {
 
                             int n = (int) floor(ckt->CKTtime / TS + 0.5);
