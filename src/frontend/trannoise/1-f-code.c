@@ -31,6 +31,7 @@ f_alpha(int n_pts, int n_exp, double X[], double Q_d, double alpha)
     fftw_complex *out = NULL;
     fftw_plan plan_forward = NULL;
     fftw_plan plan_backward = NULL;
+    NG_IGNORE(n_exp);
 #endif
 
     ha = alpha/2.0;
