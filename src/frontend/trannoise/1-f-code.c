@@ -72,7 +72,7 @@ f_alpha(int n_pts, int n_exp, double X[], double Q_d, double alpha)
     fftw_execute(plan_forward);
     fftw_destroy_plan(plan_forward);
 
-    out = fftw_malloc(sizeof(fftw_complex) * (unsigned int) n_pts/2+1);
+    out = fftw_malloc(sizeof(fftw_complex) * (unsigned int) (n_pts/2 + 1));
     /* multiply the two complex vectors */
     for (i = 0; i < n_pts/2 + 1; i++) {
         out[i][0] = hfa[i]*wfa[i] - hfa[i+1]*wfa[i+1];
@@ -80,13 +80,12 @@ f_alpha(int n_pts, int n_exp, double X[], double Q_d, double alpha)
     }
 
     /* inverse transform */
-    plan_backward = fftw_plan_dft_1d(n_pts, out, out, FFTW_BACKWARD, FFTW_ESTIMATE);
+    plan_backward = fftw_plan_dft_c2r_1d(n_pts, out, X, FFTW_ESTIMATE);
     fftw_execute(plan_backward);
-    for (i = 0; i < n_pts/2 + 1; i = i + 2) {
-        X[i]   = out[i][0];
-        X[i+1] = out[i][1];
-    }
     fftw_destroy_plan(plan_backward);
+    for (i = 0; i < n_pts; i++) {
+        X[i] = X[i] / (double) n_pts;
+    }
 
     fftw_free(out);
 
@@ -99,14 +98,14 @@ f_alpha(int n_pts, int n_exp, double X[], double Q_d, double alpha)
 
     /* multiply the two complex vectors */
     rspectprod(hfa, wfa, X, n_pts);
+
     /* inverse transform */
     riffts(X, n_exp, 1);
 
-    free(hfa);
-    free(wfa);
-
 #endif
 
+    free(hfa);
+    free(wfa);
     /* fft tables will be freed in vsrcaccept.c and isrcaccept.c
        fftFree(); */
     fprintf(stdout, "%d (2e%d) one over f values created\n", n_pts, n_exp);
