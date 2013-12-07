@@ -1,6 +1,10 @@
-/* CKTsoaCheck(ckt)
- *
- * this is a driver program to iterate through all the various SOA check
+/**********
+Copyright 2013 Dietmar Warning. All rights reserved.
+Author:   2013 Dietmar Warning
+**********/
+
+/*
+ * This is a driver program to iterate through all the various SOA check
  * functions provided for the circuit elements in the given circuit */
 
 #include "ngspice/config.h"
@@ -10,7 +14,6 @@
 #include "ngspice/devdefs.h"
 
 #include "dev.h"
-
 
 int
 CKTsoaInit(void)
