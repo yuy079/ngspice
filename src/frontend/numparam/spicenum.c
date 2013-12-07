@@ -135,7 +135,7 @@ stripbraces(SPICE_DSTRINGPTR dstr_p)
 
             cadd(&tstr, ' ');
             {
-                char buf[17+1];
+                char buf[25+1];
                 sprintf(buf, "numparm__________%08lx", placeholder);
                 sadd(&tstr, buf);
             }
