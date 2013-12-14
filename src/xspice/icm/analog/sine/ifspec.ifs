@@ -19,8 +19,8 @@ SUMMARY
 NAME_TABLE:
 
 
-C_Function_Name:       cm_sine
-Spice_Model_Name:      sine
+C_Function_Name:       cm_sine3
+Spice_Model_Name:      sine3
 Description:           "controlled sine wave oscillator"
 
 

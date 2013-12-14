@@ -1,7 +1,7 @@
 /*.......1.........2.........3.........4.........5.........6.........7.........8
 ================================================================================
 
-FILE sine/cfunc.mod
+FILE sine3/cfunc.mod
 
 Copyright 1991
 Georgia Tech Research Corporation, Atlanta, Ga. 30332
@@ -17,8 +17,9 @@ AUTHORS
 
 MODIFICATIONS
 
+     2 Sept 2012   Krzysztof Blaszkowski
+		    fixed memory leak, added 2 phases.
      2 Oct 1991    Jeffrey P. Murray
-     7 Sep 2012    Holger Vogt
 
 
 SUMMARY
@@ -57,15 +58,13 @@ NON-STANDARD FEATURES
 
 /*=== CONSTANTS ========================*/
 
+
 #define PI 3.141592654
-
 #define INT1 1
-
-static char *sine_freq_clamp = "\n**** Warning ****\nSINE: Extrapolated frequency limited to 1e-16 Hz\n";
-static char *array_error = "\n**** Error ****\nSINE: Size of control array different than frequency array\n";
 
 
 /*=== MACROS ===========================*/
+
 
 #define R_PARAM_PTR(z) (Mif_Value_t *)( ((void *)(&(z))) - ((void *)&(((Mif_Value_t *)0)->rvalue)) )
 
@@ -73,164 +72,119 @@ static char *array_error = "\n**** Error ****\nSINE: Size of control array diffe
 /*=== LOCAL VARIABLES & TYPEDEFS =======*/
 
 
+
+
 /*=== FUNCTION PROTOTYPE DEFINITIONS ===*/
 
 
-/*==============================================================================
 
-FUNCTION void cm_sine()
-
-AUTHORS
-
-    20 Mar 1991     Harry Li
-
-MODIFICATIONS
-
-     2 Oct 1991    Jeffrey P. Murray
-     7 Sep 2012    Holger Vogt
-
-SUMMARY
-
-    This function implements the sine (controlled sinewave
-    oscillator) code model.
-
-INTERFACES
-
-    FILE                 ROUTINE CALLED
-
-    CMmacros.h           cm_message_send();
-
-    CM.c                 void *cm_analog_alloc()
-                         void *cm_analog_get_ptr()
-
-RETURNED VALUE
-
-    Returns inputs and outputs via ARGS structure.
-
-GLOBAL VARIABLES
-
-    NONE
-
-NON-STANDARD FEATURES
-
-    NONE
-
-==============================================================================*/
 
 /*=== CM_SINE ROUTINE ===*/
 
-void cm_sine(ARGS)
+void cm_sine3(ARGS)
 {
-    int cntl_size;     /* control array size                            */
-
-    double output_low; /* output low value                              */
-    double output_hi;  /* output high value                             */
+	int cntl_size;     /* control array size                            */
+	double output_low; /* output low value                              */
+	double output_hi;  /* output high value                             */
 
     /**** Retrieve frequently used parameters... ****/
 
-    cntl_size  = PARAM_SIZE(cntl_array);
-    output_low = PARAM(out_low);
-    output_hi  = PARAM(out_high);
+	cntl_size = PARAM_SIZE(cntl_array);
+	output_low = PARAM(out_low);
+	output_hi = PARAM(out_high);
 
-    if (cntl_size != PARAM_SIZE(freq_array)) {
-        cm_message_send(array_error);
-        return;
-    }
+	if(cntl_size != PARAM_SIZE(freq_array)){
+		cm_message_send("\n**** Error ****\n Sine3: Size of control array different than frequency array \n");
+		return;
+ 	}
 
-    if (INIT == 1) {
+  if(INIT == 1){
 
-        cm_analog_alloc(INT1, sizeof(double));
+	cm_analog_alloc(INT1,sizeof(double));
 
-        OUTPUT(out) = (output_hi + output_low) / 2;
-    }
+        OUTPUT(out) = (output_hi + output_low)/2;
+  }
 
-    if (ANALYSIS == MIF_DC) {
+  if (ANALYSIS == MIF_DC) {
+	double *phase;     /* pointer to the instantaneous phase value      */
 
-        double *phase;     /* pointer to the instantaneous phase value      */
+	OUTPUT(out) = (output_hi + output_low)/2;
+	PARTIAL(out,cntl_in) = 0;
+	phase = (double *) cm_analog_get_ptr(INT1,0);
+	*phase = 0;
 
-        OUTPUT(out) = (output_hi + output_low) / 2;
-        PARTIAL(out, cntl_in) = 0;
-        phase = (double *) cm_analog_get_ptr(INT1, 0);
-        *phase = 0;
+  } else if(ANALYSIS == MIF_TRAN) {
+	double *phase;     /* pointer to the instantaneous phase value      */
+	double *phase1;    /* pointer to the previous value for the phase   */
+	Mif_Value_t *x;         /* pointer to the control array values           */
+	Mif_Value_t *y;         /* pointer to the frequency array values         */
+	double radian;     /* phase value in radians                        */
+	double freq=0.0;       /* frequency of the sine wave                    */
+	double dout_din;   /* partial derivative of output wrt control in   */
+	double center;     /* dc offset for the sine wave                   */
+	double peak;       /* peak voltage value for the wave               */
+	double cntl_input; /* control input                                 */
 
-    } else if (ANALYSIS == MIF_TRAN) {
+	phase = (double *) cm_analog_get_ptr(INT1,0);
+	phase1 = (double *) cm_analog_get_ptr(INT1,1);
 
-        Mif_Value_t *x;    /* pointer to the control array values           */
-        Mif_Value_t *y;    /* pointer to the frequency array values         */
+	x = R_PARAM_PTR(PARAM(cntl_array[0]));
+	y = R_PARAM_PTR(PARAM(freq_array[0]));
 
-        double radian;     /* phase value in radians                        */
-        double freq = 0.0; /* frequency of the sine wave                    */
-        double dout_din;   /* partial derivative of output wrt control in   */
-        double center;     /* dc offset for the sine wave                   */
-        double peak;       /* peak voltage value for the wave               */
-        double cntl_input; /* control input                                 */
+    /* Retrieve cntl_input value. */
+    cntl_input = INPUT(cntl_in);
 
-        double *phase;     /* pointer to the instantaneous phase value      */
-        double *phase1;    /* pointer to the previous value for the phase   */
 
-        phase  = (double *) cm_analog_get_ptr(INT1, 0);
-        phase1 = (double *) cm_analog_get_ptr(INT1, 1);
-
-        x = R_PARAM_PTR(PARAM(cntl_array[0]));
-        y = R_PARAM_PTR(PARAM(freq_array[0]));
-
-        /* Retrieve cntl_input value. */
-        cntl_input = INPUT(cntl_in);
-
-        /* Determine segment boundaries within which cntl_input resides */
-        if (cntl_input <= x->rvalue) {
-
-            /*** cntl_input below lowest cntl_voltage ***/
-            dout_din = ((y+1)->rvalue - (y+0)->rvalue) / ((x+1)->rvalue - (x+0)->rvalue);
+    /* Determine segment boundaries within which cntl_input resides */
+				/*** cntl_input below lowest cntl_voltage ***/
+    if (cntl_input <= x->rvalue) {
+            dout_din = ((y+1)->rvalue - y->rvalue)/((x+1)->rvalue - x->rvalue);
             freq = y->rvalue + (cntl_input - x->rvalue) * dout_din;
 
-            if (freq <= 0) {
-                cm_message_send(sine_freq_clamp);
-                freq = 1e-16;
-            }
-
-        } else if (cntl_input >= (x+cntl_size-1)->rvalue) {
-
-            /*** cntl_input above highest cntl_voltage ***/
+	    if(freq <= 0){
+	        cm_message_send("\n**** Warning ****\n Sine3: Extrapolated frequency limited to 1e-16 Hz \n");
+	        freq = 1e-16;
+	    }
+          /* freq = *y; */
+    } else if (cntl_input >= (x+cntl_size-1)->rvalue){
+    	    /*** cntl_input above highest cntl_voltage ***/
             dout_din = ((y+cntl_size-1)->rvalue - (y+cntl_size-2)->rvalue) /
-                ((x+cntl_size-1)->rvalue - (x+cntl_size-2)->rvalue);
+                          ((x+cntl_size-1)->rvalue - (x+cntl_size-2)->rvalue);
             freq = (y+cntl_size-1)->rvalue + (cntl_input - (x+cntl_size-1)->rvalue) * dout_din;
 
-        } else {
-
-            /*** cntl_input within bounds of end midpoints...
-                 must determine position progressively & then
-                 calculate required output. ***/
-
+    } else { /*** cntl_input within bounds of end midpoints...
+                must determine position progressively & then
+                calculate required output.                    ***/
             int i;
 
-            for (i = 0; i < cntl_size; i++)
+            for (i=0; i<cntl_size; i++) {
                 if ((cntl_input < (x+i+1)->rvalue) && (cntl_input >= (x+i)->rvalue)) {
-                    /* Interpolate to the correct frequency value */
-                    freq = ((cntl_input - (x+i)->rvalue) / ((x+i+1)->rvalue - (x+i)->rvalue)) *
-                        ((y+i+1)->rvalue - (y+i)->rvalue) + (y+i)->rvalue;
-                    break;
+			/* Interpolate to the correct frequency value */
+
+			freq = ((cntl_input - (x+i)->rvalue)/((x+i+1)->rvalue - (x+i)->rvalue))*
+				((y+i+1)->rvalue - (y+i)->rvalue) + (y+i)->rvalue;
+			break;
                 }
-        }
+            }
+    }
 
-        /* calculate the peak value of the wave, the center of the wave, the
-           instantaneous phase and the radian value of the phase */
-        peak   = (output_hi - output_low) / 2;
-        center = (output_hi + output_low) / 2;
+/*   calculate the peak value of the wave, the center of the wave, the
+	 instantaneous phase and the radian value of the phase */
 
-        *phase = *phase1 + freq*(TIME - T(1));
-        radian = *phase * 2.0 * PI;
+	peak = (output_hi - output_low)/2;
+	center = (output_hi + output_low)/2;
+	*phase = *phase1 + freq*(TIME - T(1));
+	radian = *phase * 2.0 * PI;
 
-        OUTPUT(out) = peak * sin(radian) + center;
-        PARTIAL(out, cntl_in) = 0;
+        OUTPUT(out) = peak*sin(radian) + center;
+        PARTIAL(out,cntl_in) = 0;
 
-    } else {                /* Output AC Gain */
-
-        Mif_Complex_t ac_gain;
+    } else {                      /* Output AC Gain */
+	Mif_Complex_t ac_gain;
 
         ac_gain.real = 0.0;
-        ac_gain.imag = 0.0;
-        AC_GAIN(out, cntl_in) = ac_gain;
-
+        ac_gain.imag= 0.0;
+        AC_GAIN(out,cntl_in) = ac_gain;
     }
 }
+
