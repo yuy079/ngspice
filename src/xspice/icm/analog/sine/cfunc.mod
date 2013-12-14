@@ -51,12 +51,19 @@ NON-STANDARD FEATURES
 
 /*=== INCLUDE FILES ====================*/
 
-#include "sin.h"
 #include <math.h>
 #include <stdlib.h>
 
 
 /*=== CONSTANTS ========================*/
+
+#define PI 3.141592654
+
+#define INT1 1
+
+static char *allocation_error = "\n**** Error ****\nSINE: Error allocating sine block storage\n";
+static char *sine_freq_clamp = "\n**** Warning ****\nSINE: Extrapolated frequency limited to 1e-16 Hz\n";
+static char *array_error = "\n**** Error ****\nSINE: Size of control array different than frequency array\n";
 
 
 /*=== MACROS ===========================*/
