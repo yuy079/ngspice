@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONFIG64;HAVE_FFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64_d.exe"
 				LinkIncremental="1"
 				GenerateManifest="false"
@@ -231,7 +231,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -257,7 +257,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -327,7 +327,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONFIG64;RELBUILD64;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
@@ -352,7 +352,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -419,7 +419,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;XSPICE;HAVE_FFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -443,7 +443,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_cd.exe"
 				LinkIncremental="1"
 				GenerateManifest="false"
@@ -509,7 +509,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;HAVE_FFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -533,7 +533,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64_cd.exe"
 				LinkIncremental="1"
 				GenerateManifest="false"
@@ -600,7 +600,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -625,7 +625,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_c.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -695,7 +695,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -720,7 +720,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64_c.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -789,7 +789,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -815,7 +815,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_omp.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -885,7 +885,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;CONFIG64;RELBUILD64;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
@@ -911,7 +911,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64_omp.exe"
 				LinkIncremental="0"
 				GenerateDebugInformation="false"
@@ -980,7 +980,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;USE_OMP;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -1006,7 +1006,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_omp_c.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -1076,7 +1076,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;c:\C\fftw3\fftw-3.3.3-dll32&quot;"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;RELBUILD64;USE_OMP;HAVE_FFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
@@ -1101,7 +1101,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="psapi.lib"
+				AdditionalDependencies="psapi.lib libfftw3-3.lib"
 				OutputFile="$(OutDir)\$(ProjectName)64_omp_c.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
