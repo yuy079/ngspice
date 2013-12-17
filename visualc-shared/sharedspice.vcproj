@@ -2301,10 +2301,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\visualc\msvc-compat.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\frontend\trannoise\1-f-code.c"
 				>
 			</File>
@@ -2626,6 +2622,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim3\b3set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsim3\b3soachk.c"
 				>
 			</File>
 			<File
@@ -3069,6 +3069,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim3v32\b3v32temp.c"
 				>
 			</File>
@@ -3145,6 +3149,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4\b4soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsimsoi\b4soi.c"
 				>
 			</File>
@@ -3210,6 +3218,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsimsoi\b4soiset.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsimsoi\b4soisoachk.c"
 				>
 			</File>
 			<File
@@ -3373,6 +3385,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\bsim4v5\b4v5temp.c"
 				>
 			</File>
@@ -3446,6 +3462,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6set.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bsim4v6\b4v6soachk.c"
 				>
 			</File>
 			<File
@@ -3546,6 +3566,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\bjt\bjtsload.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\bjt\bjtsoachk.c"
 				>
 			</File>
 			<File
@@ -3682,6 +3706,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\cap\capsload.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\cap\capsoachk.c"
 				>
 			</File>
 			<File
@@ -4062,6 +4090,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\analysis\cktsgen.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\cktsoachk.c"
 				>
 			</File>
 			<File
@@ -4541,6 +4573,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\dio\diosoachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\dio\diosprt.c"
 				>
 			</File>
@@ -4985,6 +5021,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\hisim2\hsm2soachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\hisim2\hsm2temp.c"
 				>
 			</File>
@@ -5058,6 +5098,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvset.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\hisimhv1\hsmhvsoachk.c"
 				>
 			</File>
 			<File
@@ -6449,6 +6493,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\visualc\msvc-compat.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\maths\deriv\multder.c"
 				>
 			</File>
@@ -7145,6 +7193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\spicelib\devices\res\ressoachk.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\spicelib\devices\res\ressprt.c"
 				>
 			</File>
@@ -7750,6 +7802,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\vbic\vbicsetup.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\devices\vbic\vbicsoachk.c"
 				>
 			</File>
 			<File
