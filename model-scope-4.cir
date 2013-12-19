@@ -1,0 +1,46 @@
+foo bar baz
+
+* (exec-spice "ngspice %s" t)
+
+v1 1 0 dc=1
+
+x1 1 sub1
+x2 1 sub2
+
+.subckt sub1 2
+  .model my r r=2k
+  r1  2 0 my
+.ends
+
+.subckt sub2 3
+  r2 3 0 my
+  x3 3 sub3
+
+  .subckt sub3 4
+*    .model my r r=8k
+    .model any r r=42
+    r5 4 0 1k
+  .ends
+  .model just r r=43
+.ends
+
+.model my r r=4k
+
+
+* end of inp_subcktexpand()
+*   v1 1 0 dc=1
+*   .model x1:my r r=2k
+*   r.x1.r1 1 0 x1:my 
+*   r.x2.r2 1 0 x2:my 
+*   .model x2:x3:my r r=8k
+*   .model my r r=4k
+*   .end
+
+* 'x2:my' is incorrect, should be 'my'
+*   remove x3 or the 8k my .model and it will be correct
+
+.control
+op
+.endc
+
+.end

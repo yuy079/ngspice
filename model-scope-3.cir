@@ -1,0 +1,53 @@
+foo bar baz
+
+* (exec-spice "ngspice %s" t)
+
+v1 1 0 1
+r1 1 0 mz
+
+.model mz r r=1k
+
+x1 1 0 sub1
+x2 1 0 sub2
+
+.subckt sub1 2 3
+  .model my r r=2k
+  r1  1 0 my
+.ends
+
+.subckt sub2 2 3
+  r1 1 0 my
+  x22 1 0 sub22
+
+  .subckt sub22 2 3
+    .model my r r=8k
+    r1 1 0 my
+  .ends
+.ends
+
+.model my r r=4k
+
+*      model             x2:x22:my                 x2:my                 x1:my
+* sollte haben my, x1:my und x2:x22:my
+* hab ich auch
+* sollte dann haben
+*  r.x1.r1  x1:my
+*  r.x2.r1  my    der ist aber x2:my
+*  r.x2.x22.r1 x2:x22:my
+
+
+.control
+op
+
+*showmod all
+*show all
+*showmod r1
+*showmod #my
+
+print @r1[resistance] @r.x1.r1[resistance] @r.x2.r1[resistance] @r.x2.r.x22.r1[resistance]
+echo "wanted is"
+print 1 2 4 4
+
+.endc
+
+.end
