@@ -82,6 +82,27 @@ extern void line_free_x(struct line * deck, bool recurse);
     } while(0)
 
 
+static void
+tprint(struct line *t, const char *header)
+{
+    printf("%s\n", header);
+    for (; t; t = t->li_next)
+        if (*(t->li_line) != '*')
+            printf("  %s\n", t->li_line);
+    printf("  --\n\n");
+}
+
+
+static void
+wprint(wordlist *w, const char *header)
+{
+    printf("%s |", header);
+    for (; w; w = w->wl_next)
+        printf("%s|", w->wl_word);
+    printf("\n");
+}
+
+
 
 struct subs;
 static struct line *doit(struct line *deck, wordlist *modnames);
@@ -231,7 +252,7 @@ inp_subcktexpand(struct line *deck) {
     }
 }
 
-#ifdef TRACE
+#if 1
     {
         wordlist *w;
         printf("Models found:\n");
@@ -329,7 +350,7 @@ inp_subcktexpand(struct line *deck) {
 #endif
 
     /* doit does the actual splicing in of the .subckt . . .  */
-    ll = doit(deck, modnames);
+    ll = doit(deck, modnames);  /* der machts */
 
     wl_free(modnames);
 
@@ -373,6 +394,7 @@ inp_subcktexpand(struct line *deck) {
         ok = ok && nupa_signal(NUPAEVALDONE, NULL);
     }
 
+    tprint(ll," end of inpexpandsub");
     return (ll);  /* return the spliced deck.  */
 }
 
@@ -400,6 +422,8 @@ doit(struct line *deck, wordlist *modnames) {
     wordlist *submod = NULL;
     wordlist *xmodnames = modnames;
 
+    tprint(deck, "doit begin, deck = ");
+    wprint(modnames, "  modnames = ");
 #ifdef TRACE
     /* SDB debug statement */
     {
@@ -608,8 +632,13 @@ doit(struct line *deck, wordlist *modnames) {
 
                 /* Change the names of .models found in .subckts . . .  */
                 submod = NULL;
-                if (modtranslate(lcc, scname, &submod, &modnames))    /* this translates the model name in the .model line */
+                wprint(submod, "going to call modtranslate, submod = ");
+                wprint(modnames, " with modnames = ");
+                if (modtranslate(lcc, scname, &submod, &modnames)) {  /* this translates the model name in the .model line */
+                    wprint(submod, "then submod = ");
+                    wprint(modnames, "and modnames = ");
                     devmodtranslate(lcc, scname, submod); /* This translates the model name on all components in the deck */
+                }
                 wl_free(submod);
 
                 {
@@ -1736,9 +1765,12 @@ modtranslate(struct line *deck, char *subname, wordlist **submod, wordlist ** co
 static void
 devmodtranslate(struct line *deck, char *subname, wordlist * const submod)
 {
+    struct line *deck_orig = deck;
     struct line *s;
     int found;
 
+    printf("devmodtranslate, subname=%s ", subname); wprint(submod, "submod =");
+    tprint(deck, "  deck=");
     for (s = deck; s; s = s->li_next) {
 
         char *buffer, *t, c, *name, *next_name;
@@ -1837,6 +1869,7 @@ devmodtranslate(struct line *deck, char *subname, wordlist * const submod)
             (void) sprintf(buffer + strlen(buffer), "%s ", name);
             tfree(name);
 
+// warum zwei mal ?!?
             if (*t) {    /* if there is a model, process it. . . . */
                 name = gettok(&t);
                 wlsub = wl_find(name, submod);
@@ -2113,6 +2146,8 @@ devmodtranslate(struct line *deck, char *subname, wordlist * const submod)
             break;
         }
     }
+
+    tprint(deck_orig, " --->");
 }
 
 

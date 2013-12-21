@@ -267,7 +267,7 @@ char *INPgetMod(CKTcircuit *ckt, char *name, INPmodel ** model, INPtables * tab)
 
   for (modtmp = modtab; modtmp != NULL; modtmp = modtmp->INPnextModel) {
 
-#ifdef TRACE
+#if 1
     /* SDB debug statement */
     printf("In INPgetMod, comparing %s against stored model %s . . . \n", name, modtmp->INPmodName);
 #endif
@@ -275,6 +275,7 @@ char *INPgetMod(CKTcircuit *ckt, char *name, INPmodel ** model, INPtables * tab)
     if (strcmp(modtmp->INPmodName, name) == 0) {
       /* found the model in question - now instantiate if necessary */
       /* and return an appropriate pointer to it */
+        printf(" hit .\n");
 
       if (modtmp->INPmodType < 0) {    /* First check for illegal model type */
         /* illegal device type, so can't handle */
@@ -294,6 +295,7 @@ char *INPgetMod(CKTcircuit *ckt, char *name, INPmodel ** model, INPtables * tab)
         error = create_model( ckt, modtmp, tab );
         if ( error ) return INPerror(error);
       }
+      printf(" hit ..\n");
       *model = modtmp;
       return (NULL);
     }

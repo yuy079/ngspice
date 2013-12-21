@@ -518,7 +518,7 @@ inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
             SetAnalyse("Prepare Deck", 0);
 #endif
             /* Now expand subcircuit macros and substitute numparams.*/
-            if (!cp_getvar("nosubckt", CP_BOOL, NULL))
+            if (!cp_getvar("nosubckt", CP_BOOL, NULL)) /* dieses macht die scopes für models */
                 if ((deck->li_next = inp_subcktexpand(deck->li_next)) == NULL) {
                     line_free(realdeck, TRUE);
                     line_free(deck->li_actual, TRUE);
@@ -555,7 +555,7 @@ inp_spsource(FILE *fp, bool comfile, char *filename, bool intfile)
                     fprintf(fdo, "%6d  %6d  %s\n", t->li_linenum_orig, t->li_linenum, t->li_line);
                 fclose(fdo);
             }
-            for (dd = deck; dd; dd = dd->li_next) {
+            for (dd = deck; dd; dd = dd->li_next) { // !! is scoped
                 /* get csparams and create vectors, being
                    available in .control section, in plot 'const' */
                 if (ciprefix(".csparam", dd->li_line)) {

@@ -6209,7 +6209,7 @@ tprint(struct line *t)
     struct line *tmp;
 
     /*debug: print into file*/
-    FILE *fd = fopen("tprint-out.txt", "w");
+    FILE *fd = stdout;
     for (tmp = t; tmp; tmp = tmp->li_next)
         if (*(tmp->li_line) != '*')
             fprintf(fd, "%6d  %6d  %s\n", tmp->li_linenum_orig, tmp->li_linenum, tmp->li_line);
@@ -6224,7 +6224,7 @@ tprint(struct line *t)
     for (tmp = t; tmp; tmp = tmp->li_next)
         if (*(tmp->li_line) != '*')
             fprintf(fd, "%s\n",tmp->li_line);
-    fclose(fd);
+    fflush(fd);
 }
 
 
