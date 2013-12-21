@@ -1,0 +1,52 @@
+foo bar baz
+
+* (exec-spice "ngspice %s" t) 
+
+i1 1 0 dc=-1
+i2 2 0 dc=-1
+i3 3 0 dc=-1
+i4 4 0 dc=-1
+i5 5 0 dc=-1
+i6 6 0 dc=-1
+i7 7 0 dc=-1
+
+x1 1        sub1
+x2 2 3 4 5 6 7 sub2
+
+.subckt sub1 2
+  .model my r r=2k
+  r1  2 0 my
+.ends
+
+.subckt sub2 3 41a 41b 42a 42b 5
+  r2  3 0   my
+  x31 41a 41b    sub3
+  x32 42a 42b    sub3
+
+  .subckt sub3 4 5
+    .model my r r=8k
+    .model any r r=42
+    r5 4 0 1k
+    r6 5 0 my
+  .ends
+
+  .model just r r=43
+  r5  5 0  just
+.ends
+
+.model my r r=4k
+
+v1 1_g 0  2k
+v2 2_g 0  4k
+v3 3_g 0  1k
+v4 4_g 0  8k
+v5 5_g 0  1k
+v6 6_g 0  8k
+v7 7_g 0  43
+
+.control
+op
+print allv
+.endc
+
+.end
