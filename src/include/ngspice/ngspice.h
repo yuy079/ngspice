@@ -158,6 +158,7 @@ extern void SetAnalyse(char *Analyse, int Percent);
 #if defined (_MSC_VER)
 #include <direct.h>
 #include <process.h>
+#if (_MSC_VER < 1700)
 #define trunc x_trunc
 extern double x_trunc(double);
 #define nearbyint x_nearbyint
@@ -168,6 +169,9 @@ extern double x_asinh(double);
 extern double x_acosh(double);
 #define atanh x_atanh
 extern double x_atanh(double);
+#else
+#include <amp_math.h>
+#endif
 #define strdup _strdup
 #define unlink _unlink
 #define fileno _fileno
