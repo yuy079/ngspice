@@ -550,7 +550,6 @@ inp_readall(FILE *fp, char *dir_name, bool comfile, bool intfile)
             inp_bsource_compat(working);
             inp_dot_if(working);
             inp_temper_compat(working);
-tprint(cc); /* test printout to file tprint-out.txt */
         }
 
         inp_add_series_resistor(working);
