@@ -939,8 +939,8 @@ main(int argc, char **argv)
 
             case 'o':       /* Output file */
               if (optarg) {
-                  /* turn off buffering for stdout */
-                  setbuf(stdout, NULL);
+                  /* switch to line buffering for stdout */
+                  setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
                   sprintf (log_file, "%s", optarg);
                   orflag = TRUE;
               }
@@ -950,6 +950,8 @@ main(int argc, char **argv)
               iflag = TRUE;
               istty = TRUE;
               ft_pipemode = TRUE;
+              /* switch to line buffering for stdout */
+              setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
               break;
 
             case 'q':       /* Command completion */
@@ -1014,7 +1016,8 @@ main(int argc, char **argv)
 //        oflag = TRUE; /* All further output to -o log file */
 #else
         /* Connect stdout to file log_file and log stdout */
-        if (!freopen (log_file, "w", stdout)) {
+        if (!freopen (log_file, "w", stdout) || !freopen (log_file, "w", stderr)) {
+//        if (!freopen (log_file, "w", stdout)) {
             perror (log_file);
             sp_shutdown (EXIT_BAD);
         }
