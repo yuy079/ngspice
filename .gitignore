@@ -67,3 +67,4 @@ Makefile.in
 /debug*
 
 /visualc-tcl*
+/visualc/fftw3/fftw-*
