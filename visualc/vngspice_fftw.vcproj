@@ -27,7 +27,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 				ExcludedFromBuild="false"
 			/>
 			<Tool
@@ -49,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;C:\Program Files (x86)\Visual Leak Detector\include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;XSPICE;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;XSPICE;HAVE_LIBFFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -108,24 +108,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib&#x0D;&#x0A;"
 				ExcludedFromBuild="false"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -141,7 +142,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONFIG64;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONFIG64;HAVE_LIBFFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -199,6 +200,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -210,6 +212,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -233,7 +236,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -295,23 +298,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -330,7 +335,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONFIG64;RELBUILD64;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONFIG64;RELBUILD64;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -391,6 +396,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -401,7 +407,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 				ExcludedFromBuild="false"
 			/>
 			<Tool
@@ -423,7 +429,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;XSPICE;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;XSPICE;HAVE_LIBFFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -481,24 +487,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="console_debug|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib"
 				ExcludedFromBuild="false"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -514,7 +521,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;NGDEBUG;CONSOLE;HAVE_LIBFFTW3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -572,6 +579,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -583,6 +591,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -606,7 +615,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -667,23 +676,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="console_release|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -702,7 +713,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -763,6 +774,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -774,6 +786,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -797,7 +810,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -859,23 +872,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseOMP|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -894,7 +909,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;CONFIG64;RELBUILD64;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;USE_OMP;CONFIG64;RELBUILD64;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -956,6 +971,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -967,6 +983,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x86 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -990,7 +1007,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;USE_OMP;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;USE_OMP;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -1052,23 +1069,25 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll32\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="console_release_omp|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)64"
+			IntermediateDirectory="$(ConfigurationName)64\$(PlatformName)"
 			ConfigurationType="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="lib /machine:x64 /def:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.def /out:$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.lib"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Custom defined Build: Recompile conf.c with actual date"
-				CommandLine="del $(ConfigurationName)\$(PlatformName)\conf.obj"
-				Outputs="$(ConfigurationName)\$(PlatformName)\conf.obj"
+				CommandLine="del $(ConfigurationName)64\$(PlatformName)\conf.obj"
+				Outputs="$(ConfigurationName)64\$(PlatformName)\conf.obj"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -1087,7 +1106,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\src\maths\poly&quot;;&quot;$(ProjectDir)..\src\frontend&quot;;&quot;$(ProjectDir)..\src\spicelib\devices&quot;;&quot;$(ProjectDir)..\src\include&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;RELBUILD64;USE_OMP;HAVE_FFTW3"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;SIMULATOR;CONSOLE;CONFIG64;RELBUILD64;USE_OMP;HAVE_LIBFFTW3"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="0"
@@ -1148,6 +1167,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy /y &quot;$(ProjectDir)fftw3\fftw-3.3.3-dll64\libfftw3-3.dll&quot; &quot;$(OutDir)\libfftw3-3.dll&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -2156,10 +2176,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\spicelib\parser\inpxx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\frontend\inp.h"
 				>
 			</File>
@@ -2197,6 +2213,10 @@
 			</File>
 			<File
 				RelativePath="..\src\frontend\parser\input.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\spicelib\parser\inpxx.h"
 				>
 			</File>
 			<File
@@ -3147,10 +3167,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="msvc-compat.c"
-				>
-			</File>
 			<File
 				RelativePath="..\src\frontend\trannoise\1-f-code.c"
 				>
@@ -7329,6 +7345,10 @@
 			</File>
 			<File
 				RelativePath="..\src\spicelib\devices\mos9\mos9trun.c"
+				>
+			</File>
+			<File
+				RelativePath="msvc-compat.c"
 				>
 			</File>
 			<File
