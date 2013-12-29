@@ -67,4 +67,5 @@ Makefile.in
 /debug*
 
 /visualc-tcl*
-/visualc/fftw3/fftw-*
+/visualc/fftw3/fftw-*/*
+!/visualc/fftw3/fftw-*/README-ngspice.txt

@@ -12,5 +12,5 @@ fftw3.h
 libfftw3-3.dll
 libfftw3-3.def
 
-If you need to distribute ngspice.exe to another directory, 
+If you need to distribute ngspice.exe to another directory,
 copy libfftw3-3.dll into the same directory.
