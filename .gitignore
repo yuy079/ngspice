@@ -62,6 +62,8 @@ Makefile.in
 /visualc/vngspice.vcproj.*
 /visualc/vngspice.suo
 /visualc/vngspice.ncb
+/visualc/fftw3/fftw-*/*
+!/visualc/fftw3/fftw-*/README-ngspice.txt
 
 /release*
 /debug*
