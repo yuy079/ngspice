@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+EXTRA_DIST = readme spiced.c
+
 noinst_LTLIBRARIES = libunsupported.la
 
 libunsupported_la_SOURCES = \
