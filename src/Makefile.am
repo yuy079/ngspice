@@ -448,9 +448,9 @@ pkgIndex.tcl : Makefile
 
 pkgIndex.tcl: $(srcdir)/pkgIndex.tcl.in
 
-EXTRA_DIST += spice.def
-
 endif TCL_MODULE
+
+EXTRA_DIST += spice.def
 
 
 
