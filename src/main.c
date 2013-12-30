@@ -943,7 +943,6 @@ main(int argc, char **argv)
               if (optarg) {
                   /* switch to line buffering for stdout */
                   setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
-                  setvbuf(stdout, NULL, _IONBF, 0);
                   sprintf (log_file, "%s", optarg);
                   oflag = TRUE;
               }
@@ -1025,7 +1024,6 @@ main(int argc, char **argv)
         }
         dup2(fileno(stdout), fileno(stderr));
         setvbuf(stdout, NULL, _IOLBF, BUFSIZ); /* enable line buffering */
-        setvbuf(stderr, NULL, _IOLBF, BUFSIZ);
  #endif
     } /* orflag */
 
