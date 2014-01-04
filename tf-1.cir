@@ -1,0 +1,23 @@
+
+* (compile "../w32/src/ngspice tf-1.cir" t)
+
+* gibt auch noch pz transfer und dc transfer ...
+*  tf war mindestens kaputt
+
+vin  1 0  DC 9
+*iin  1 0  DC 9
+r1   1 0  1k
+c1   1 0  1p
+
+.control
+*dc iin -2 2 1
+*tf v(1) iin
+*tf v(1) c1
+*tf v(1) i2
+tf v(1) vin
+print all
+*print v(1)
+quit 1
+.endc
+
+.end

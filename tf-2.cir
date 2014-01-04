@@ -1,0 +1,35 @@
+check voltage transfer function
+* (compile "../w32/src/ngspice tf-2.cir" t)
+
+vin  1 0  DC=8.70888
+r1   1 2  1k
+d1   2 0  Dmod
+
+.model Dmod D(IS=10f)
+
+.control
+
+let vt = boltz * (27.0 - kelvin) / echarge
+
+op 
+
+let rd = const.vt / @d1[id]
+
+let gold_Zout = 1/(1/@r1[resistance] + 1/rd)
+let gold_Zin  = @r1[resistance] + rd
+let gold_tf   = 1/(1 + @r1[resistance] / rd)
+
+tf v(2) vin
+print all
+
+define relerr(y,gold) (y/gold - 1)
+
+echo "--"
+
+print relerr(transfer_function, op1.gold_tf)
+print relerr(vin#input_impedance, op1.gold_Zin)
+print relerr(output_impedance_at_v(2), op1.gold_Zout)
+
+.endc
+
+.end

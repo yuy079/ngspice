@@ -1,0 +1,49 @@
+verify mutual inductance
+
+* (compile (concat "../w32/src/ngspice " buffer-file-name) t)
+
+*  (u1)   (L1 M)     (d/dt i1)
+*  (  ) = (    )  *  (       )
+*  (u2)   (M L2)     (d/dt i2)
+*
+*  M = K * sqrt(L1*L2)
+
+.param L1 = 10m
+.param L2 = 2m
+.param KK = 0.693
+.param MM = {KK*sqrt(L1*L2)}
+
+Vin 1 0  dc=0 ac=1 sin(0 5 159.15 0 0)
+
+Rs 1 3 100
+L1 3 0 {L1}
+
+L2 4 0 {L2}
+Rl 4 0 500
+
+K L1 L2 {KK}
+
+
+* for verification
+*   excite an equivalent circuit with the same stimulus
+
+Rgs 1  g3 100
+Lg1 g3 gc {L1-MM}
+Lgc gc 0  {MM}
+Lg2 gc g4 {L2-MM}
+Rg1 g4 0  500
+
+
+.control
+
+tran 0.1m 10m
+plot v(3) v(4)
+plot v(4)-v(g4) v(3)-v(g3)
+
+ac dec 5 100 990k
+plot db(abs(v(3))) db(abs(v(4)))
+plot db(abs(v(3)/v(g3))) db(abs(v(4)/v(g4)))
+
+.endc
+
+.end

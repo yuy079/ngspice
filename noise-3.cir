@@ -1,0 +1,40 @@
+test noise / voltage source
+* (compile (concat "../w32/src/ngspice " buffer-file-name) t)
+
+* fixme, warum ist inoise_spectrum mit @v1[acmag]^2 scalliert ?!!!
+
+v1  1 0  dc=0 ac=17
+r1  1 2  1300
+c1  2 0  1n
+
+.control
+
+let kT4 = boltz * (27.0 - kelvin) * 4
+
+op
+
+let v_noise_R_gold = const.kT4 * @r1[resistance]
+let i_noise_R_gold = const.kT4 / @r1[resistance]
+
+print kT4 v_noise_R_gold
+
+noise v(2) v1 dec 10 100Hz 100MEGHz
+setplot noise1
+print all
+
+plot inoise_spectrum loglog
+plot onoise_spectrum loglog
+
+let tau = @r1[resistance] * @c1[capacitance]
+let omega = 2 * pi * frequency
+let onoise_gold = op1.v_noise_R_gold / (1 + (omega * tau)^2)
+
+let inoise_gold = op1.v_noise_R_gold   $ very strange indeed
+let inoise_strange = inoise_gold / @v1[acmag]^2  $ even stranger
+
+plot onoise_spectrum / onoise_gold
+plot inoise_spectrum / inoise_strange
+
+.endc
+
+.end
