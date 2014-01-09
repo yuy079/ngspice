@@ -485,6 +485,7 @@ X11_NewViewport(GRAPH *graph)
     atom_wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", False);
     XtAddEventHandler(DEVDEP(graph).shell, NoEventMask, True, handle_wm_messages, graph);
     XSetWMProtocols(display, XtWindow(DEVDEP(graph).shell), &atom_wm_delete_window, 1);
+    XStoreName(display, XtWindow(DEVDEP(graph).shell), graph->plotname);
 
     return (0);
 }
