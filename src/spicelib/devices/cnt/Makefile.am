@@ -13,7 +13,7 @@ libcnt_la_SOURCES = 	\
 	cntdist.c	\
 	cntdset.c	\
 	cntext.h	\
-	cntic.c	\
+	cntic.c		\
 	cntinit.c	\
 	cntinit.h	\
 	cntitf.h	\
