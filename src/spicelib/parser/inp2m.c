@@ -238,6 +238,7 @@ INP2M (CKTcircuit *ckt, INPtables * tab, card * current)
 #endif
                 && thismodel->INPmodType != INPtypelook ("HiSIM2")
                 && thismodel->INPmodType != INPtypelook ("HiSIMHV")
+                && thismodel->INPmodType != INPtypelook ("Cnt")
            ) {
             LITERR ("incorrect model type");
             return;
@@ -268,8 +269,7 @@ INP2M (CKTcircuit *ckt, INPtables * tab, card * current)
             (type == INPtypelook ("B3SOIFD")) ||
             (type == INPtypelook ("B3SOIDD")) ||
             (type == INPtypelook ("HiSIMHV")) ||
-            (type == INPtypelook ("SOI3"))    ||
-            (type == INPtypelook ("Cnt"))) {
+            (type == INPtypelook ("SOI3"))) {
         switch (nodeflag) {
         case 0:
             fast->GENnode5 = -1;
