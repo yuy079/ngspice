@@ -1338,8 +1338,16 @@ else
 		{
 		fai=acos((-qq/2.0)/(sqrt(pow(fabs(p),3.0)/27.0)));
 		realy1=2.0*sqrt(fabs(p)/3.0)*cos(fai/3.0)-r;
-		realy1=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
-		realy1=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
+
+/* FRA - Original Code */
+//		realy1=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
+//		realy1=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
+/***********************/
+/* FRA - New Code */
+		realy2=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
+		realy3=-2.0*sqrt(fabs(p)/3.0)*cos((fai+pi)/3.0)-r;
+/***********************/
+
 		imagy1=0.0;
 		imagy2=0.0;
 		imagy3=0.0;
