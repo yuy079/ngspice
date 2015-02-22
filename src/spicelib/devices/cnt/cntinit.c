@@ -67,6 +67,7 @@ SPICEdev CNTinfo = {
  /* DEVsenTrunc   */ NULL,
  /* DEVdisto      */ CNTdisto,
  /* DEVnoise      */ CNTnoise,
+ /* DEVsoaCheck   */ NULL,
 #ifdef CIDER
  /* DEVdump       */ NULL,
  /* DEVacct       */ NULL,
