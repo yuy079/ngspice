@@ -76,7 +76,7 @@ CNTparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
             here->CNTdrainSquaresGiven = TRUE;
             break;
         case CNT_OFF:
-            here->CNToff = value->iValue;
+            here->CNToff = (value->iValue != 0);
             break;
         case CNT_IC_VBS:
             here->CNTicVBS = value->rValue;

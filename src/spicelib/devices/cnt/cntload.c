@@ -800,7 +800,7 @@ printf("%d %d %lf  %lf\n",QsRange, QdRange, Vsc,cdrain);
             /*
              *  check convergence
              */
-            if ( (here->CNToff == 0)  || 
+            if ( (!here->CNToff)  ||
 		 (!(ckt->CKTmode & (MODEINITFIX|MODEINITSMSIG))) ){
                 if (Check == 1) {
                     ckt->CKTnoncon++;

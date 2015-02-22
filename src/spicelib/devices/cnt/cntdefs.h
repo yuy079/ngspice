@@ -160,13 +160,7 @@ typedef struct sCNTinstance {
     int CNTmode;       /* device mode : 1 = normal, -1 = inverse */
 
 
-/* FRA - Original Code */
-//    unsigned CNToff:1;  /* non-zero to indicate device is off for dc analysis*/
-/***********************/
-/* FRA - New Code */
-    int CNToff;  /* non-zero to indicate device is off for dc analysis*/
-/******************/
-
+    unsigned CNToff:1;  /* non-zero to indicate device is off for dc analysis*/
     unsigned CNTtempGiven :1;  /* instance temperature specified */
     unsigned CNTdtempGiven :1;  /* instance delta temperature specified */
     unsigned CNTmGiven :1;
