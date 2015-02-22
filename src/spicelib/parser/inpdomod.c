@@ -216,7 +216,9 @@ char *INPdomodel(CKTcircuit *ckt, card * image, INPtables * tab)
     else if ((strcmp(type_name, "nmos") == 0)
 	       || (strcmp(type_name, "pmos") == 0)
 	       || (strcmp(type_name, "nsoi") == 0)
-	       || (strcmp(type_name, "psoi") == 0)) {
+	       || (strcmp(type_name, "psoi") == 0)
+	       || (strcmp(type_name, "ncnt") == 0)
+	       || (strcmp(type_name, "pcnt") == 0)) {
 			err = INPfindLev(line, &lev);
 			switch (lev) {
 			case 0:
@@ -407,6 +409,14 @@ char *INPdomodel(CKTcircuit *ckt, card * image, INPtables * tab)
 				    err =
 				    INPmkTemp
 				    ("Placeholder: Device type HiSIMHV not available in this binary\n");
+			    }
+			    break;
+                        case 74:
+			    type = INPtypelook("Cnt");
+			    if (type < 0) {
+				    err =
+				    INPmkTemp
+				    ("Placeholder: Device type CNTFET not available in this binary\n");
 			    }
 			    break;
 			default:		/* placeholder; use level xxx for the next model */

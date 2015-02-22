@@ -238,6 +238,7 @@ INP2M (CKTcircuit *ckt, INPtables * tab, card * current)
 #endif
                 && thismodel->INPmodType != INPtypelook ("HiSIM2")
                 && thismodel->INPmodType != INPtypelook ("HiSIMHV")
+                && thismodel->INPmodType != INPtypelook ("Cnt")
            ) {
             LITERR ("incorrect model type");
             return;
