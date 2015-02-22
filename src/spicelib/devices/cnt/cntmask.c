@@ -17,6 +17,9 @@ int
 CNTmAsk(CKTcircuit *ckt, GENmodel *inst, int which, IFvalue *value)
 {
     CNTmodel *model = (CNTmodel *)inst;
+
+    NG_IGNORE(ckt);
+
     switch(which) {
         case CNT_MOD_TNOM:
             value->rValue = model->CNTtnom-CONSTCtoK;

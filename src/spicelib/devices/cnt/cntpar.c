@@ -19,6 +19,9 @@ int
 CNTparam(int param, IFvalue *value, GENinstance *inst, IFvalue *select)
 {
     CNTinstance *here = (CNTinstance *)inst;
+
+    NG_IGNORE(select);
+
     switch(param) {
         case CNT_TEMP:
             here->CNTtemp = value->rValue+CONSTCtoK;
