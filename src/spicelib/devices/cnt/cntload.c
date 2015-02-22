@@ -1120,7 +1120,7 @@ for(i=1;i<=n1;i++)
 							y=n1+1;
 							goto next3;
 							}
-						else if((xmin1+(i+j-2)*inte1)<Root(Vds1,q1,c1,qC1,qCN01,i+j-1,n1) && Root(Vds1,q1,c1,qC1,qCN01,i+j-1,n1)<=(xmin1+(i+j-1)*inte1));
+						else if((xmin1+(i+j-2)*inte1)<Root(Vds1,q1,c1,qC1,qCN01,i+j-1,n1) && Root(Vds1,q1,c1,qC1,qCN01,i+j-1,n1)<=(xmin1+(i+j-1)*inte1));   // this ; might be a serious bug !, FIXME !
 							{
 							y=i+j-1;
 							goto next3;
@@ -1221,7 +1221,7 @@ for(i=1;i<=n2;i++)
 							y=j;
 							goto next4;
 							}
-						else if((xmin2+(i+j-2)*inte2)<Root(Vds2,q2,c2,qC2,qCN02,i+j-1,n2) && Root(Vds2,q2,c2,qC2,qCN02,i+j-1,n2)<=(xmin2+(i+j-1)*inte2));
+						else if((xmin2+(i+j-2)*inte2)<Root(Vds2,q2,c2,qC2,qCN02,i+j-1,n2) && Root(Vds2,q2,c2,qC2,qCN02,i+j-1,n2)<=(xmin2+(i+j-1)*inte2));  // this ; might be a serious bug !, FIXME !
 							{
 							y=n2;
 							goto next4;
