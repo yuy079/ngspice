@@ -29,8 +29,8 @@ extern int CNTdisto(int,GENmodel*,CKTcircuit*);
 extern int CNTnoise(int,int,GENmodel*,CKTcircuit*,Ndata*,double*);
 extern int CNTdSetup(GENmodel*,CKTcircuit*);
 
-extern double Coeff();
-extern double Root();
-extern int Range1();
-extern int Range2();
-extern double Ncnt();
+extern double Coeff(int, int);
+extern double Root(double, double, double, double, double, int, int);
+extern int Range1(double, double, double, double, double, double, double, double, int);
+extern int Range2(double, double, double, double, double, double, double, double, int);
+extern double Ncnt(double, double, double, double);
