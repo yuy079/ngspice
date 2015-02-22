@@ -20,6 +20,7 @@ SUBDIRS = \
 	cap	\
 	cccs	\
 	ccvs	\
+	cnt	\
 	cpl	\
 	csw	\
 	dio	\
