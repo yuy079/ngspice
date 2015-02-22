@@ -411,6 +411,14 @@ char *INPdomodel(CKTcircuit *ckt, card * image, INPtables * tab)
 				    ("Placeholder: Device type HiSIMHV not available in this binary\n");
 			    }
 			    break;
+                        case 74:
+			    type = INPtypelook("Cnt");
+			    if (type < 0) {
+				    err =
+				    INPmkTemp
+				    ("Placeholder: Device type CNTFET not available in this binary\n");
+			    }
+			    break;
 			default:		/* placeholder; use level xxx for the next model */
 #ifdef ADMS
 			    err = INPmkTemp
