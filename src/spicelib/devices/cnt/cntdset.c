@@ -84,7 +84,7 @@ CNTdSetup(GENmodel *inModel, CKTcircuit *ckt)
         /* loop through all the instances of the model */
         for (here = model->CNTinstances; here != NULL ;
                 here=here->CNTnextInstance) {
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*/ /*Cuidado*/
 
             vt = CONSTKoverQ * here->CNTtemp;
             EffectiveLength=here->CNTl - 2*model->CNTlatDiff;

@@ -20,7 +20,7 @@ CNTtrunc(GENmodel *inModel, CKTcircuit *ckt, double *timeStep)
 
     for( ; model != NULL; model = model->CNTnextModel) {
         for(here=model->CNTinstances;here!=NULL;here = here->CNTnextInstance){
-	    if (here->CNTowner != ARCHme) continue;
+/*	    if (here->CNTowner != ARCHme) continue;*/
         
             CKTterr(here->CNTqgs,ckt,timeStep);
             CKTterr(here->CNTqgd,ckt,timeStep);

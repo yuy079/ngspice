@@ -60,7 +60,7 @@ CNTnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt,
         }
 	coxSquared *= coxSquared;
 	for (inst=model->CNTinstances; inst != NULL; inst=inst->CNTnextInstance) {
-	    if (inst->CNTowner != ARCHme) continue;
+	    /*if (inst->CNTowner != ARCHme) continue;*//*cuidado*/
         
 	    switch (operation) {
 

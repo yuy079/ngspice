@@ -117,7 +117,7 @@ CNTtemp(GENmodel *inModel, CKTcircuit *ckt)
             double arg;     /* 1 - fc */
             double sarg;    /* (1-fc) ^^ (-mj) */
             double sargsw;  /* (1-fc) ^^ (-mjsw) */
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*/
 
             /* perform the parameter defaulting */
             

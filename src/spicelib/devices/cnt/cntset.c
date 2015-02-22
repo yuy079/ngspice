@@ -92,7 +92,7 @@ CNTsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit *ckt,
         for (here = model->CNTinstances; here != NULL ;
                 here=here->CNTnextInstance) {
 
-	    if (here->CNTowner == ARCHme) {
+	    if (/*here->CNTowner == ARCHme*/1) {
 		/* allocate a chunk of the state vector */
 		here->CNTstates = *states;
 		*states += CNTnumStates;

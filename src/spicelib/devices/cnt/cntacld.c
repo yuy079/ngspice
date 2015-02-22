@@ -36,7 +36,7 @@ CNTacLoad(GENmodel *inModel, CKTcircuit *ckt)
     for( ; model != NULL; model = model->CNTnextModel) {
         for(here = model->CNTinstances; here!= NULL;
                 here = here->CNTnextInstance) {
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*//* Cuidado acabei de mudar!!*/
         
             if (here->CNTmode < 0) {
                 xnrm=0;

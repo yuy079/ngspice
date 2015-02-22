@@ -131,7 +131,7 @@ CNTsAcLoad(GENmodel *inModel, CKTcircuit *ckt)
     for( ; model != NULL; model = model->CNTnextModel) {
         for(here = model->CNTinstances; here!= NULL;
                 here = here->CNTnextInstance) {
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*/ /*cuidado*/
 
             /* save the unperturbed values in the state vector */
             for(i=0; i <= 16; i++)

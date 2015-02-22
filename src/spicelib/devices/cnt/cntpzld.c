@@ -37,7 +37,7 @@ CNTpzLoad(GENmodel *inModel, CKTcircuit *ckt, SPcomplex *s)
     for( ; model != NULL; model = model->CNTnextModel) {
         for(here = model->CNTinstances; here!= NULL;
                 here = here->CNTnextInstance) {
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*/ /*cuidado*/
         
             if (here->CNTmode < 0) {
                 xnrm=0;

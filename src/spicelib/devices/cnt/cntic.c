@@ -24,7 +24,7 @@ CNTgetic(GENmodel *inModel, CKTcircuit *ckt)
 
     for( ; model ; model = model->CNTnextModel) {
         for(here = model->CNTinstances; here ; here = here->CNTnextInstance) {
-	    if (here->CNTowner != ARCHme) continue;
+	    /*if (here->CNTowner != ARCHme) continue;*/ /*cuidado*/
         
             if(!here->CNTicVBSGiven) {
                 here->CNTicVBS = 

@@ -50,7 +50,7 @@ for( ; model != NULL; model = model->CNTnextModel ) {
   /* loop through all the instances of the model */
   for (here = model->CNTinstances; here != NULL ;
       here=here->CNTnextInstance) {
-    if (here->CNTowner != ARCHme) continue;
+    /*if (here->CNTowner != ARCHme) continue;*/ /*cuidado*/
         
 
 
