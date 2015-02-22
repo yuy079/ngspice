@@ -216,7 +216,9 @@ char *INPdomodel(CKTcircuit *ckt, card * image, INPtables * tab)
     else if ((strcmp(type_name, "nmos") == 0)
 	       || (strcmp(type_name, "pmos") == 0)
 	       || (strcmp(type_name, "nsoi") == 0)
-	       || (strcmp(type_name, "psoi") == 0)) {
+	       || (strcmp(type_name, "psoi") == 0)
+	       || (strcmp(type_name, "ncnt") == 0)
+	       || (strcmp(type_name, "pcnt") == 0)) {
 			err = INPfindLev(line, &lev);
 			switch (lev) {
 			case 0:
@@ -545,20 +547,6 @@ char *INPdomodel(CKTcircuit *ckt, card * image, INPtables * tab)
 			INPmakeMod(modname, type, image);
     }
 
-    /*  --------  Check if model is a CNTFET --------- */
-    else if (strcmp(type_name, "cnt") == 0
-      || strcmp(type_name, "Cnt") == 0
-      || strcmp(type_name, "ncnt") == 0
-      || strcmp(type_name, "pcnt") == 0
-    ) {
-			type = INPtypelook("Cnt");
-			if (type < 0) {
-			    err =
-				INPmkTemp
-				("Device type CNTFET not available in this binary\n");
-			}
-			INPmakeMod(modname, type, image);
-    }
 #ifdef CIDER
     else if(strcmp(type_name,"numd") == 0) {
 			 err = INPfindLev(line,&lev);
