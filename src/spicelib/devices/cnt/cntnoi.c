@@ -20,8 +20,6 @@ Modified: 2000 AlansFixes
  *    all of the CNTFET's is summed with the variable "OnDens".
  */
 
-extern void   NevalSrc();
-extern double Nintegrate();
 
 int
 CNTnoise (int mode, int operation, GENmodel *genmodel, CKTcircuit *ckt,
