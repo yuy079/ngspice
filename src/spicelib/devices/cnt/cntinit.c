@@ -1,6 +1,6 @@
-#include "config.h"
+#include "ngspice/config.h"
 
-#include "devdefs.h"
+#include "ngspice/devdefs.h"
 
 #include "cntitf.h"
 #include "cntext.h"

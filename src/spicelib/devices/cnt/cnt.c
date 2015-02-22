@@ -4,11 +4,11 @@ Author: 1987 Thomas L. Quarles
 Modified: 2000 AlansFixes
 **********/
 
-#include "ngspice.h"
-#include "devdefs.h"
-#include "ifsim.h"
+#include "ngspice/ngspice.h"
+#include "ngspice/devdefs.h"
+#include "ngspice/ifsim.h"
 #include "cntdefs.h"
-#include "suffix.h"
+#include "ngspice/suffix.h"
 
 IFparm CNTpTable[] = { /* parameters */ 
  IOPU("m",            CNT_M,          IF_REAL   , "Multiplier"),

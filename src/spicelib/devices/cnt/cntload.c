@@ -5,14 +5,14 @@ Modified: 2000 AlansFixes
 **********/
 
 #include <math.h>
-#include "ngspice.h"
-#include "cktdefs.h"
-#include "devdefs.h"
+#include "ngspice/ngspice.h"
+#include "ngspice/cktdefs.h"
+#include "ngspice/devdefs.h"
 #include "cntdefs.h"
-#include "trandefs.h"
-#include "const.h"
-#include "sperror.h"
-#include "suffix.h"
+#include "ngspice/trandefs.h"
+#include "ngspice/const.h"
+#include "ngspice/sperror.h"
+#include "ngspice/suffix.h"
 
 static double CSa[5]={-2.384095e10,7.137675e10,-4.753580e10,0.0,0.0};
 static double CSb[5]={-3.576143e10,7.849982e10,-2.852148e10,0.0,0.0};
