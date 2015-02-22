@@ -1090,6 +1090,7 @@ AC_CONFIG_FILES([Makefile
                  src/spicelib/devices/ccvs/Makefile
                  src/spicelib/devices/csw/Makefile
                  src/spicelib/devices/cpl/Makefile
+                 src/spicelib/devices/cnt/Makefile
                  src/spicelib/devices/dio/Makefile
                  src/spicelib/devices/ind/Makefile
                  src/spicelib/devices/isrc/Makefile

@@ -268,7 +268,8 @@ INP2M (CKTcircuit *ckt, INPtables * tab, card * current)
             (type == INPtypelook ("B3SOIFD")) ||
             (type == INPtypelook ("B3SOIDD")) ||
             (type == INPtypelook ("HiSIMHV")) ||
-            (type == INPtypelook ("SOI3"))) {
+            (type == INPtypelook ("SOI3"))    ||
+            (type == INPtypelook ("Cnt"))) {
         switch (nodeflag) {
         case 0:
             fast->GENnode5 = -1;

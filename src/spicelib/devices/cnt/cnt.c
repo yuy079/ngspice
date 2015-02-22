@@ -7,8 +7,8 @@ Modified: 2000 AlansFixes
 #include "ngspice/ngspice.h"
 #include "ngspice/devdefs.h"
 #include "ngspice/ifsim.h"
-#include "cntdefs.h"
 #include "ngspice/suffix.h"
+#include "cntdefs.h"
 
 IFparm CNTpTable[] = { /* parameters */ 
  IOPU("m",            CNT_M,          IF_REAL   , "Multiplier"),
